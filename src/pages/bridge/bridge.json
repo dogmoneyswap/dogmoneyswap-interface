@@ -1,0 +1,416 @@
+[
+  {
+    "methodId": "avaxc",
+    "symbol": "AVAX",
+    "hint": "Avalanche C chain",
+    "name": "Avalanche",
+    "logoUrl": "https://sideshift.ai/static/media/avax.a31a63d8.svg",
+    "title": "Avalanche",
+    "chainId": 43114
+  },
+  {
+    "methodId": "usdtavaxc",
+    "symbol": "USDT",
+    "hint": "Avalanche C chain",
+    "name": "Avalanche",
+    "logoUrl": "https://sideshift.ai/static/media/usdt.66f1b147.svg",
+    "title": "Tether",
+    "chainId": 43114
+  },
+  {
+    "methodId": "usdcavaxc",
+    "symbol": "USDC",
+    "hint": "Avalanche C chain",
+    "name": "Avalanche",
+    "logoUrl": "https://sideshift.ai/static/media/usdc.1bc59a3a.svg",
+    "title": "USDC",
+    "chainId": 43114
+  },
+  {
+    "methodId": "mimavaxc",
+    "symbol": "MIM",
+    "hint": "Avalanche C chain",
+    "name": "Avalanche",
+    "logoUrl": "https://sideshift.ai/static/media/mim.7c1b5842.svg",
+    "title": "Magic Internet Money",
+    "chainId": 43114
+  },
+  {
+    "methodId": "bsc",
+    "symbol": "BNB",
+    "hint": "Binance Smart Chain",
+    "name": "Binance Smart Chain",
+    "logoUrl": "https://sideshift.ai/static/media/bnb.f78cb0ac.svg",
+    "title": "Binance Coin",
+    "chainId": 56
+  },
+  {
+    "methodId": "busd",
+    "symbol": "BUSD",
+    "hint": "Binance Smart Chain",
+    "name": "Binance Smart Chain",
+    "logoUrl": "https://sideshift.ai/static/media/busd.8705fd81.svg",
+    "title": "BUSD",
+    "chainId": 56
+  },
+  {
+    "methodId": "usdcbsc",
+    "symbol": "USDC",
+    "hint": "Binance Smart Chain",
+    "name": "Binance Smart Chain",
+    "logoUrl": "https://sideshift.ai/static/media/usdc.1bc59a3a.svg",
+    "title": "USDC",
+    "chainId": 56
+  },
+  {
+    "methodId": "btc",
+    "symbol": "BTC",
+    "hint": "Bitcoin",
+    "name": "Bitcoin",
+    "logoUrl": "https://sideshift.ai/static/media/btc.e73cb1b2.svg",
+    "title": "Bitcoin",
+    "chainId": 90000
+  },
+  {
+    "methodId": "ln",
+    "symbol": "BTC",
+    "hint": "Lightning Network",
+    "name": "Bitcoin",
+    "logoUrl": "https://sideshift.ai/static/media/btc.e73cb1b2.svg",
+    "title": "Bitcoin Ligtning",
+    "chainId": 90000
+  },
+  {
+    "methodId": "liquid",
+    "symbol": "BTC",
+    "hint": "Liquid",
+    "name": "Bitcoin",
+    "logoUrl": "https://sideshift.ai/static/media/btc.e73cb1b2.svg",
+    "title": "Bitcoin Liquid",
+    "chainId": 90000
+  },
+  {
+    "methodId": "usdtla",
+    "symbol": "USDT",
+    "hint": "Liquid",
+    "name": "Bitcoin",
+    "logoUrl": "https://sideshift.ai/static/media/usdt.66f1b147.svg",
+    "title": "Tether",
+    "chainId": 90000
+  },
+  {
+    "methodId": "bch",
+    "symbol": "BCH",
+    "hint": "Smart Bitcoin Cash",
+    "name": "Smart Bitcoin Cash",
+    "logoUrl": "https://sideshift.ai/static/media/bch.274d44f0.svg",
+    "title": "Smart Bitcoin Cash",
+    "chainId": 10000
+  },
+  {
+    "methodId": "bch",
+    "symbol": "BCH",
+    "hint": "Bitcoin Cash",
+    "name": "Bitcoin Cash",
+    "logoUrl": "https://sideshift.ai/static/media/bch.274d44f0.svg",
+    "title": "Bitcoin Cash",
+    "chainId": 0
+  },
+  {
+    "methodId": "usdtBch",
+    "symbol": "USDT",
+    "hint": "Simple Ledger Protocol",
+    "name": "Bitcoin Cash",
+    "logoUrl": "https://sideshift.ai/static/media/usdt.66f1b147.svg",
+    "title": "Tether",
+    "chainId": 0
+  },
+  {
+    "methodId": "usdh",
+    "symbol": "USDH",
+    "hint": "Simple Ledger Protocol",
+    "name": "Bitcoin Cash",
+    "logoUrl": "https://sideshift.ai/static/media/usdh.09324849.svg",
+    "title": "HonestCoin",
+    "chainId": 0
+  },
+  {
+    "methodId": "flexusd",
+    "symbol": "FlexUSD",
+    "hint": "Simple Ledger Protocol",
+    "name": "Bitcoin Cash",
+    "logoUrl": "https://sideshift.ai/static/media/flexusd.b39f9ff8.svg",
+    "title": "flexUSD",
+    "chainId": 0
+  },
+  {
+    "methodId": "dash",
+    "symbol": "DASH",
+    "hint": "Dash",
+    "name": "Dash",
+    "logoUrl": "https://sideshift.ai/static/media/dash.951d489f.svg",
+    "title": "Dash",
+    "chainId": 90001
+  },
+  {
+    "methodId": "doge",
+    "symbol": "DOGE",
+    "hint": "Doge",
+    "name": "Doge",
+    "logoUrl": "https://sideshift.ai/static/media/doge.c7fd4d5d.svg",
+    "title": "Dogecoin",
+    "chainId": 90002
+  },
+  {
+    "methodId": "eth",
+    "symbol": "ETH",
+    "hint": "Ethereum",
+    "name": "Ethereum",
+    "logoUrl": "https://sideshift.ai/static/media/eth.18708d3e.svg",
+    "title": "Ethereum",
+    "chainId": 1
+  },
+  {
+    "methodId": "usdtErc20",
+    "symbol": "USDT",
+    "hint": "Erc20 token",
+    "name": "Ethereum",
+    "logoUrl": "https://sideshift.ai/static/media/usdt.66f1b147.svg",
+    "title": "Tether",
+    "chainId": 1
+  },
+  {
+    "methodId": "usdc",
+    "symbol": "USDC",
+    "hint": "Erc20 token",
+    "name": "Ethereum",
+    "logoUrl": "https://sideshift.ai/static/media/usdc.1bc59a3a.svg",
+    "title": "USDC",
+    "chainId": 1
+  },
+  {
+    "methodId": "dai",
+    "symbol": "DAI",
+    "hint": "Erc20 token",
+    "name": "Ethereum",
+    "logoUrl": "https://sideshift.ai/static/media/dai.a1c449c2.svg",
+    "title": "Dai",
+    "chainId": 1
+  },
+  {
+    "methodId": "xaut",
+    "symbol": "XAUT",
+    "hint": "Erc20 token",
+    "name": "Ethereum",
+    "logoUrl": "https://sideshift.ai/static/media/xaut.c6b1f68d.svg",
+    "title": "Tether Gold",
+    "chainId": 1
+  },
+  {
+    "methodId": "ftt",
+    "symbol": "FTT",
+    "hint": "Erc20 token",
+    "name": "Ethereum",
+    "logoUrl": "https://sideshift.ai/static/media/ftt.112752a1.svg",
+    "title": "FTX Token",
+    "chainId": 1
+  },
+  {
+    "methodId": "srm",
+    "symbol": "SRM",
+    "hint": "Erc20 token",
+    "name": "Ethereum",
+    "logoUrl": "https://sideshift.ai/static/media/srm.4ba777d7.svg",
+    "title": "Serum",
+    "chainId": 1
+  },
+  {
+    "methodId": "comp",
+    "symbol": "COMP",
+    "hint": "Erc20 token",
+    "name": "Ethereum",
+    "logoUrl": "https://sideshift.ai/static/media/comp.967f39e2.svg",
+    "title": "Compound",
+    "chainId": 1
+  },
+  {
+    "methodId": "sushi",
+    "symbol": "SUSHI",
+    "hint": "Erc20 token",
+    "name": "Ethereum",
+    "logoUrl": "https://sideshift.ai/static/media/sushi.6aa13a69.svg",
+    "title": "Sushi",
+    "chainId": 1
+  },
+  {
+    "methodId": "yfi",
+    "symbol": "YFI",
+    "hint": "Erc20 token",
+    "name": "Ethereum",
+    "logoUrl": "https://sideshift.ai/static/media/yfi.0857ab0b.svg",
+    "title": "yearn.finance",
+    "chainId": 1
+  },
+  {
+    "methodId": "uni",
+    "symbol": "UNI",
+    "hint": "Erc20 token",
+    "name": "Ethereum",
+    "logoUrl": "https://sideshift.ai/static/media/uni.e101521d.svg",
+    "title": "Uniswap",
+    "chainId": 1
+  },
+  {
+    "methodId": "wbtc",
+    "symbol": "WBTC",
+    "hint": "Erc20 token",
+    "name": "Ethereum",
+    "logoUrl": "https://sideshift.ai/static/media/btc.e73cb1b2.svg",
+    "title": "WBTC",
+    "chainId": 1
+  },
+  {
+    "methodId": "axs",
+    "symbol": "AXS",
+    "hint": "Erc20 token",
+    "name": "Ethereum",
+    "logoUrl": "https://sideshift.ai/static/media/axs.d43ac345.svg",
+    "title": "Axie Infinity",
+    "chainId": 1
+  },
+  {
+    "methodId": "slp",
+    "symbol": "SLP",
+    "hint": "Erc20 token",
+    "name": "Ethereum",
+    "logoUrl": "https://sideshift.ai/static/media/slp.a155a37f.svg",
+    "title": "Smooth Love Potion",
+    "chainId": 1
+  },
+  {
+    "methodId": "matic",
+    "symbol": "MATIC",
+    "hint": "Erc20 token",
+    "name": "Ethereum",
+    "logoUrl": "https://sideshift.ai/static/media/polygon.d38118c6.svg",
+    "title": "Polygon",
+    "chainId": 1
+  },
+  {
+    "methodId": "shib",
+    "symbol": "SHIB",
+    "hint": "Erc20 token",
+    "name": "Ethereum",
+    "logoUrl": "https://sideshift.ai/static/media/shib.2b586553.svg",
+    "title": "SHIBA INU",
+    "chainId": 1
+  },
+  {
+    "methodId": "bat",
+    "symbol": "BAT",
+    "hint": "Erc20 token",
+    "name": "Ethereum",
+    "logoUrl": "https://sideshift.ai/static/media/bat.fc6a5468.svg",
+    "title": "Basic Attention Token",
+    "chainId": 1
+  },
+  {
+    "methodId": "xai",
+    "symbol": "XAI",
+    "hint": "Erc20 token",
+    "name": "Ethereum",
+    "logoUrl": "https://sideshift.ai/static/media/xai.62e95fb0.svg",
+    "title": "SideShift Token",
+    "chainId": 1
+  },
+  {
+    "methodId": "ftm",
+    "symbol": "FTM",
+    "hint": "Fantom Opera",
+    "name": "Fantom Opera",
+    "logoUrl": "https://sideshift.ai/static/media/ftm.a719cba6.svg",
+    "title": "Fantom",
+    "chainId": 90003
+  },
+  {
+    "methodId": "ltc",
+    "symbol": "LTC",
+    "hint": "Litecoin",
+    "name": "Litecoin",
+    "logoUrl": "https://sideshift.ai/static/media/ltc.cdae0850.svg",
+    "title": "Litecoin",
+    "chainId": 90004
+  },
+  {
+    "methodId": "xmr",
+    "symbol": "XMR",
+    "hint": "Monero",
+    "name": "Monero",
+    "logoUrl": "https://sideshift.ai/static/media/xmr.9749f027.svg",
+    "title": "Monero",
+    "chainId": 90005
+  },
+  {
+    "methodId": "polygon",
+    "symbol": "MATIC",
+    "hint": "Polygon",
+    "name": "Polygon",
+    "logoUrl": "https://sideshift.ai/static/media/polygon.d38118c6.svg",
+    "title": "Polygon",
+    "chainId": 90006
+  },
+  {
+    "methodId": "xrp",
+    "symbol": "XRP",
+    "hint": "Ripple",
+    "name": "Ripple",
+    "logoUrl": "https://sideshift.ai/static/media/xrp.84ce7542.svg",
+    "title": "XRP",
+    "chainId": 90007
+  },
+  {
+    "methodId": "sol",
+    "symbol": "SOL",
+    "hint": "Solana",
+    "name": "Solana",
+    "logoUrl": "https://sideshift.ai/static/media/sol.6c06cb3b.svg",
+    "title": "Solana",
+    "chainId": 90008
+  },
+  {
+    "methodId": "usdcsol",
+    "symbol": "USDC",
+    "hint": "Solana token",
+    "name": "Solana",
+    "logoUrl": "https://sideshift.ai/static/media/usdc.1bc59a3a.svg",
+    "title": "USDC",
+    "chainId": 90008
+  },
+  {
+    "methodId": "xlm",
+    "symbol": "XLM",
+    "hint": "Stellar",
+    "name": "Stellar",
+    "logoUrl": "https://sideshift.ai/static/media/xlm.29ac2fa4.svg",
+    "title": "Stellar Lumens",
+    "chainId": 90009
+  },
+  {
+    "methodId": "zec",
+    "symbol": "ZEC",
+    "hint": "ZCash transparent",
+    "name": "ZCash",
+    "logoUrl": "https://sideshift.ai/static/media/zec.4775683f.svg",
+    "title": "Zcash transparent",
+    "chainId": 90010
+  },
+  {
+    "methodId": "zaddr",
+    "symbol": "ZEC",
+    "hint": "ZCash shielded",
+    "name": "ZCash",
+    "logoUrl": "https://sideshift.ai/static/media/zec.4775683f.svg",
+    "title": "Zcash shielded",
+    "chainId": 90010
+  }
+]
