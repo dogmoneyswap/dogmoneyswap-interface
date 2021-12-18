@@ -1,4 +1,4 @@
-import { ChainId } from '../../sdk'
+import { ChainId } from '@mistswapdex/sdk'
 import { createAction } from '@reduxjs/toolkit'
 
 export interface SerializableTransactionReceipt {

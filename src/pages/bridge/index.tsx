@@ -57,6 +57,7 @@ import { useTokenContract } from '../../hooks'
 import { default as bridge } from './bridge.json';
 import { useEthPrice } from '../../services/graph';
 import BridgeModal from '../../modals/BridgeModal';
+import { xaiQuote } from '../../services/sideshift.ai';
 
 type BridgeDataInfo = {
   methodId: string,
@@ -254,14 +255,6 @@ export default function Bridge() {
   const [chainFrom, setChainFrom] = useState<Chain | null>(DEFAULT_CHAIN_FROM)
   const [chainTo, setChainTo] = useState<Chain | null>(DEFAULT_CHAIN_TO)
 
-  async function xaiQuote(from = "bch") {
-    const response = await fetch(`https://sideshift.ai/api/pairs/${from}/bch`, {
-      method: 'GET',
-      redirect: 'follow'
-    });
-    return await response.json();
-  }
-
   const [tokenList, setTokenList] = useState<Currency[] | null>([])
   const [currency0, setCurrency0] = useState<Currency | null>(null)
   const [currencyAmount, setCurrencyAmount] = useState<string | null>('')
@@ -355,7 +348,8 @@ export default function Bridge() {
     minimumAmount: number,
     maximumAmount: number,
     feeUsd: number,
-    feeBch: number
+    feeBch: number,
+    receiveAmount: number,
   }
   const [swapInfo, setSwapInfo] = useState<SwapInfo | null>(null)
   useEffect(() => {
@@ -372,11 +366,14 @@ export default function Bridge() {
       minimumAssetAmount = Math.max(tokenToBridge.other.MinimumSwap, minimumBchAmount)
       minimumAssetAmount = Math.ceil(minimumAssetAmount * 1e6) / 1e6
 
+      const receiveAmount = Math.max(tokenToBridge.other.SwapRate * amount - feeBch, 0)
+
       setSwapInfo({
         minimumAmount: minimumAssetAmount,
         maximumAmount: tokenToBridge.other.MaximumSwap,
         feeUsd: tokenToBridge.other.FeeUsd,
-        feeBch: feeBch
+        feeBch: feeBch,
+        receiveAmount: receiveAmount
       })
     }
   }, [currencyAmount, tokenToBridge])
@@ -705,6 +702,11 @@ export default function Bridge() {
                 <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
                   <div className="text-sm font-medium text-secondary">
                     Estimated Fee Included: {swapInfo?.feeUsd.toFixed(2)} USD + {swapInfo?.feeBch.toFixed(5)} BCH
+                  </div>
+                </div>
+                <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
+                  <div className="text-sm font-medium text-secondary">
+                    You will receive about: {formatNumber(swapInfo?.receiveAmount)} BCH
                   </div>
                 </div>
                 {/* <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">

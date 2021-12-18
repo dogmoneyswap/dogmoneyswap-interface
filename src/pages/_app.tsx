@@ -148,10 +148,8 @@ function MyApp({
           content="Trade, launch, stake, farm, invest, automate, build on the premier DeFi platform of smartBCH"
         />
         <script src="https://hop.cash/assets/bchaddrjs-0.5.2.min.js" type="application/javascript"></script>
-        <script src="https://hop.cash/assets/qrious.min.js" type="application/javascript"></script>
         <script src="https://hop.cash/assets/hex2wif.bundle.js" type="application/javascript"></script>
         <script src="https://hop.cash/assets/mainnet.bundle.js" type="application/javascript"></script>
-        <script src="https://hop.cash/assets/detect-provider.min.js"></script>
       </Head>
       <I18nProvider i18n={i18n} forceRenderOnLocaleChange={false}>
         <Web3ReactProvider getLibrary={getLibrary}>

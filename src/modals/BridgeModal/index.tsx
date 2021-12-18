@@ -11,7 +11,10 @@ import { AutoRow } from "../../components/Row";
 import Typography from "../../components/Typography";
 import { formatNumber } from "../../functions";
 import { Chain } from "../../pages/bridge";
-import Image from 'next/image'
+
+import QRCode from "qrcode.react";
+import { hopInRefresh, HopStage, HopStatus, initHopWallet, showCCTransLogs } from "../../services/hop.cash";
+import { useActiveWeb3React } from "../../hooks";
 
 interface BridgeModalProps {
   isOpen: boolean;
@@ -31,27 +34,65 @@ export default function BridgeModal({
   chainTo,
 }: BridgeModalProps) {
 
-  // const [swapInfo, setSwapInfo] = useState<string | null>("kek")
-  // setSwapInfo("asdf")
+  const [depositAddress, setDepositAddress] = useState<string | null>(null)
 
-  // useEffect(() =>{
-  //   new QRious({element: document.getElementById("cashAddrQR"), value: swapInfo});
-  // }, [swapInfo])
+  const { library: provider } = useActiveWeb3React()
 
-  const [swapInfo, setSwapInfo] = useState<string | null>(null)
+  const [hopStage, setHopStage] = useState((window.hopStatus || {}).stage);
 
   useEffect(() => {
-    if (isOpen && !swapInfo) {
-      Wallet.newRandom().then(wallet => setSwapInfo(wallet.getDepositQr().src))
-    }
-  }, [isOpen, swapInfo]);
+    const stateMachine = async () => {
+      if (isOpen) {
+        // const {cashAddr, fromBlock} = await initHopWallet(provider)
+        // setDepositAddress(cashAddr)
+
+        // hop cash state machine
+        const hopStatus: HopStatus = window.hopStatus || {}
+        switch (hopStatus.stage) {
+          case undefined:
+          case "unknown":
+          case "init":
+            // transition to deposit
+            const {cashAddr, fromBlock} = await initHopWallet(provider)
+            setDepositAddress(cashAddr)
+            // window.hopStatus.stage = HopStage.deposit
+            break;
+          case "deposit":
+            // waiting for deposit
+            await hopInRefresh(provider)
+            break;
+          case "sent":
+            const signer = provider.getSigner();
+            const ccTargetAddr = await signer.getAddress();
+            await showCCTransLogs("", provider, ccTargetAddr, hopStatus.fromBlock)
+            break;
+          case "settled":
+            // update ui
+            break;
+        }
+
+        setHopStage(hopStatus.stage)
+
+        if (hopStatus.stage != HopStage.settled) {
+          setTimeout(stateMachine, 1000);
+        }
+
+      } else {
+        setDepositAddress(null)
+      }
+    };
+    stateMachine();
+  }, [isOpen]);
+
+  useEffect(() => {
+    console.log(hopStage, window.hopStatus)
+  }, [hopStage])
 
   return (
   <>
     <Modal isOpen={isOpen} onDismiss={onDismiss}>
       <div className="space-y-4">
         <ModalHeader title={i18n._(t`Bridge Kek ${currency0?.symbol}`)} onClose={onDismiss} />
-        <canvas id="cashAddrQR"></canvas>
         <Typography variant="sm" className="font-medium">
           {i18n._(t`You are sending ${formatNumber(currencyAmount)} ${currency0?.symbol} from ${chainFrom?.name}`)}
         </Typography>
@@ -72,7 +113,22 @@ export default function BridgeModal({
             )} */}
           </Typography>
         </Button>
+        <div className="flex items-center justify-center">
+          <Typography className="font-medium" variant="sm">
+            {hopStage}
+          </Typography>
+        </div>
         {/* {swapInfo && (<Image src={swapInfo} alt={"asdf"} width={200} height={200} />)} */}
+        {depositAddress && (<div>
+          <div className="flex items-center justify-center">
+            <QRCode size={200}  value={depositAddress} includeMargin={true} />
+          </div>
+          <div className="flex items-center justify-center">
+            <Typography className="font-medium" variant="sm">
+              {depositAddress}
+            </Typography>
+          </div>
+        </div>)}
       </div>
     </Modal>
   </>
