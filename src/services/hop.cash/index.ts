@@ -52,7 +52,7 @@ export async function initHopWallet(provider: Web3Provider) {
 	const signer = provider.getSigner();
 	const myAddr = await signer.getAddress();
 
-  if (window.hopwallet && window.hopwallet.myAddr !== myAddr) {
+  if (!window.hopwallet || (window.hopwallet && window.hopwallet.myAddr !== myAddr)) {
     const signature = await signer.signMessage(`[Grant-Hop-Wallet]【授权Hop钱包】\n${myAddr}\nI hereby grant this website the permission to access my Hop-Wallet for above address.\n我郑重授权此网站访问以上地址的Hop钱包。`);
     let privKey = BigNumber.from(sha256(signature));
     const prime = BigNumber.from("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364140");
