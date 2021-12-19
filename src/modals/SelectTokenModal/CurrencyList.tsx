@@ -201,7 +201,7 @@ export default function CurrencyList({
       const handleSelect = () => currency && onCurrencySelect(currency)
 
       if (currency) {
-        return <CurrencyRow style={style} currency={currency} isSelected={isSelected} onSelect={handleSelect} />
+        return <CurrencyRow style={style} currency={currency as any} isSelected={isSelected} onSelect={handleSelect} />
       } else {
         return null
       }

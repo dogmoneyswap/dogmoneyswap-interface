@@ -1,4 +1,3 @@
-import { Currency, CurrencyAmount, Token } from '../../sdk'
 import React, { ReactNode, useCallback, useState } from 'react'
 import { classNames, formatNumberScale } from '../../functions'
 import Button from '../Button'
@@ -14,9 +13,8 @@ import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { useLingui } from '@lingui/react'
 import Card from '../Card'
 import Logo from '../Logo'
-import { Chain } from '../../sdk/entities/Chain'
-import { useChainModalToggle } from '../../state/application/hooks'
 import ChainModal from '../../modals/ChainModal'
+import { Chain } from '../../pages/bridge'
 
 interface ChainSelectProps {
   chains: { [chainId: number]: Chain }

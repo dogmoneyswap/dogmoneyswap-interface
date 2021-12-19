@@ -27,7 +27,7 @@ import { BottomGrouping } from '../../features/exchange-v1/swap/styleds'
 import Button from '../../components/Button'
 import DualChainCurrencyInputPanel from '../../components/DualChainCurrencyInputPanel'
 import ChainSelect from '../../components/ChainSelect'
-// import { Chain, DEFAULT_CHAIN_FROM, DEFAULT_CHAIN_TO } from '../../sdk/entities/Chain'
+
 export type Chain = {
   id: ChainId
   name?: string
@@ -44,8 +44,6 @@ import { ethers } from 'ethers'
 // import { useAnyswapTokenContract, useTokenContract } from '../../hooks'
 import Loader from '../../components/Loader'
 import { getWeb3ReactContext, useWeb3React } from '@web3-react/core'
-// import { BridgeContextName } from '../../constants'
-// import { bridgeInjected } from '../../connectors'
 import NavLink from '../../components/NavLink'
 import { useTransactionAdder } from '../../state/bridgeTransactions/hooks'
 import { useRouter } from 'next/router'
@@ -58,6 +56,7 @@ import { default as bridge } from './bridge.json';
 import { useEthPrice } from '../../services/graph';
 import BridgeModal from '../../modals/BridgeModal';
 import { xaiQuote } from '../../services/sideshift.ai';
+import { getSmartBchPoolBalance } from '../../services/hop.cash';
 
 type BridgeDataInfo = {
   methodId: string,
@@ -236,8 +235,8 @@ chainIds.forEach((chainId) => {
   chains[chainId] = { id: chainId, icon: chainInfo.logoUrl, name: chainInfo.name, symbol: chainInfo.symbol } as Chain
 })
 
-const DEFAULT_CHAIN_FROM: Chain = chains[0]
-const DEFAULT_CHAIN_TO: Chain = chains[ChainId.SMARTBCH]
+export const DEFAULT_CHAIN_FROM: Chain = chains[0]
+export const DEFAULT_CHAIN_TO: Chain = chains[ChainId.SMARTBCH]
 
 export default function Bridge() {
   const { i18n } = useLingui()
@@ -254,6 +253,10 @@ export default function Bridge() {
 
   const [chainFrom, setChainFrom] = useState<Chain | null>(DEFAULT_CHAIN_FROM)
   const [chainTo, setChainTo] = useState<Chain | null>(DEFAULT_CHAIN_TO)
+  const shiftNeeded = !(chainFrom === DEFAULT_CHAIN_FROM && chainTo === DEFAULT_CHAIN_TO)
+  const hopDirection = (chainTo === DEFAULT_CHAIN_TO) ? "in" : "out"
+
+  const [methodId, setMethodId] = useState<string | null>(null)
 
   const [tokenList, setTokenList] = useState<Currency[] | null>([])
   const [currency0, setCurrency0] = useState<Currency | null>(null)
@@ -330,15 +333,25 @@ export default function Bridge() {
       handleTypeInput('')
       if (currency) {
         const methodId = Object.values(anyswapInfo[chainFrom.id]).filter((val: AvailableChainsInfo) => (currency.chainId === ChainId.SMARTBCH) || (val.symbol == currency.symbol && val.name == currency.name))[0].id
-        const quote = await xaiQuote(methodId)
-
         const tokenTo = anyswapInfo[chainFrom.id][methodId]
 
-        tokenTo.other.MinimumSwap = parseFloat(quote.min)
-        tokenTo.other.MaximumSwap = parseFloat(quote.max)
-        tokenTo.other.FeeUsd = parseFloat(quote.estimatedNetworkFeesUsd)
-        tokenTo.other.SwapRate = parseFloat(quote.rate)
+        if (shiftNeeded) {
+          const quote = await xaiQuote(methodId)
+
+          tokenTo.other.MinimumSwap = parseFloat(quote.min)
+          tokenTo.other.MaximumSwap = parseFloat(quote.max)
+          tokenTo.other.FeeUsd = parseFloat(quote.estimatedNetworkFeesUsd)
+          tokenTo.other.SwapRate = parseFloat(quote.rate)
+        } else {
+          const hopCashSbchMaximum = parseFloat(await getSmartBchPoolBalance(library))
+
+          tokenTo.other.MinimumSwap = 0.01001000
+          tokenTo.other.MaximumSwap = hopCashSbchMaximum
+          tokenTo.other.FeeUsd = 0.
+          tokenTo.other.SwapRate = 1
+        }
         setTokenToBridge(tokenTo)
+        setMethodId(methodId)
       }
     },
     [anyswapInfo, chainFrom.id, handleTypeInput]
@@ -356,7 +369,7 @@ export default function Bridge() {
     if (tokenToBridge) {
       const amount = parseFloat(currencyAmount) || 0.
       const feeUsdInBch = tokenToBridge.other.FeeUsd / bchPrice
-      const bchAmount = tokenToBridge.other.SwapRate * amount + feeUsdInBch
+      const bchAmount = tokenToBridge.other.SwapRate * amount + (feeUsdInBch || 0.)
       let feeBch = bchAmount * 0.001
       if (feeBch < 0.0001)
         feeBch = 0.0001
@@ -518,7 +531,14 @@ export default function Bridge() {
 
   return (
     <>
-      <BridgeModal isOpen={showBridgeModal} currency0={currency0} onDismiss={() => setShowBridgeModal(false)} />
+      {showBridgeModal && (<BridgeModal
+        isOpen={showBridgeModal}
+        chainFrom={chainFrom}
+        chainTo={chainTo}
+        currency0={currency0}
+        currencyAmount={currencyAmount}
+        methodId={methodId}
+        onDismiss={() => setShowBridgeModal(false)} />)}
       {/* <Modal isOpen={showBridgeModal} onDismiss={() => setShowBridgeModal(false)}>
         <div className="space-y-4">
           <ModalHeader title={i18n._(t`Bridge ${currency0?.symbol}`)} onClose={() => setShowBridgeModal(false)} />
@@ -546,7 +566,7 @@ export default function Bridge() {
       </Modal> */}
 
       <Head>
-        <title>{i18n._(t`Bridge`)} | Solarbeam</title>
+        <title>{i18n._(t`Bridge`)} | MISTswap</title>
         <meta key="description" name="description" content="Bridge" />
       </Head>
 

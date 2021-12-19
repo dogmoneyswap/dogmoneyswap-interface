@@ -10,11 +10,26 @@ import ModalHeader from "../../components/ModalHeader";
 import { AutoRow } from "../../components/Row";
 import Typography from "../../components/Typography";
 import { formatNumber } from "../../functions";
-import { Chain } from "../../pages/bridge";
+import { Chain, DEFAULT_CHAIN_FROM, DEFAULT_CHAIN_TO } from "../../pages/bridge";
 
 import QRCode from "qrcode.react";
-import { hopInRefresh, HopStage, HopStatus, initHopWallet, showCCTransLogs } from "../../services/hop.cash";
+import { HopDirection, hopInRefresh, HopStage, HopStatus, initHopWallet, showCCTransLogs } from "../../services/hop.cash";
 import { useActiveWeb3React } from "../../hooks";
+import { ShiftStage, ShiftStatus, xaiOrder, xaiStatus } from "../../services/sideshift.ai";
+import Dots from "../../components/Dots";
+
+const shorten = (text: string) => {
+  if (text.length > 12) {
+    return `${text.slice(0, 5)}...${text.slice(-5)}`
+  }
+  return text
+}
+
+export interface DepositAddress {
+  address: string
+  destinationTag?: number
+  memo?: string
+}
 
 interface BridgeModalProps {
   isOpen: boolean;
@@ -23,6 +38,7 @@ interface BridgeModalProps {
   currencyAmount?: string;
   chainFrom?: Chain;
   chainTo?: Chain;
+  methodId?: string;
 }
 
 export default function BridgeModal({
@@ -32,93 +48,106 @@ export default function BridgeModal({
   currencyAmount,
   chainFrom,
   chainTo,
+  methodId
 }: BridgeModalProps) {
+  const [statusText, setStatusText] = useState<string | null>("Initializing")
 
   const [depositAddress, setDepositAddress] = useState<string | null>(null)
+  const [memo, setMemo] = useState<string | null>(null)
+  const [destinationTag, setDestinationTag] = useState<number | null>(null)
+  const [sideShiftOrderId, setSideShiftOrderId] = useState<string | null>(null)
+
+  const [bchTransactionId, setBchTransactionId] = useState<string | null>(null)
+  const [sbchTransactionId, setSbchTransactionId] = useState<string | null>(null)
+
+  const bridgeDirectionIn = chainFrom === DEFAULT_CHAIN_FROM && chainTo === DEFAULT_CHAIN_TO
+  const bridgeDirectionOut = chainFrom === DEFAULT_CHAIN_TO && chainTo === DEFAULT_CHAIN_FROM
+
+  const shiftNeeded = !(chainFrom === DEFAULT_CHAIN_FROM && chainTo === DEFAULT_CHAIN_TO)
+  const hopDirection = (chainTo === DEFAULT_CHAIN_TO) ? HopDirection.in : HopDirection.out
 
   const { library: provider } = useActiveWeb3React()
-
-  const [hopStage, setHopStage] = useState((window.hopStatus || {}).stage);
 
   useEffect(() => {
     const stateMachine = async () => {
       if (isOpen) {
-        // const {cashAddr, fromBlock} = await initHopWallet(provider)
-        // setDepositAddress(cashAddr)
-
-        // hop cash state machine
-        const hopStatus: HopStatus = window.hopStatus || {}
+        // hop.cash state machine
+        const hopStatus: HopStatus = {...(window.hopStatus || {})} as HopStatus
+        const shiftStatus: ShiftStatus = {...(window.shiftStatus || {})} as ShiftStatus
         switch (hopStatus.stage) {
           case undefined:
-          case "unknown":
-          case "init":
-            // transition to deposit
+          case HopStage.init:
             const {cashAddr, fromBlock} = await initHopWallet(provider)
-            setDepositAddress(cashAddr)
-            // window.hopStatus.stage = HopStage.deposit
+            // sideshift.ai state machine
+            if (!shiftNeeded) {
+              setDepositAddress(cashAddr)
+            }
             break;
-          case "deposit":
-            // waiting for deposit
+          case HopStage.deposit:
+            // sideshift.ai state machine
+            if (shiftNeeded) {
+              switch (shiftStatus.stage) {
+                case undefined:
+                case ShiftStage.init:
+                  const cashAddr = hopStatus.depositAddress;
+                  const order = await xaiOrder(methodId, "bch", cashAddr);
+                  setDepositAddress(order.depositAddress.address)
+                  if (order.depositAddress.memo) setMemo(order.depositAddress.memo);
+                  if (order.depositAddress.destinationTag )setDestinationTag(order.depositAddress.destinationTag)
+                  setSideShiftOrderId(order.orderId)
+                  break;
+                case ShiftStage.deposit:
+                  setStatusText("Waiting for deposit");
+                  break;
+                case ShiftStage.confirmation:
+                  setStatusText(`Waiting for ${currency0?.symbol} confirmations`);
+                  setDepositAddress(null)
+                  break;
+                case ShiftStage.settled:
+                  // transition to hop cash is automatic
+                  break;
+              }
+              if (shiftStatus.stage == ShiftStage.deposit || shiftStatus.stage == ShiftStage.confirmation) {
+                // update order status and advance the state
+                await xaiStatus(shiftStatus.orderId);
+              }
+            } else {
+              setStatusText("Waiting for deposit");
+            }
+
             await hopInRefresh(provider)
             break;
-          case "sent":
+          case HopStage.sent:
             const signer = provider.getSigner();
             const ccTargetAddr = await signer.getAddress();
             await showCCTransLogs("", provider, ccTargetAddr, hopStatus.fromBlock)
+            setDepositAddress(null)
+            setBchTransactionId(hopStatus.bchTxId);
+            setStatusText("Funds sent to the cross-chain bridge");
             break;
-          case "settled":
-            // update ui
+          case HopStage.settled:
+            setSbchTransactionId(hopStatus.sbchTxId);
+            setStatusText("Funds arrived to destination");
             break;
         }
-
-        setHopStage(hopStatus.stage)
 
         if (hopStatus.stage != HopStage.settled) {
           setTimeout(stateMachine, 1000);
         }
-
-      } else {
-        setDepositAddress(null)
       }
     };
     stateMachine();
   }, [isOpen]);
 
-  useEffect(() => {
-    console.log(hopStage, window.hopStatus)
-  }, [hopStage])
-
   return (
   <>
     <Modal isOpen={isOpen} onDismiss={onDismiss}>
       <div className="space-y-4">
-        <ModalHeader title={i18n._(t`Bridge Kek ${currency0?.symbol}`)} onClose={onDismiss} />
+        <ModalHeader title={i18n._(t`Bridge ${currency0?.symbol}`)} onClose={onDismiss} />
         <Typography variant="sm" className="font-medium">
-          {i18n._(t`You are sending ${formatNumber(currencyAmount)} ${currency0?.symbol} from ${chainFrom?.name}`)}
-        </Typography>
-        <Typography variant="sm" className="font-medium">
-          {i18n._(t`You will receive ${/*formatNumber(getAmountToReceive())*/0} ${currency0?.symbol} on ${chainTo?.name}`)}
+          {i18n._(t`Sending ${formatNumber(currencyAmount)} ${currency0?.symbol} from ${chainFrom?.name} network`)}
         </Typography>
 
-        <Button color="gradient" size="lg" disabled={false /*pendingTx*/} onClick={() => {} /*bridgeToken()*/}>
-          <Typography variant="lg">
-            {/* {pendingTx ? (
-              <div className={'p-2'}>
-                <AutoRow gap="6px" justify="center">
-                  {buttonText} <Loader stroke="white" />
-                </AutoRow>
-              </div>
-            ) : (
-              i18n._(t`Bridge ${currency0?.symbol}`)
-            )} */}
-          </Typography>
-        </Button>
-        <div className="flex items-center justify-center">
-          <Typography className="font-medium" variant="sm">
-            {hopStage}
-          </Typography>
-        </div>
-        {/* {swapInfo && (<Image src={swapInfo} alt={"asdf"} width={200} height={200} />)} */}
         {depositAddress && (<div>
           <div className="flex items-center justify-center">
             <QRCode size={200}  value={depositAddress} includeMargin={true} />
@@ -129,6 +158,59 @@ export default function BridgeModal({
             </Typography>
           </div>
         </div>)}
+        {memo && (
+          <div className="flex items-center justify-center">
+            <Typography className="font-medium" variant="sm">
+              Your XLM deposit must contain the memo: "{memo}", otherwise the deposit might be lost
+            </Typography>
+          </div>
+        )}
+        {destinationTag && (
+          <div className="flex items-center justify-center">
+            <Typography className="font-medium" variant="sm">
+              Your XRP deposit must contain the Destination Tag: "{destinationTag}", otherwise the deposit will be rejected by the network
+            </Typography>
+          </div>
+        )}
+
+        {sideShiftOrderId && (<div>
+          <div className="flex items-center justify-center">
+            <a href={`https://sideshift.ai/orders/${sideShiftOrderId}`} target="_blank"
+              className="font-bold text-baseline text-primary"
+            >
+              sideshift.ai order {sideShiftOrderId} 🔗
+            </a>
+          </div>
+        </div>)}
+
+        {bchTransactionId && (<div>
+          <div className="flex items-center justify-center">
+            <a href={`https://blockchair.com/bitcoin-cash/transaction/${bchTransactionId}`} target="_blank"
+              className="font-bold text-baseline text-primary"
+            >
+              BCH cross-chain tx {shorten(bchTransactionId)} 🔗
+            </a>
+          </div>
+        </div>)}
+
+        {sbchTransactionId && (<div>
+          <div className="flex items-center justify-center">
+            <a href={`https://www.smartscan.cash/transaction/${sbchTransactionId}`} target="_blank"
+              className="font-bold text-baseline text-primary"
+            >
+              SmartBCH cross-chain tx {shorten(sbchTransactionId)} 🔗
+            </a>
+          </div>
+        </div>)}
+
+        {statusText && (
+          <div className="flex items-center justify-center">
+            {!statusText.includes("arrived to destination") && (<Dots>
+              {statusText}
+            </Dots>)}
+            {statusText.includes("arrived to destination") && (<div>{statusText}</div>)}
+          </div>
+        )}
       </div>
     </Modal>
   </>

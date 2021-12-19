@@ -115,7 +115,7 @@ function AppBar(): JSX.Element {
                           <a
                             className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                           >
-                            {i18n._(t`Bridge`)}
+                            {i18n._(t`Bridge`)} <sup>BETA</sup>
                           </a>
                         </NavLink>
                       )}
@@ -312,7 +312,7 @@ function AppBar(): JSX.Element {
                     <a
                       className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                     >
-                      {i18n._(t`Bridge`)}
+                      {i18n._(t`Bridge`)} <sup>BETA</sup>
                     </a>
                   </Link>
                 )}

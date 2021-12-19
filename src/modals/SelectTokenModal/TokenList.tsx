@@ -1,4 +1,4 @@
-import { Currency } from '../../sdk'
+import { Currency } from '@mistswapdex/sdk'
 import React, { useCallback, useRef } from 'react'
 
 import AutoSizer from 'react-virtualized-auto-sizer'

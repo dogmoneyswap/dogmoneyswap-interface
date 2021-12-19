@@ -18,14 +18,14 @@ import Web3Connect from '../../../components/Web3Connect'
 import { Loader } from 'react-feather'
 import { useETHBalances } from '../../../state/wallet/hooks'
 import axios from 'axios'
-import ReCAPTCHA from 'react-google-recaptcha'
-import { FAUCET_ADDRESS } from '../../../constants'
+// import ReCAPTCHA from 'react-google-recaptcha'
+// import { FAUCET_ADDRESS } from '../../../constants'
 import NavLink from '../../../components/NavLink'
 
 export default function Faucet(): JSX.Element {
   const { chainId, account, library } = useActiveWeb3React()
   const [token, setToken] = useState('')
-  const tokenBalance = useETHBalances([FAUCET_ADDRESS])
+  // const tokenBalance = useETHBalances([FAUCET_ADDRESS])
   const [pendingTx, setPendingTx] = useState(false)
   const [requested, setRequested] = useState(false)
   const [faucetResult, setFaucetResult] = useState({ status: 200, message: null })
@@ -68,15 +68,15 @@ export default function Faucet(): JSX.Element {
 
       <SolarbeamLogo />
 
-      <ReCAPTCHA
+      {/* <ReCAPTCHA
         ref={recaptchaRef}
         size="invisible"
         sitekey={'6LeaGV4cAAAAAE2HKmub-Ilnb7raS1JfhdfhfrP1'}
         onChange={onReCAPTCHAChange}
-      />
+      /> */}
 
       <Container maxWidth="2xl" className="space-y-6">
-        <DoubleGlowShadow opacity="0.6">
+        <DoubleGlowShadow /*opacity="0.6"*/>
           <div className="p-4 space-y-4 rounded bg-dark-900" style={{ zIndex: 1 }}>
             <div className="flex items-center justify-center mb-4 space-x-3">
               <div className="grid grid-cols-3 rounded p-3px bg-dark-800 h-[46px]">
@@ -128,16 +128,16 @@ export default function Faucet(): JSX.Element {
                   Solarbeam.io without having to buy MOVR somewhere else.
                 </Typography>
               </div>
-              <div className="flex flex-1 justify-center text-center items-center mt-8 mb-12">
+              <div className="flex items-center justify-center flex-1 mt-8 mb-12 text-center">
                 <Image src="/images/faucet/moonriver-faucet.png" alt="Solarbeam" width={150} height={150} />
               </div>
               <div className="p-4 mb-3 space-y-1 text-center">
                 <Typography component="h1" variant="base">
                   Faucet balance:{' '}
-                  {formatNumberScale(tokenBalance[FAUCET_ADDRESS]?.toSignificant(4, undefined, 2) ?? 0, false, 4)} MOVR
+                  {/* {formatNumberScale(tokenBalance[FAUCET_ADDRESS]?.toSignificant(4, undefined, 2) ?? 0, false, 4)} MOVR */}
                 </Typography>
                 <Typography component="h1" variant="base">
-                  Faucet Address: {FAUCET_ADDRESS}
+                  {/* Faucet Address: {FAUCET_ADDRESS} */}
                 </Typography>
               </div>
 

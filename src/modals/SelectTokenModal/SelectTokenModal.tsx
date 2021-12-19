@@ -1,4 +1,4 @@
-import { AbstractCurrency, Currency, Token } from '../../sdk'
+import { Currency } from '@mistswapdex/sdk'
 import React, { useCallback } from 'react'
 
 import CurrencyModalView from './CurrencyModalView'

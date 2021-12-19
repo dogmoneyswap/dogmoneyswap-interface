@@ -1,9 +1,15 @@
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import Fraction from './src/entities/Fraction'
+import { HopStatus } from './src/services/hop.cash'
+import { ShiftStatus } from './src/services/sideshift.ai'
 
 declare module 'fortmatic'
 
 declare global {
+  function hex2wif(hex): string
+  const Wallet: any
+  function OpReturnDataFromString(string): any
+
   interface String {
     toBigNumber(decimals: number): BigNumber
   }
@@ -15,6 +21,10 @@ declare global {
       autoRefreshOnNetworkChange?: boolean
     }
     web3?: Record<string, unknown>
+    hopStatus: HopStatus
+    hopwallet: any
+    shiftStatus: ShiftStatus
+    FromBlock: number
   }
 }
 

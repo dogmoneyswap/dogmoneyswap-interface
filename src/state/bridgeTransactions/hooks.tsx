@@ -8,7 +8,6 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { addTransaction } from './actions'
 import { useActiveWeb3React } from '../../hooks/useActiveWeb3React'
 import { useWeb3React } from '@web3-react/core'
-import { BridgeContextName } from '../../constants'
 
 export interface TransactionResponseLight {
   hash: string
