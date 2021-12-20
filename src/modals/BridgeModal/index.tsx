@@ -10,14 +10,16 @@ import ModalHeader from "../../components/ModalHeader";
 import { AutoRow } from "../../components/Row";
 import Typography from "../../components/Typography";
 import { formatNumber } from "../../functions";
-import { Chain, DEFAULT_CHAIN_FROM, DEFAULT_CHAIN_TO } from "../../pages/bridge";
+import { BridgeChains, Chain, DEFAULT_CHAIN_FROM, DEFAULT_CHAIN_TO } from "../../pages/bridge";
 
 import QRCode from "qrcode.react";
-import { HopDirection, hopInRefresh, HopStage, HopStatus, initHopWallet, showCCTransLogs } from "../../services/hop.cash";
+import { HopDirection, hopInRefresh, HopStage, HopStatus, initHopWallet, randomId, showCCTransLogs } from "../../services/hop.cash";
 import { useActiveWeb3React } from "../../hooks";
 import { ShiftStage, ShiftStatus, xaiOrder, xaiStatus } from "../../services/sideshift.ai";
 import Dots from "../../components/Dots";
 import Copy from "../../components/AccountDetails/Copy";
+import { useTransactionGetter, useTransactionUpdater } from "../../state/bridgeTransactions/hooks";
+import { TransactionDetails } from "../../state/bridgeTransactions/reducer";
 
 const shorten = (text: string, size = 5) => {
   if (text.length > 20) {
@@ -42,23 +44,35 @@ export interface DepositAddress {
 interface BridgeModalProps {
   isOpen: boolean;
   onDismiss: () => void;
-  currency0?: Currency;
-  currencyAmount?: string;
-  chainFrom?: Chain;
-  chainTo?: Chain;
-  methodId?: string;
+  // currency0?: Currency;
+  // currencyAmount?: string;
+  // chainFrom?: Chain;
+  // chainTo?: Chain;
+  // methodId?: string;
+  hash: string
 }
 
 export default function BridgeModal({
   isOpen,
   onDismiss,
-  currency0,
-  currencyAmount,
-  chainFrom,
-  chainTo,
-  methodId
+  // currency0,
+  // currencyAmount,
+  // chainFrom,
+  // chainTo,
+  // methodId,
+  hash
 }: BridgeModalProps) {
   const [statusText, setStatusText] = useState<string | null>("Initializing")
+
+  const transactionGetter = useTransactionGetter;
+  const transactionUpdater = useTransactionUpdater();
+
+  const { library: provider } = useActiveWeb3React()
+  let bridgeTransaction = transactionGetter(hash) || {} as TransactionDetails;
+
+  const { methodId, srcChainId, destChainId, symbol, initialAmount } = bridgeTransaction
+  const chainFrom = BridgeChains[srcChainId]
+  const chainTo = BridgeChains[destChainId]
 
   const address = (window.shiftStatus || {}).depositAddress || (window.hopStatus || {}).depositAddress || null
   const [depositAddress, setDepositAddress] = useState<string | null>(address)
@@ -66,16 +80,17 @@ export default function BridgeModal({
   const [destinationTag, setDestinationTag] = useState<number | null>(null)
   const [sideShiftOrderId, setSideShiftOrderId] = useState<string | null>(null)
 
-  const [bchTransactionId, setBchTransactionId] = useState<string | null>(null)
-  const [sbchTransactionId, setSbchTransactionId] = useState<string | null>(null)
+  const [bchTransactionId, setBchTransactionId] = useState<string | null>(bridgeTransaction.hopStatus?.bchTxId)
+  const [sbchTransactionId, setSbchTransactionId] = useState<string | null>(bridgeTransaction.hopStatus?.sbchTxId)
 
   const bridgeDirectionIn = chainFrom === DEFAULT_CHAIN_FROM && chainTo === DEFAULT_CHAIN_TO
   const bridgeDirectionOut = chainFrom === DEFAULT_CHAIN_TO && chainTo === DEFAULT_CHAIN_FROM
 
-  const shiftNeeded = !(chainFrom === DEFAULT_CHAIN_FROM && chainTo === DEFAULT_CHAIN_TO)
+  const shiftNeeded = methodId !== "bch"
   const hopDirection = (chainTo === DEFAULT_CHAIN_TO) ? HopDirection.in : HopDirection.out
 
-  const { library: provider } = useActiveWeb3React()
+  window.hopStatus = {...bridgeTransaction.hopStatus}
+  window.shiftStatus = {...bridgeTransaction.shiftStatus}
 
   useEffect(() => {
     const stateMachine = async () => {
@@ -83,10 +98,25 @@ export default function BridgeModal({
         // hop.cash state machine
         const hopStatus: HopStatus = {...(window.hopStatus || {})} as HopStatus
         const shiftStatus: ShiftStatus = {...(window.shiftStatus || {})} as ShiftStatus
+
         switch (hopStatus.stage) {
           case undefined:
           case HopStage.init:
             const {cashAddr, fromBlock} = await initHopWallet(provider)
+            // window.bridgeId = randomId();
+
+            // bridgeTransaction = {...bridgeTransaction, ...{
+            //   hash: window.bridgeId,
+            //   hopStatus: {...hopStatus},
+            //   shiftStatus: {...shiftStatus},
+            //   addedTime: new Date().getTime(),
+            //   initialAmount: initialAmount,
+            //   symbol: symbol,
+            //   from: await provider.getSigner().getAddress(),
+            //   srcChainId: chainFrom.id,
+            //   destChainId: chainTo.id,
+            // }};
+
             // sideshift.ai state machine
             if (!shiftNeeded) {
               setDepositAddress(cashAddr)
@@ -99,17 +129,23 @@ export default function BridgeModal({
                 case undefined:
                 case ShiftStage.init:
                   const cashAddr = hopStatus.depositAddress;
-                  const order = await xaiOrder(methodId, "bch", cashAddr);
-                  setDepositAddress(order.depositAddress.address)
-                  if (order.depositAddress.memo) setMemo(order.depositAddress.memo);
-                  if (order.depositAddress.destinationTag )setDestinationTag(order.depositAddress.destinationTag)
-                  setSideShiftOrderId(order.orderId)
+                  try {
+                    const order = await xaiOrder(methodId, "bch", cashAddr);
+                    setDepositAddress(order.depositAddress.address)
+                    if (order.depositAddress.memo) setMemo(order.depositAddress.memo);
+                    if (order.depositAddress.destinationTag )setDestinationTag(order.depositAddress.destinationTag)
+                    setSideShiftOrderId(order.orderId)
+                  } catch (error) {
+                    hopStatus.stage = HopStage.cancelled
+                    console.log(error)
+                    alert(error.message)
+                  }
                   break;
                 case ShiftStage.deposit:
                   setStatusText("Waiting for deposit");
                   break;
                 case ShiftStage.confirmation:
-                  setStatusText(`Waiting for ${currency0?.symbol} confirmations`);
+                  setStatusText(`Waiting for ${symbol} confirmations`);
                   setDepositAddress(null)
                   break;
                 case ShiftStage.settled:
@@ -140,25 +176,42 @@ export default function BridgeModal({
             break;
           case HopStage.cancelled:
             setStatusText("Bridge process cancelled");
-            window.hopStatus = undefined
             break;
         }
 
         if (hopStatus.stage != HopStage.settled && hopStatus.stage != HopStage.cancelled) {
-          setTimeout(stateMachine, 1000);
+          window.smTimeout = setTimeout(stateMachine, 1000)
+        }
+
+        const copy = {...bridgeTransaction}
+
+        bridgeTransaction = {...bridgeTransaction, ...{
+          hopStatus: hopStatus,
+          shiftStatus: shiftStatus,
+        }};
+
+        // todo: need a better take on this
+        if (bridgeTransaction.hash && JSON.stringify(copy) !== JSON.stringify(bridgeTransaction)) {
+          transactionUpdater(bridgeTransaction)
         }
       }
     };
     stateMachine();
   }, [isOpen]);
 
+  const onClose = () => {
+    clearTimeout(window.smTimeout)
+    isOpen = false
+    onDismiss()
+  }
+
   return (
   <>
-    <Modal isOpen={isOpen} onDismiss={onDismiss}>
+    <Modal isOpen={isOpen} onDismiss={onClose}>
       <div className="space-y-4">
-        <ModalHeader title={i18n._(t`Bridge ${currency0?.symbol}`)} onClose={onDismiss} />
+        <ModalHeader title={i18n._(t`Bridge ${symbol}`)} onClose={onClose} />
         <Typography variant="sm" className="font-medium">
-          {i18n._(t`Sending ${formatNumber(currencyAmount)} ${currency0?.symbol} from ${chainFrom?.name} network`)}
+          {i18n._(t`Sending ${formatNumber(initialAmount)} ${symbol} from ${chainFrom?.name} network`)}
         </Typography>
 
         {depositAddress && (<div>

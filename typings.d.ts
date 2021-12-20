@@ -25,6 +25,8 @@ declare global {
     hopwallet: any
     shiftStatus: ShiftStatus
     FromBlock: number
+    bridgeId: string
+    smTimeout: any
   }
 }
 

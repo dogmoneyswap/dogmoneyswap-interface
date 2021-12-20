@@ -13,30 +13,10 @@ import { t } from '@lingui/macro'
 import { useActiveWeb3React } from '../../hooks/useActiveWeb3React'
 import { useCurrencyBalance/*, useMultichainCurrencyBalance*/ } from '../../state/wallet/hooks'
 import { useLingui } from '@lingui/react'
-// import { Chain, DEFAULT_CHAIN_FROM, DEFAULT_CHAIN_TO } from '../../sdk/entities/Chain'
 import SelectTokenModal from '../../modals/SelectTokenModal/SelectTokenModal'
-import { AnyswapTokensMap } from '../../pages/bridge'
+import { AnyswapTokensMap, Chain } from '../../pages/bridge'
 import { useWeb3React } from '@web3-react/core'
-// import { BridgeContextName } from '../../constants'
 import { NETWORK_ICON, NETWORK_LABEL } from '../../config/networks'
-
-export type Chain = {
-  id: ChainId
-  name?: string
-  icon?: string
-}
-
-export const DEFAULT_CHAIN_FROM: Chain = {
-  id: ChainId.SMARTBCH,
-  icon: NETWORK_ICON[ChainId.SMARTBCH],
-  name: NETWORK_LABEL[ChainId.SMARTBCH],
-}
-
-export const DEFAULT_CHAIN_TO: Chain = {
-  id: ChainId.SMARTBCH,
-  icon: NETWORK_ICON[ChainId.SMARTBCH],
-  name: NETWORK_LABEL[ChainId.SMARTBCH],
-}
 
 interface CurrencyInputPanelProps {
   value?: string

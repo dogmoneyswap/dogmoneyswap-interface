@@ -52,7 +52,7 @@ export default function ChainSelect({
     >
       <Card
         className={
-          'hover:bg-dark-700 cursor-pointer h-full outline-none select-none cursor-pointer border-none text-xl font-medium items-center'
+          'hover:bg-dark-700 cursor-pointer h-full outline-none select-none border-none text-xl font-medium items-center'
         }
       >
         <div className="flex flex-col items-center justify-center">

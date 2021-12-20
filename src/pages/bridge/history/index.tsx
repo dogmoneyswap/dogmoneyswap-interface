@@ -1,7 +1,7 @@
 import {
   ChainId,
 } from '@mistswapdex/sdk'
-import React, { FC, useEffect, useMemo, useState } from 'react'
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
 
 import Container from '../../../components/Container'
 import Head from 'next/head'
@@ -17,8 +17,7 @@ import Button from '../../../components/Button'
 import { BottomGrouping } from '../../../features/exchange-v1/swap/styleds'
 import Web3Connect from '../../../components/Web3Connect'
 import { useWeb3React } from '@web3-react/core'
-import { isTransactionRecent, useAllTransactions } from '../../../state/bridgeTransactions/hooks'
-import { TransactionDetails } from '../../../state/transactions/reducer'
+import { useAllTransactions } from '../../../state/bridgeTransactions/hooks'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../../state'
 import { getExplorerLink } from '../../../functions/explorer'
@@ -30,6 +29,12 @@ import { RefreshCw } from 'react-feather'
 import moment from 'moment'
 import { FixedSizeList } from 'react-window'
 import { NETWORK_LABEL } from '../../../config/networks'
+import { TransactionDetails } from '../../../state/bridgeTransactions/reducer'
+import { BridgeChains } from '..'
+import { HopStage } from '../../../services/hop.cash'
+import { useAppDispatch } from '../../../state/hooks'
+import { deleteTransaction } from '../../../state/bridgeTransactions/actions'
+import BridgeModal from '../../../modals/BridgeModal'
 type AnyswapTokenInfo = {
   ID: string
   Name: string
@@ -79,45 +84,35 @@ function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
 }
 
-const Transaction: FC<{ chainId: string; hash: string }> = ({ chainId, hash }) => {
+const Transaction: FC<{ chainId: string; hash: string, onClick: (hash) => any }> = ({ chainId, hash, onClick }) => {
   const { i18n } = useLingui()
   const allTransactions = useAllTransactions()
-  const dispatch = useDispatch<AppDispatch>()
-  const [status, setStatus] = useState(null)
 
-  const tx = allTransactions?.[chainId][hash]
-  const summary = tx?.summary
+  const tx: TransactionDetails = allTransactions?.[hash]
+
+  if (!tx) {
+    return null
+  }
+
   const destChainId = tx?.destChainId
-  const srcChaindId = tx?.srcChaindId
+  const srcChainId = tx?.srcChainId
   const from = tx?.from
-  const pairId = tx?.pairId
+  const pairId = "asdf"
+  const status = tx?.hopStatus?.stage
 
-  const tzTime = parseInt(tx?.addedTime) / 1000
+  const tzTime = tx?.addedTime / 1000
 
   const addedTime = moment.unix(tzTime).fromNow()
+  const amount = tx?.initialAmount
+  const symbol = tx?.symbol
 
-  const getUrl = () => {
-    if (srcChaindId == ChainId.SMARTBCH) {
-      return `https://bridgeapi.anyswap.exchange/v2/getWithdrawHashStatus/${from}/${hash}/${srcChaindId}/${pairId}/${destChainId}`
-    } else {
-      return `https://bridgeapi.anyswap.exchange/v2/getHashStatus/${from}/${hash}/${destChainId}/${pairId}/${srcChaindId}`
-    }
-  }
-  const { data: anyswapInfo, error }: SWRResponse<any, Error> = useSWR(`${getUrl()}`, (url) =>
-    fetch(url)
-      .then((result) => result.json())
-      .then((data) => {
-        if (data && data.msg == 'Success') {
-          let resultStatus = data?.info?.status || 8
-          setStatus(resultStatus)
-        }
-      })
-  )
-
-  if (!chainId) return null
+  const dispatch = useAppDispatch()
+  const deleteTransactionCallback = useCallback((hash: string) => {
+    dispatch(deleteTransaction({hash}))
+  }, [dispatch])
 
   return (
-    <div className={'w-full px-2 py-2 text-left rounded select-none bg-dark-700  text-primary text-sm md:text-lg'}>
+    <div onClick={() => onClick(hash)} className={'w-full px-2 py-2 text-left rounded bg-dark-700  text-primary text-sm md:text-lg'}>
       <div className="flex flex-col px-2 md:px-0 md:flex-row">
         <div className="flex flex-row justify-between md:flex-none md:w-40">
           <div className="items-center text-base font-bold text-primary md:hidden">
@@ -129,23 +124,18 @@ const Transaction: FC<{ chainId: string; hash: string }> = ({ chainId, hash }) =
         </div>
         <div className="flex flex-row justify-between md:flex-grow">
           <div className="items-center text-base font-bold text-primary md:hidden">
-            <div className="w-40">{i18n._(t`Transaction`)}</div>
+            <div className="w-40">{i18n._(t`Asset`)}</div>
           </div>
-          <ExternalLink
-            href={getExplorerLink(parseInt(chainId), hash, 'transaction')}
-            className="flex items-center justify-between gap-2"
-          >
-            <Typography variant="sm" className="flex items-center hover:underline py-0.5">
-              {summary} ↗
-            </Typography>
-          </ExternalLink>
+          <Typography variant="sm" className="flex items-center py-0.5">
+            {amount} {symbol}
+          </Typography>
         </div>
         <div className="flex flex-row justify-between md:flex-none md:w-24">
           <div className="items-center text-base font-bold text-primary md:hidden">
             <div className="w-40">{i18n._(t`From`)}</div>
           </div>
           <Typography variant="sm" className="flex items-center py-0.5">
-            {NETWORK_LABEL[srcChaindId]}
+            {BridgeChains[srcChainId].name}
           </Typography>
         </div>
         <div className="flex flex-row justify-between md:flex-none md:w-24">
@@ -153,7 +143,7 @@ const Transaction: FC<{ chainId: string; hash: string }> = ({ chainId, hash }) =
             <div className="w-40">{i18n._(t`To`)}</div>
           </div>
           <Typography variant="sm" className="flex items-center py-0.5">
-            {NETWORK_LABEL[destChainId]}
+            {BridgeChains[destChainId].name}
           </Typography>
         </div>
         <div className="flex flex-row justify-between md:justify-end md:flex-none md:w-24 ">
@@ -162,19 +152,21 @@ const Transaction: FC<{ chainId: string; hash: string }> = ({ chainId, hash }) =
           </div>
           <Typography variant="sm" className="flex items-center md:py-0.5 justify-end">
             <div className={'text-primary'}>
-              {status === null ? (
-                <Loader stroke={'white'} />
-              ) : status == 0 ? (
-                'Pending'
-              ) : status == 8 ? (
-                'Processing'
-              ) : status == 9 ? (
-                'Minting'
-              ) : status == 10 ? (
-                'Complete'
-              ) : (
-                'Pending'
-              )}
+              {status === HopStage.settled ? 'Settled' : status === HopStage.cancelled ? 'Cancelled' : 'Pending'}
+            </div>
+          </Typography>
+        </div>
+        <div className="flex flex-row justify-between md:justify-end md:flex-none md:w-10">
+          <div className="items-center text-base font-bold text-primary md:hidden">
+            <div className="w-10"></div>
+          </div>
+          <Typography variant="sm" className="flex items-center md:py-0.5 justify-end">
+            <div className={'cursor-pointer text-primary'} onClick={(e) => {
+              e.stopPropagation()
+              e.nativeEvent.stopImmediatePropagation()
+              deleteTransactionCallback(hash)
+            }} >
+              🗑️
             </div>
           </Typography>
         </div>
@@ -185,24 +177,21 @@ const Transaction: FC<{ chainId: string; hash: string }> = ({ chainId, hash }) =
 
 function renderTransactions(
   address: string,
-  transactions: { [chainId: number]: { [txHash: string]: TransactionDetails } }
+  transactions: { [txHash: string]: TransactionDetails },
+  onClick: (hash) => any
 ) {
   const txs = []
-  Object.keys(transactions).forEach((chainId, i) => {
-    const chainTxs = transactions[chainId]
-    Object.keys(chainTxs).forEach((hash, idx) => {
-      const tx = chainTxs[hash]
-      if (tx.from.toString() == address?.toString()) {
-        txs.push({ ...tx, chainId, hash })
-      }
-    })
+  Object.values(transactions).forEach((tx, i) => {
+    if (tx.from == address?.toString()) {
+      txs.push({ ...tx, chainId: tx.srcChainId, hash: tx.hash })
+    }
   })
   return (
     <div className="flex flex-col gap-2 flex-nowrap">
       {txs
         .sort((tx, tx1) => tx1.addedTime - tx.addedTime)
         .map((tx, i) => {
-          return <Transaction key={i} hash={tx.hash} chainId={tx.chainId} />
+          return <Transaction key={i} hash={tx.hash} chainId={tx.chainId} onClick={onClick} />
         })}
     </div>
   )
@@ -217,24 +206,37 @@ export default function Bridge() {
 
   const allTransactions = useAllTransactions(refresher)
 
+  const [showBridgeModal, setShowBridgeModal] = useState(false)
+  const [bridgeTransactionHash, setBridgeTransactionHash] = useState<string | null>(null)
+
   useEffect(() => {
     // activate(bridgeInjected)
   }, [activate, chainId, activeAccount, activeChainId])
 
+  const onClick = (hash) => {
+    setBridgeTransactionHash(hash)
+    setShowBridgeModal(true)
+  }
+
   return (
     <>
+      {showBridgeModal && (<BridgeModal
+        isOpen={showBridgeModal}
+        hash={bridgeTransactionHash}
+        onDismiss={() => setShowBridgeModal(false)} />)}
+
       <Head>
-        <title>{i18n._(t`Bridge`)} | Solarbeam</title>
+        <title>{i18n._(t`Bridge`)} | MISTswap</title>
         <meta key="description" name="description" content="Bridge" />
       </Head>
 
-      <SolarbeamLogo />
+      {/* <SolarbeamLogo /> */}
 
       <Container maxWidth="2xl" className="space-y-6">
         <DoubleGlowShadow /*opacity="0.6"*/>
           <div className="p-4 space-y-4 rounded bg-dark-900" style={{ zIndex: 1 }}>
             <div className="flex items-center justify-center mb-4 space-x-3">
-              <div className="grid grid-cols-3 rounded p-3px bg-dark-800 h-[46px]">
+              <div className="grid grid-cols-2 rounded p-3px bg-dark-800 h-[46px]">
                 <NavLink
                   activeClassName="font-bold border rounded text-high-emphesis border-dark-700 bg-dark-700"
                   exact
@@ -261,7 +263,7 @@ export default function Bridge() {
                     </Typography>
                   </a>
                 </NavLink>
-                <NavLink
+                {/* <NavLink
                   activeClassName="font-bold border rounded text-high-emphesis border-dark-700 bg-dark-700"
                   exact
                   href={{
@@ -273,7 +275,7 @@ export default function Bridge() {
                       {i18n._(t`Faucet`)}
                     </Typography>
                   </a>
-                </NavLink>
+                </NavLink> */}
               </div>
             </div>
             <div className="p-4 text-center">
@@ -283,7 +285,7 @@ export default function Bridge() {
                 </Typography>
               </div>
             </div>
-            <div className="flex items-center justify-between px-4">
+            {/* <div className="flex items-center justify-between px-4">
               <Typography weight={700}></Typography>
               <div>
                 <RefreshCw
@@ -292,7 +294,7 @@ export default function Bridge() {
                   className={'font-emphasis hover:font-high-emphasis cursor-pointer'}
                 />
               </div>
-            </div>
+            </div> */}
             <BottomGrouping>
               {!account && activeAccount ? (
                 <Web3Connect size="lg" color="gradient" className="w-full" />
@@ -302,13 +304,14 @@ export default function Bridge() {
                     <>
                       <div className="flex items-center hidden px-2 text-base font-bold md:flex text-primary">
                         <div className="flex-none w-40">{i18n._(t`Date`)}</div>
-                        <div className="flex-grow">{i18n._(t`Transaction`)}</div>
+                        <div className="flex-grow">{i18n._(t`Asset`)}</div>
                         <div className="flex-none w-24">{i18n._(t`From`)}</div>
                         <div className="flex-none w-24">{i18n._(t`To`)}</div>
                         <div className="flex-none w-24 text-right">{i18n._(t`Status`)}</div>
+                        <div className="flex-none w-10"></div>
                       </div>
                       <div className="flex-col mt-2">
-                        {renderTransactions(activeAccount || account, allTransactions)}
+                        {renderTransactions(activeAccount || account, allTransactions, onClick)}
                       </div>
                     </>
                   ) : (

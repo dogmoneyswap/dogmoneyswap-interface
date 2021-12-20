@@ -45,7 +45,6 @@ import { ethers } from 'ethers'
 import Loader from '../../components/Loader'
 import { getWeb3ReactContext, useWeb3React } from '@web3-react/core'
 import NavLink from '../../components/NavLink'
-import { useTransactionAdder } from '../../state/bridgeTransactions/hooks'
 import { useRouter } from 'next/router'
 import Modal from '../../components/Modal'
 import ModalHeader from '../../components/ModalHeader'
@@ -56,7 +55,9 @@ import { default as bridge } from './bridge.json';
 import { useEthPrice } from '../../services/graph';
 import BridgeModal from '../../modals/BridgeModal';
 import { xaiGetPermissions, xaiQuote } from '../../services/sideshift.ai';
-import { getSmartBchPoolBalance } from '../../services/hop.cash';
+import { getSmartBchPoolBalance, randomId } from '../../services/hop.cash';
+import { useTransactionUpdater } from '../../state/bridgeTransactions/hooks';
+import { TransactionDetails } from '../../state/bridgeTransactions/reducer';
 
 type BridgeDataInfo = {
   methodId: string,
@@ -237,6 +238,7 @@ chainIds.forEach((chainId) => {
 
 export const DEFAULT_CHAIN_FROM: Chain = chains[0]
 export const DEFAULT_CHAIN_TO: Chain = chains[ChainId.SMARTBCH]
+export const BridgeChains = chains
 
 export default function Bridge() {
   const { i18n } = useLingui()
@@ -247,17 +249,18 @@ export default function Bridge() {
 
   const bchPrice = useEthPrice()
 
-  const addTransaction = useTransactionAdder()
+  const transactionUpdater = useTransactionUpdater();
+
   const currentChainFrom = chainId && chains[chainId] &&
     { id: chainId, icon: chains[chainId].icon, name: chains[chainId].name }
 
   const [chainFrom, setChainFrom] = useState<Chain | null>(DEFAULT_CHAIN_FROM)
   const [chainTo, setChainTo] = useState<Chain | null>(DEFAULT_CHAIN_TO)
-  const shiftNeeded = !(chainFrom === DEFAULT_CHAIN_FROM && chainTo === DEFAULT_CHAIN_TO)
   const [shiftAllowed, setShiftAllowed] = useState<boolean>(true)
   const hopDirection = (chainTo === DEFAULT_CHAIN_TO) ? "in" : "out"
 
   const [methodId, setMethodId] = useState<string | null>(null)
+  const [bridgeTransactionHash, setBridgeTransactionHash] = useState<string | null>(null)
 
   const [tokenList, setTokenList] = useState<Currency[] | null>([])
   const [currency0, setCurrency0] = useState<Currency | null>(null)
@@ -341,6 +344,8 @@ export default function Bridge() {
         tokenTo.other.FeeUsd = 0
         tokenTo.other.SwapRate = 1
 
+        const shiftNeeded = methodId !== "bch"
+
         if (shiftNeeded) {
           const allowed = await xaiGetPermissions();
           setShiftAllowed(allowed);
@@ -373,6 +378,26 @@ export default function Bridge() {
     },
     [anyswapInfo, chainFrom.id, handleTypeInput]
   )
+
+  const bridgeButtonClick = () => {
+    window.bridgeId = randomId();
+
+    const bridgeTransaction = {
+      hash: randomId(),
+      hopStatus: {},
+      shiftStatus: {},
+      addedTime: new Date().getTime(),
+      initialAmount: currencyAmount,
+      symbol: currency0.symbol,
+      from: activeAccount || account,
+      srcChainId: chainFrom.id,
+      destChainId: chainTo.id,
+      methodId: methodId
+    };
+    transactionUpdater(bridgeTransaction as TransactionDetails)
+    setShowBridgeModal(true)
+    setBridgeTransactionHash(bridgeTransaction.hash)
+  }
 
   type SwapInfo = {
     minimumAmount: number,
@@ -477,70 +502,70 @@ export default function Bridge() {
       ? `Confirming Transaction`
       : `Bridge ${currency0?.symbol}`
 
-  const bridgeToken = async () => {
-    const token = tokenToBridge.other
-    const depositAddress = currency0.chainId == ChainId.SMARTBCH ? token.ContractAddress : token.DepositAddress
+  // const bridgeToken = async () => {
+  //   const token = tokenToBridge.other
+  //   const depositAddress = currency0.chainId == ChainId.SMARTBCH ? token.ContractAddress : token.DepositAddress
 
-    const amountToBridge = ethers.utils.parseUnits(currencyAmount, token.Decimals)
-    setPendingTx(true)
+  //   const amountToBridge = ethers.utils.parseUnits(currencyAmount, token.Decimals)
+  //   setPendingTx(true)
 
-    try {
-      if (currency0.chainId == ChainId.SMARTBCH) {
-        if (currency0.isNative) {
-        } else if (currency0.isToken) {
-          const fn = anyswapCurrencyContract?.interface?.getFunction('Swapout')
-          const data = anyswapCurrencyContract.interface.encodeFunctionData(fn, [amountToBridge.toString(), account])
-          const tx = await library.getSigner().sendTransaction({
-            value: 0x0,
-            from: account,
-            to: currency0.address,
-            data,
-          })
-          addTransaction(tx, {
-            summary: `${i18n._(t`Bridge `)} ${tokenToBridge.symbol}`,
-            destChainId: chainTo.id.toString(),
-            srcChaindId: chainFrom.id.toString(),
-            pairId: tokenToBridge.id,
-          })
-          push('/bridge/history')
-        }
-      } else {
-        if (currency0.isNative) {
-          const tx = await library.getSigner().sendTransaction({
-            from: account,
-            to: depositAddress,
-            value: amountToBridge,
-          })
-          addTransaction(tx, {
-            summary: `${i18n._(t`Bridge `)} ${tokenToBridge.symbol}`,
-            destChainId: chainTo.id.toString(),
-            srcChaindId: chainFrom.id.toString(),
-            pairId: tokenToBridge.id,
-          })
-          push('/bridge/history')
-        } else if (currency0.isToken) {
-          const fn = currencyContract?.interface?.getFunction('transfer')
-          const data = currencyContract.interface.encodeFunctionData(fn, [depositAddress, amountToBridge.toString()])
-          const tx = await library.getSigner().sendTransaction({
-            value: 0x0,
-            from: account,
-            to: currency0.address,
-            data,
-          })
-          addTransaction(tx, {
-            summary: `${i18n._(t`Bridge `)} ${tokenToBridge.symbol}`,
-            destChainId: chainTo.id.toString(),
-            srcChaindId: chainFrom.id.toString(),
-            pairId: tokenToBridge.id,
-          })
-          push('/bridge/history')
-        }
-      }
-    } catch (ex) {
-    } finally {
-      setPendingTx(false)
-    }
-  }
+  //   try {
+  //     if (currency0.chainId == ChainId.SMARTBCH) {
+  //       if (currency0.isNative) {
+  //       } else if (currency0.isToken) {
+  //         const fn = anyswapCurrencyContract?.interface?.getFunction('Swapout')
+  //         const data = anyswapCurrencyContract.interface.encodeFunctionData(fn, [amountToBridge.toString(), account])
+  //         const tx = await library.getSigner().sendTransaction({
+  //           value: 0x0,
+  //           from: account,
+  //           to: currency0.address,
+  //           data,
+  //         })
+  //         addTransaction(tx, {
+  //           summary: `${i18n._(t`Bridge `)} ${tokenToBridge.symbol}`,
+  //           destChainId: chainTo.id.toString(),
+  //           srcChaindId: chainFrom.id.toString(),
+  //           pairId: tokenToBridge.id,
+  //         })
+  //         push('/bridge/history')
+  //       }
+  //     } else {
+  //       if (currency0.isNative) {
+  //         const tx = await library.getSigner().sendTransaction({
+  //           from: account,
+  //           to: depositAddress,
+  //           value: amountToBridge,
+  //         })
+  //         addTransaction(tx, {
+  //           summary: `${i18n._(t`Bridge `)} ${tokenToBridge.symbol}`,
+  //           destChainId: chainTo.id.toString(),
+  //           srcChaindId: chainFrom.id.toString(),
+  //           pairId: tokenToBridge.id,
+  //         })
+  //         push('/bridge/history')
+  //       } else if (currency0.isToken) {
+  //         const fn = currencyContract?.interface?.getFunction('transfer')
+  //         const data = currencyContract.interface.encodeFunctionData(fn, [depositAddress, amountToBridge.toString()])
+  //         const tx = await library.getSigner().sendTransaction({
+  //           value: 0x0,
+  //           from: account,
+  //           to: currency0.address,
+  //           data,
+  //         })
+  //         addTransaction(tx, {
+  //           summary: `${i18n._(t`Bridge `)} ${tokenToBridge.symbol}`,
+  //           destChainId: chainTo.id.toString(),
+  //           srcChaindId: chainFrom.id.toString(),
+  //           pairId: tokenToBridge.id,
+  //         })
+  //         push('/bridge/history')
+  //       }
+  //     }
+  //   } catch (ex) {
+  //   } finally {
+  //     setPendingTx(false)
+  //   }
+  // }
 
   const anyswapChains = Object.keys(anyswapInfo).map(val => parseInt(val)) //[ChainId.SMARTBCH]
   const availableChains = Object.keys(anyswapInfo || {})
@@ -551,11 +576,7 @@ export default function Bridge() {
     <>
       {showBridgeModal && (<BridgeModal
         isOpen={showBridgeModal}
-        chainFrom={chainFrom}
-        chainTo={chainTo}
-        currency0={currency0}
-        currencyAmount={currencyAmount}
-        methodId={methodId}
+        hash={bridgeTransactionHash}
         onDismiss={() => setShowBridgeModal(false)} />)}
       {/* <Modal isOpen={showBridgeModal} onDismiss={() => setShowBridgeModal(false)}>
         <div className="space-y-4">
@@ -594,7 +615,7 @@ export default function Bridge() {
         <DoubleGlowShadow /*opacity="0.6"*/>
           <div className="p-4 space-y-4 rounded bg-dark-900" style={{ zIndex: 1 }}>
             <div className="flex items-center justify-center mb-4 space-x-3">
-              <div className="grid grid-cols-3 rounded p-3px bg-dark-800 h-[46px]">
+              <div className="grid grid-cols-2 rounded p-3px bg-dark-800 h-[46px]">
                 <NavLink
                   activeClassName="font-bold border rounded text-high-emphesis border-dark-700 bg-dark-700"
                   exact
@@ -621,7 +642,7 @@ export default function Bridge() {
                     </Typography>
                   </a>
                 </NavLink>
-                <NavLink
+                {/* <NavLink
                   activeClassName="font-bold border rounded text-high-emphesis border-dark-700 bg-dark-700"
                   exact
                   href={{
@@ -633,7 +654,7 @@ export default function Bridge() {
                       {i18n._(t`Faucet`)}
                     </Typography>
                   </a>
-                </NavLink>
+                </NavLink> */}
               </div>
             </div>
 
@@ -689,7 +710,7 @@ export default function Bridge() {
                 <Web3Connect size="lg" color="gradient" className="w-full" />
               ) : (
                 <Button
-                  onClick={() => setShowBridgeModal(true)}
+                  onClick={bridgeButtonClick}
                   color={buttonDisabled ? 'gray' : 'gradient'}
                   size="lg"
                   disabled={buttonDisabled}

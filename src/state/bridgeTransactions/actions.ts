@@ -1,37 +1,10 @@
-import { ChainId } from '@mistswapdex/sdk'
 import { createAction } from '@reduxjs/toolkit'
+import { TransactionDetails } from './reducer'
 
-export interface SerializableTransactionReceipt {
-  to: string
-  from: string
-  contractAddress: string
-  transactionIndex: number
-  blockHash: string
-  transactionHash: string
-  blockNumber: number
-  status?: number
-}
+export const addTransaction = createAction<TransactionDetails>('bridgeTransactions/addTransaction')
 
-export const addTransaction = createAction<{
-  chainId: ChainId
-  hash: string
-  from: string
-  summary?: string
-  destChainId?: string
-  pairId?: string
-  srcChaindId?: string
-}>('bridgeTransactions/addTransaction')
+export const clearAllTransactions = createAction<{}>('bridgeTransactions/clearAllTransactions')
 
-export const clearAllTransactions = createAction<{ chainId: ChainId }>('bridgeTransactions/clearAllTransactions')
+export const updateTransaction = createAction<TransactionDetails>('bridgeTransactions/updateTransaction')
 
-export const finalizeTransaction = createAction<{
-  chainId: ChainId
-  hash: string
-  receipt: SerializableTransactionReceipt
-}>('bridgeTransactions/finalizeTransaction')
-
-export const checkedTransaction = createAction<{
-  chainId: ChainId
-  hash: string
-  blockNumber: number
-}>('bridgeTransactions/checkedTransaction')
+export const deleteTransaction = createAction<{hash: string}>('bridgeTransactions/deleteTransaction')

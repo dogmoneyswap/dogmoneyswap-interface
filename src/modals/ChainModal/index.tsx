@@ -2,9 +2,6 @@
 import { /*useChainModalToggle*/ useModalOpen, useNetworkModalToggle } from '../../state/application/hooks'
 
 import { ApplicationModal } from '../../state/application/actions'
-// import { BridgeContextName } from '../../constants'
-// import { Chain } from '../../sdk/entities/Chain'
-// import { ChainId } from '../../sdk'
 import {
   ChainId,
 } from '@mistswapdex/sdk'

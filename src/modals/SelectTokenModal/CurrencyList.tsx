@@ -23,7 +23,6 @@ import { useIsUserAddedToken } from '../../hooks/Tokens'
 import { useLingui } from '@lingui/react'
 import { formatNumberScale } from '../../functions'
 import { useWeb3React } from '@web3-react/core'
-// import { BridgeContextName } from '../../constants'
 import { ChainId } from '@mistswapdex/sdk'
 import Logo from '../../components/Logo'
 
