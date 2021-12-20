@@ -55,7 +55,7 @@ import { useTokenContract } from '../../hooks'
 import { default as bridge } from './bridge.json';
 import { useEthPrice } from '../../services/graph';
 import BridgeModal from '../../modals/BridgeModal';
-import { xaiQuote } from '../../services/sideshift.ai';
+import { xaiGetPermissions, xaiQuote } from '../../services/sideshift.ai';
 import { getSmartBchPoolBalance } from '../../services/hop.cash';
 
 type BridgeDataInfo = {
@@ -254,6 +254,7 @@ export default function Bridge() {
   const [chainFrom, setChainFrom] = useState<Chain | null>(DEFAULT_CHAIN_FROM)
   const [chainTo, setChainTo] = useState<Chain | null>(DEFAULT_CHAIN_TO)
   const shiftNeeded = !(chainFrom === DEFAULT_CHAIN_FROM && chainTo === DEFAULT_CHAIN_TO)
+  const [shiftAllowed, setShiftAllowed] = useState<boolean>(true)
   const hopDirection = (chainTo === DEFAULT_CHAIN_TO) ? "in" : "out"
 
   const [methodId, setMethodId] = useState<string | null>(null)
@@ -335,24 +336,40 @@ export default function Bridge() {
         const methodId = Object.values(anyswapInfo[chainFrom.id]).filter((val: AvailableChainsInfo) => (currency.chainId === ChainId.SMARTBCH) || (val.symbol == currency.symbol && val.name == currency.name))[0].id
         const tokenTo = anyswapInfo[chainFrom.id][methodId]
 
-        if (shiftNeeded) {
-          const quote = await xaiQuote(methodId)
+        tokenTo.other.MinimumSwap = 0
+        tokenTo.other.MaximumSwap = 0
+        tokenTo.other.FeeUsd = 0
+        tokenTo.other.SwapRate = 1
 
-          tokenTo.other.MinimumSwap = parseFloat(quote.min)
-          tokenTo.other.MaximumSwap = parseFloat(quote.max)
-          tokenTo.other.FeeUsd = parseFloat(quote.estimatedNetworkFeesUsd)
-          tokenTo.other.SwapRate = parseFloat(quote.rate)
+        if (shiftNeeded) {
+          const allowed = await xaiGetPermissions();
+          setShiftAllowed(allowed);
+
+          if (allowed) {
+            const quote = await xaiQuote(methodId)
+
+            tokenTo.other.MinimumSwap = parseFloat(quote.min)
+            tokenTo.other.MaximumSwap = parseFloat(quote.max)
+            tokenTo.other.FeeUsd = parseFloat(quote.estimatedNetworkFeesUsd)
+            tokenTo.other.SwapRate = parseFloat(quote.rate)
+          }
         } else {
+          if (!shiftAllowed) {
+            setShiftAllowed(true);
+          }
+
           const hopCashSbchMaximum = parseFloat(await getSmartBchPoolBalance(library))
 
           tokenTo.other.MinimumSwap = 0.01001000
           tokenTo.other.MaximumSwap = hopCashSbchMaximum
-          tokenTo.other.FeeUsd = 0.
-          tokenTo.other.SwapRate = 1
         }
         setTokenToBridge(tokenTo)
         setMethodId(methodId)
       }
+
+      // reset bridge state
+      window.shiftStatus = undefined
+      window.hopStatus = undefined
     },
     [anyswapInfo, chainFrom.id, handleTypeInput]
   )
@@ -445,6 +462,7 @@ export default function Bridge() {
     pendingTx
 
   const buttonText =
+    !shiftAllowed ? `Bridge forbidden (blocked country)` :
     !currency0
       ? `Select a Token`
       : !currencyAmount || currencyAmount == ''

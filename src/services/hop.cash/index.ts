@@ -31,6 +31,7 @@ export const HopStage = {
   deposit: literal("deposit"),
   sent: literal("sent"),
   settled: literal("settled"),
+	cancelled: literal("cancelled")
 }
 export type HopStage = typeof HopStage[keyof typeof HopStage];
 
@@ -53,12 +54,19 @@ export async function initHopWallet(provider: Web3Provider) {
 	const myAddr = await signer.getAddress();
 
   if (!window.hopwallet || (window.hopwallet && window.hopwallet.myAddr !== myAddr)) {
-    const signature = await signer.signMessage(`[Grant-Hop-Wallet]【授权Hop钱包】\n${myAddr}\nI hereby grant this website the permission to access my Hop-Wallet for above address.\n我郑重授权此网站访问以上地址的Hop钱包。`);
+    let signature;
+		try {
+			signature = await signer.signMessage(`[Grant-Hop-Wallet]【授权Hop钱包】\n${myAddr}\nI hereby grant this website the permission to access my Hop-Wallet for above address.\n我郑重授权此网站访问以上地址的Hop钱包。`);
+		} catch {
+			window.hopStatus.stage = HopStage.cancelled;
+			return {cashAddr: null, fromBlock: 0}
+		}
     let privKey = BigNumber.from(sha256(signature));
     const prime = BigNumber.from("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364140");
     privKey = privKey.mod(prime);
     const wif = hex2wif(privKey.toHexString().substr(2));
     window.hopwallet = await Wallet.fromWIF(wif);
+		window.hopwallet.myAddr = myAddr
   }
 
 	// show hop-wallet's address in text and QRCode

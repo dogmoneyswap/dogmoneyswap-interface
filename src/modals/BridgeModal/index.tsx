@@ -17,12 +17,20 @@ import { HopDirection, hopInRefresh, HopStage, HopStatus, initHopWallet, showCCT
 import { useActiveWeb3React } from "../../hooks";
 import { ShiftStage, ShiftStatus, xaiOrder, xaiStatus } from "../../services/sideshift.ai";
 import Dots from "../../components/Dots";
+import Copy from "../../components/AccountDetails/Copy";
 
-const shorten = (text: string) => {
-  if (text.length > 12) {
-    return `${text.slice(0, 5)}...${text.slice(-5)}`
+const shorten = (text: string, size = 5) => {
+  if (text.length > 20) {
+    return `${text.slice(0, size)}...${text.slice(-size)}`
   }
   return text
+}
+
+const needsDots = (message: string) => {
+  if (message.includes("cancelled") || message.includes("arrived to destination")) {
+    return false
+  }
+  return true
 }
 
 export interface DepositAddress {
@@ -52,7 +60,8 @@ export default function BridgeModal({
 }: BridgeModalProps) {
   const [statusText, setStatusText] = useState<string | null>("Initializing")
 
-  const [depositAddress, setDepositAddress] = useState<string | null>(null)
+  const address = (window.shiftStatus || {}).depositAddress || (window.hopStatus || {}).depositAddress || null
+  const [depositAddress, setDepositAddress] = useState<string | null>(address)
   const [memo, setMemo] = useState<string | null>(null)
   const [destinationTag, setDestinationTag] = useState<number | null>(null)
   const [sideShiftOrderId, setSideShiftOrderId] = useState<string | null>(null)
@@ -129,9 +138,13 @@ export default function BridgeModal({
             setSbchTransactionId(hopStatus.sbchTxId);
             setStatusText("Funds arrived to destination");
             break;
+          case HopStage.cancelled:
+            setStatusText("Bridge process cancelled");
+            window.hopStatus = undefined
+            break;
         }
 
-        if (hopStatus.stage != HopStage.settled) {
+        if (hopStatus.stage != HopStage.settled && hopStatus.stage != HopStage.cancelled) {
           setTimeout(stateMachine, 1000);
         }
       }
@@ -153,9 +166,9 @@ export default function BridgeModal({
             <QRCode size={200}  value={depositAddress} includeMargin={true} />
           </div>
           <div className="flex items-center justify-center">
-            <Typography className="font-medium" variant="sm">
-              {depositAddress}
-            </Typography>
+            <Copy toCopy={depositAddress}>
+              <Typography variant="sm">{shorten(depositAddress, 10)}</Typography>
+            </Copy>
           </div>
         </div>)}
         {memo && (
@@ -205,10 +218,10 @@ export default function BridgeModal({
 
         {statusText && (
           <div className="flex items-center justify-center">
-            {!statusText.includes("arrived to destination") && (<Dots>
+            {needsDots(statusText) && (<Dots>
               {statusText}
             </Dots>)}
-            {statusText.includes("arrived to destination") && (<div>{statusText}</div>)}
+            {!needsDots(statusText) && (<div>{statusText}</div>)}
           </div>
         )}
       </div>
