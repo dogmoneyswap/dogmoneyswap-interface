@@ -90,10 +90,6 @@ const Transaction: FC<{ chainId: string; hash: string, onClick: (hash) => any }>
 
   const tx: TransactionDetails = allTransactions?.[hash]
 
-  if (!tx) {
-    return null
-  }
-
   const destChainId = tx?.destChainId
   const srcChainId = tx?.srcChainId
   const from = tx?.from
