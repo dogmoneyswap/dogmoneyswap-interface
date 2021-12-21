@@ -37,7 +37,7 @@ export type Chain = {
 import { useBridgeInfo } from '../../features/bridge/hooks'
 import useSWR, { SWRResponse } from 'swr'
 import { getAddress } from '@ethersproject/address'
-import { formatNumber, formatPrice } from '../../functions'
+import { classNames, formatNumber, formatPrice } from '../../functions'
 import { SUPPORTED_NETWORKS } from '../../modals/ChainModal'
 // import { NETWORK_ICON, NETWORK_LABEL } from '../../constants/networks'
 import { ethers } from 'ethers'
@@ -55,9 +55,10 @@ import { default as bridge } from './bridge.json';
 import { useEthPrice } from '../../services/graph';
 import BridgeModal from '../../modals/BridgeModal';
 import { xaiGetPermissions, xaiQuote } from '../../services/sideshift.ai';
-import { getSmartBchPoolBalance, randomId } from '../../services/hop.cash';
+import { getBchPoolBalance, getSmartBchPoolBalance, HopDirection, randomId } from '../../services/hop.cash';
 import { useTransactionUpdater } from '../../state/bridgeTransactions/hooks';
 import { TransactionDetails } from '../../state/bridgeTransactions/reducer';
+import CashAddressInput from '../../components/Input/Cashaddress';
 
 type BridgeDataInfo = {
   methodId: string,
@@ -261,6 +262,7 @@ export default function Bridge() {
 
   const [methodId, setMethodId] = useState<string | null>(null)
   const [bridgeTransactionHash, setBridgeTransactionHash] = useState<string | null>(null)
+  const [destinationAddress, setDestinationAddress] = useState<string | null>("")
 
   const [tokenList, setTokenList] = useState<Currency[] | null>([])
   const [currency0, setCurrency0] = useState<Currency | null>(null)
@@ -346,27 +348,32 @@ export default function Bridge() {
 
         const shiftNeeded = methodId !== "bch"
 
+        let hopCashMaximum: number
+        if (hopDirection === HopDirection.in) {
+          hopCashMaximum = library ? parseFloat(await getSmartBchPoolBalance(library)) || 0. : 0.
+        } else {
+          hopCashMaximum = parseFloat(await getBchPoolBalance()) || 0.
+        }
+
         if (shiftNeeded) {
-          const allowed = await xaiGetPermissions();
-          setShiftAllowed(allowed);
+          const allowed = await xaiGetPermissions()
+          setShiftAllowed(allowed)
 
           if (allowed) {
             const quote = await xaiQuote(methodId)
 
             tokenTo.other.MinimumSwap = parseFloat(quote.min)
-            tokenTo.other.MaximumSwap = parseFloat(quote.max)
+            tokenTo.other.MaximumSwap = Math.min(parseFloat(quote.max), hopCashMaximum)
             tokenTo.other.FeeUsd = parseFloat(quote.estimatedNetworkFeesUsd)
             tokenTo.other.SwapRate = parseFloat(quote.rate)
           }
         } else {
           if (!shiftAllowed) {
-            setShiftAllowed(true);
+            setShiftAllowed(true)
           }
 
-          const hopCashSbchMaximum = parseFloat(await getSmartBchPoolBalance(library))
-
           tokenTo.other.MinimumSwap = 0.01001000
-          tokenTo.other.MaximumSwap = hopCashSbchMaximum
+          tokenTo.other.MaximumSwap = hopCashMaximum
         }
         setTokenToBridge(tokenTo)
         setMethodId(methodId)
@@ -392,7 +399,8 @@ export default function Bridge() {
       from: activeAccount || account,
       srcChainId: chainFrom.id,
       destChainId: chainTo.id,
-      methodId: methodId
+      methodId: methodId,
+      destinationAddress: destinationAddress
     };
     transactionUpdater(bridgeTransaction as TransactionDetails)
     setShowBridgeModal(true)
@@ -568,9 +576,12 @@ export default function Bridge() {
   // }
 
   const anyswapChains = Object.keys(anyswapInfo).map(val => parseInt(val)) //[ChainId.SMARTBCH]
-  const availableChains = Object.keys(anyswapInfo || {})
+  let availableChains = Object.keys(anyswapInfo || {})
     .map((r) => parseInt(r))
     .filter((r) => anyswapChains.includes(r))
+
+  // put smartbch on the top
+  availableChains = [ChainId.SMARTBCH, ...availableChains.filter(val => val !== ChainId.SMARTBCH)]
 
   return (
     <>
@@ -704,6 +715,19 @@ export default function Bridge() {
               tokenList={tokenList}
               chainList={anyswapInfo}
             />
+
+            {chainTo === BridgeChains[0] && <div className={classNames('mt-0 pt-0 p-5 rounded rounded-t-none bg-dark-800')} style={{margin: 0}}>
+              <div className={"flex flex-col items-center md:text-xl text-base justify-between space-y-3 sm:space-y-0 sm:flex-row"}>
+                <div className={classNames('w-full sm:w-72')}>
+                  Destination address
+                </div>
+                <div className={classNames('flex items-center w-full space-x-3 rounded bg-dark-900 focus:bg-dark-700 p-3')}>
+                  <CashAddressInput className='h-10 font-bold'
+                    value={destinationAddress}
+                    onUserInput={(value) => setDestinationAddress(value)} />
+                </div>
+              </div>
+            </div>}
 
             <BottomGrouping>
               {!account ? (

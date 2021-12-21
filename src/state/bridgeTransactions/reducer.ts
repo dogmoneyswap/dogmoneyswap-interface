@@ -26,6 +26,7 @@ export interface TransactionDetails {
   methodId?: string
   initialAmount: string
   finalAmount?: string
+  destinationAddress: string
 }
 
 export interface TransactionState {
