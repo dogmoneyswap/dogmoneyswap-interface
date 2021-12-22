@@ -2,7 +2,8 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { arrayify, hexlify, hexZeroPad } from '@ethersproject/bytes';
 import { id } from '@ethersproject/hash';
 import { Web3Provider } from "@ethersproject/providers";
-import { formatUnits } from '@ethersproject/units';
+import { toUtf8Bytes } from '@ethersproject/strings';
+import { formatUnits, parseUnits } from '@ethersproject/units';
 import { randomBytes } from 'crypto';
 import { sha256 } from "ethers/utils/sha2";
 
@@ -27,7 +28,6 @@ export const HopDirection = {
 export type HopDirection = typeof HopDirection[keyof typeof HopDirection];
 
 export const HopStage = {
-  unknown: literal("unknown"),
   init: literal("init"),
   deposit: literal("deposit"),
   sent: literal("sent"),
@@ -45,56 +45,323 @@ export interface HopStatus {
   sbchAmount: string
   fromBlock: number
   depositAddress: string
+  destinationAddress: string
+  errorMessage: string
 }
+
+export class HopProcess implements HopStatus {
+  direction: HopDirection
+  stage: HopStage
+  bchTxId: string
+  sbchTxId: string
+  bchAmount: string
+  sbchAmount: string
+  fromBlock: number
+  depositAddress: string
+  destinationAddress: string
+  errorMessage: string
+
+  provider: Web3Provider
+
+  static fromObject(object: HopStatus, provider: Web3Provider): HopProcess {
+    const process = new this();
+
+    process.direction = object.direction;
+    process.stage = object.stage;
+    process.bchTxId = object.bchTxId;
+    process.sbchTxId = object.sbchTxId;
+    process.bchAmount = object.bchAmount;
+    process.sbchAmount = object.sbchAmount;
+    process.fromBlock = object.fromBlock;
+    process.depositAddress = object.depositAddress;
+    process.destinationAddress = object.destinationAddress;
+    process.errorMessage = object.errorMessage;
+    process.provider = provider;
+
+    return process;
+  }
+
+  toObject(): HopProcess {
+    const copy = {...this};
+    delete copy.provider;
+    return copy;
+  }
+
+  cancel(message: string) {
+		this.stage = HopStage.cancelled;
+    this.errorMessage = message;
+  }
+
+  async init() {
+    this.stage = HopStage.deposit;
+  }
+
+  async checkDeposit() {
+    this.stage = HopStage.sent
+  }
+
+  async checkArrival() {
+    this.stage = HopStage.settled
+  }
+
+	async work() {
+    switch (this.stage) {
+      case undefined:
+      case HopStage.init:
+        await this.init();
+        break;
+      case HopStage.deposit:
+        await this.checkDeposit();
+        break;
+      case HopStage.sent:
+        await this.checkArrival();
+        break;
+    }
+  }
+}
+
+export class HopInProcess extends HopProcess {
+  hopwallet: any;
+
+  constructor() {
+    super();
+    this.direction = HopDirection.in;
+  }
+
+  toObject() {
+    const copy = super.toObject() as HopInProcess;
+    delete copy.hopwallet;
+    return copy;
+  }
+
+  private async getHopWallet(provider: Web3Provider) {
+    const signer = provider.getSigner();
+    const myAddr = await signer.getAddress();
+
+    if (!window.hopwallet || (window.hopwallet && window.hopwallet.myAddr !== myAddr)) {
+      // throws upon cancellation
+      const signature = await signer.signMessage(`[Grant-Hop-Wallet]【授权Hop钱包】\n${myAddr}\nI hereby grant this website the permission to access my Hop-Wallet for above address.\n我郑重授权此网站访问以上地址的Hop钱包。`);
+      let privKey = BigNumber.from(sha256(signature));
+      const prime = BigNumber.from("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364140");
+      privKey = privKey.mod(prime);
+      const wif = hex2wif(privKey.toHexString().substr(2));
+      window.hopwallet = await Wallet.fromWIF(wif);
+      window.hopwallet.myAddr = myAddr;
+    }
+
+    return window.hopwallet;
+  }
+
+  async init() {
+    this.stage = HopStage.init;
+
+    if (!this.provider) {
+      this.cancel("Web3 provider not initialized");
+      return;
+    }
+
+    if (!this.destinationAddress) {
+      this.cancel("Destination address not set");
+      return;
+    }
+
+    try {
+      this.hopwallet = await this.getHopWallet(this.provider);
+    } catch {
+      this.cancel("Rejected by user");
+      return;
+    }
+
+    // show hop-wallet's address in text and QRCode
+    this.depositAddress = this.hopwallet.getDepositAddress();
+
+    // hop-wallet will watch the incoming coins inside the hopInRefresh function
+    this.fromBlock = await this.provider.getBlockNumber();
+    this.stage = HopStage.deposit;
+  }
+
+  async checkDeposit() {
+    if (!this.hopwallet) {
+      try {
+        this.hopwallet = await this.getHopWallet(this.provider);
+      } catch {
+        this.cancel("Rejected by user");
+        return;
+      }
+    }
+
+    // Check Main Chain
+    const maxAmount = await this.hopwallet.getMaxAmountToSend(2);
+    const balance = await this.hopwallet.getBalance('sat');
+    if(balance >= 1000000/*0.01BCH*/) {
+      const amt = maxAmount.sat - 400 // 400 sats margin, for getMaxAmountToSend is not accurate
+      const txData = await this.hopwallet.send([
+        OpReturnDataFromString(this.destinationAddress), //first output is just OP_RETURN
+        {cashaddr: IncomeAddrOnBCH, value: amt, unit: "sat"}, //second output has BCH
+      ]);
+      const a = amt/100000000.0;
+
+      this.stage = HopStage.sent
+      this.bchTxId = txData.txId
+      this.bchAmount = String(a)
+    }
+  }
+
+  // show the cross-chain transfer logs in a "divId" div
+  async checkArrival() {
+    // Check Side Chain's Transfer event, because coins are send through SEP206 calls
+    const Bridged = id("Bridged(bytes32,address,address,uint256)");
+    const myAddrPad32 = hexZeroPad(this.destinationAddress, 32);
+    const senderAddrPad32 = hexZeroPad(PoolAddrOnSmartBCH, 32);
+    const hopAddr = CCTransAddress;
+    var filter = {address: hopAddr, topics: [Bridged, null, senderAddrPad32, myAddrPad32], toBlock: 0, fromBlock: 0};
+    filter.toBlock = 10000*10000 // a very large value
+    filter.fromBlock = this.fromBlock;
+    var logs = await this.provider.getLogs(filter);
+
+    const end = Math.max(0, logs.length-20) // at most 20 entries
+    let amount;
+    for(var i=logs.length-1; i>=end; i--) {
+      const h = logs[i].blockNumber
+      amount = formatUnits(logs[i].data);
+
+      this.stage = HopStage.settled
+      this.sbchTxId = logs[i].transactionHash
+      this.sbchAmount = amount
+      this.fromBlock = h + 1;
+      break;
+    }
+  }
+}
+
+export class HopOutProcess extends HopProcess {
+  provider: Web3Provider;
+  recipientWallet: any;
+  lastSeenBalance: any;
+
+  constructor() {
+    super();
+    this.direction = HopDirection.out;
+  }
+
+  toObject() {
+    const copy = super.toObject() as HopOutProcess;
+    delete copy.recipientWallet;
+    return copy;
+  }
+
+  private async initRecipientWallet() {
+    this.recipientWallet = await Wallet.watchOnly(this.destinationAddress);
+    this.lastSeenBalance = await this.recipientWallet.getBalance("sat");
+  }
+
+  async init() {
+    if (!this.provider) {
+      this.cancel("Web3 provider not initialized");
+      return;
+    }
+
+    if (!this.destinationAddress) {
+      this.cancel("Deposit address on BCH main chain was not provided");
+      return;
+    }
+
+    this.stage = HopStage.init;
+
+    if(!bchaddr.isValidAddress(this.destinationAddress) || bchaddr.isBitpayAddress(this.destinationAddress)) {
+      this.cancel(`Invalid address for BCH main chain: ${this.destinationAddress}`);
+      return;
+    }
+
+    if(this.provider.network.chainId != 10000) {
+      this.cancel("You are not in smartBCH network.");
+      return;
+    }
+
+    const signer = this.provider.getSigner();
+    const balance256 = await this.provider.getBalance(await signer.getAddress())
+    const balance = parseFloat(formatUnits(balance256)) * 1.0
+    var amount = parseFloat(this.sbchAmount) * 1.0
+    if(amount <= 0) {
+      this.cancel("Please enter valid transfer amount.");
+      return;
+    }
+    var poolBalance: string | number = await getBchPoolBalance() //as string
+    if(poolBalance.length == 0) {
+      this.cancel("Cannot get the pool's balance on BCH main chain.");
+      return;
+    }
+    poolBalance = parseFloat(poolBalance) * 1.0 // as number
+    if(poolBalance < amount) {
+      this.cancel(`The coins in pool are not enough for this transfer. ${poolBalance} < ${amount}`);
+      return;
+    }
+    if(balance < amount + 0.00005/*estimated gas fee*/) {
+      this.cancel(`Your balance (${balance}) is not enough for this transfer.`);
+      return;
+    }
+    if(amount < 0.01) {
+      this.cancel(`The minimum amount for cross-chain transfer is 0.01`);
+      return;
+    }
+
+    //record the recipient's balance before transfer cross-chain coins to it
+    await this.initRecipientWallet();
+
+    var fee = Math.max(amount * 0.001, 0.0001);
+    amount = amount - fee;
+    amount = parseFloat(amount.toFixed(8))*1.0;
+    this.bchAmount = String(amount);
+
+    this.stage = HopStage.deposit;
+  }
+
+  async checkDeposit() {
+    try {
+      var amount = parseFloat(this.sbchAmount) * 1.0
+      const amount256 = parseUnits(amount.toString())
+      const txReq = {
+        to: IncomeAddrOnSmartBCH,
+        value: amount256,
+        data: hexlify(toUtf8Bytes(this.destinationAddress)),
+        gasPrice: BigNumber.from("0x3e63fa64"), //1.05Gwei
+      };
+
+      const signer = this.provider.getSigner();
+      const txResp = await signer.sendTransaction(txReq);
+
+      this.sbchTxId = txResp.hash;
+      this.stage = HopStage.sent;
+    } catch {
+      this.cancel("Rejected by user");
+      return;
+    }
+  }
+
+  // show the cross-chain transfer logs in a "divId" div
+  async checkArrival() {
+    if (!this.recipientWallet) {
+      await this.initRecipientWallet();
+    }
+
+    const balance = await this.recipientWallet.getBalance("sat");
+    if (balance == this.lastSeenBalance) return;
+    const b = balance / 100000000.0;
+    const lb = this.lastSeenBalance / 100000000.0;
+    this.lastSeenBalance = balance;
+    var diff = b-lb;
+    diff = parseFloat(diff.toFixed(8))*1.0;
+
+    const history = await this.recipientWallet.getHistory();
+    this.bchTxId = history.slice(-1)[0].tx_hash;
+    this.stage = HopStage.settled;
+  }
+}
+
+
 
 export function randomId() {
 	return hexlify(arrayify(randomBytes(10)));
-}
-
-async function getHopWallet(provider: Web3Provider) {
-	const signer = provider.getSigner();
-	const myAddr = await signer.getAddress();
-
-  if (!window.hopwallet || (window.hopwallet && window.hopwallet.myAddr !== myAddr)) {
-		// throws upon cancellation
-		const signature = await signer.signMessage(`[Grant-Hop-Wallet]【授权Hop钱包】\n${myAddr}\nI hereby grant this website the permission to access my Hop-Wallet for above address.\n我郑重授权此网站访问以上地址的Hop钱包。`);
-    let privKey = BigNumber.from(sha256(signature));
-    const prime = BigNumber.from("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364140");
-    privKey = privKey.mod(prime);
-    const wif = hex2wif(privKey.toHexString().substr(2));
-    window.hopwallet = await Wallet.fromWIF(wif);
-		window.hopwallet.myAddr = myAddr;
-  }
-
-	return window.hopwallet;
-}
-
-// Initialize the hop-wallet, whose private key is the hash of a signature generated by web3-wallet
-export async function initHopWallet(provider: Web3Provider) {
-	if (!provider)
-		return
-
-  window.hopStatus = { stage: HopStage.unknown } as HopStatus;
-
-	try {
-		await getHopWallet(provider);
-	} catch {
-		window.hopStatus.stage = HopStage.cancelled;
-		return {cashAddr: null, fromBlock: 0}
-	}
-
-	// show hop-wallet's address in text and QRCode
-	const cashAddr = window.hopwallet.getDepositAddress();
-
-	// hop-wallet will watch the incoming coins inside the hopInRefresh function
-	const fromBlock = await provider.getBlockNumber();
-  window.FromBlock = fromBlock;
-
-  window.hopStatus.stage = HopStage.deposit;
-  window.hopStatus.fromBlock = fromBlock;
-  window.hopStatus.depositAddress = cashAddr;
-
-  return {cashAddr, fromBlock};
 }
 
 export async function getBchPoolBalance(): Promise<string> {
@@ -105,76 +372,4 @@ export async function getBchPoolBalance(): Promise<string> {
 export async function getSmartBchPoolBalance(provider): Promise<string> {
 	const balance256 = await provider.getBalance(PoolAddrOnSmartBCH);
 	return formatUnits(balance256);
-}
-
-// Check whether there is enough coins sent into hop-wallet, and if so, send them to IncomeAddrOnBCH, with the 
-// cross-chain target address (ccTargetAddr) embedded inside OP_RETURN
-// Check whether PoolAddrOnBCH has sent coins to the cross-chain target address
-export async function hopInRefresh(provider: Web3Provider) {
-  window.hopStatus.stage = HopStage.deposit
-  window.hopStatus.direction = HopDirection.in
-
-	const signer = provider.getSigner();
-	const ccTargetAddr = await signer.getAddress();
-
-	try {
-		await getHopWallet(provider);
-	} catch {
-		window.hopStatus.stage = HopStage.cancelled;
-		return
-	}
-
-	// Check Main Chain
-	const maxAmount = await window.hopwallet.getMaxAmountToSend(2);
-	const balance = await window.hopwallet.getBalance('sat');
-	if(balance >= 1000000/*0.01BCH*/) {
-		const amt = maxAmount.sat - 400 // 400 sats margin, for getMaxAmountToSend is not accurate
-		const txData = await window.hopwallet.send([
-			OpReturnDataFromString(ccTargetAddr), //first output is just OP_RETURN
-			{cashaddr: IncomeAddrOnBCH, value: amt, unit: "sat"}, //second output has BCH
-		]);
-		const a = amt/100000000.0;
-		const b = balance/100000000.0;
-		// const text = T(`[First Step] Found ${b} BCH in your Hop-Wallet. After miner fees, sending ${a} BCH to the bridge. Please do not refresh, or progress will be hidden. Transaction id: //【第一步成功】发现Hop钱包余额为${b}，扣除矿工费之后，${a}个BCH已被发送至跨链桥。请不要刷新，否则将无法追踪进度。交易ID：`);
-		// AddToDiv("inProgress", text, makeBchTxLink(txData.txId));
-		// document.getElementById("inHistory").style.display = "none"
-    window.hopStatus.stage = HopStage.sent
-    window.hopStatus.bchTxId = txData.txId
-    window.hopStatus.bchAmount = String(a)
-	}
-	window.FromBlock = await showCCTransLogs("inProgress", provider, ccTargetAddr, window.FromBlock);
-}
-
-// show the cross-chain transfer logs in a "divId" div
-export async function showCCTransLogs(divId, provider, ccTargetAddr, fromBlock) {
-	// Check Side Chain's Transfer event, because coins are send through SEP206 calls
-	const Bridged = id("Bridged(bytes32,address,address,uint256)");
-	const myAddrPad32 = hexZeroPad(ccTargetAddr, 32);
-	const senderAddrPad32 = hexZeroPad(PoolAddrOnSmartBCH, 32);
-	const senderAddrList = [senderAddrPad32]
-	var tokenIdList = [];
-	const hopAddr = "0xBAe8Af26E08D3332C7163462538B82F0CBe45f2a";
-	var filter = {address: hopAddr, topics: [Bridged, null, senderAddrPad32, myAddrPad32], toBlock: 0, fromBlock: 0};
-	filter.toBlock = 10000*10000 // a very large value
-	filter.fromBlock = fromBlock;
-	var logs = await provider.getLogs(filter);
-	//console.log("found logs", logs);
-	const end = Math.max(0, logs.length-20) // at most 20 entries
-	let amount;
-  for(var i=logs.length-1; i>=end; i--) {
-		const h = logs[i].blockNumber
-		fromBlock = h + 1;
-		amount = formatUnits(logs[i].data);
-
-    window.hopStatus.stage = HopStage.settled
-    window.hopStatus.sbchTxId = logs[i].transactionHash
-    window.hopStatus.sbchAmount = amount
-    window.hopStatus.fromBlock = fromBlock
-    break;
-		// const text = T(`[Cross-chain finished, reload for another tx] After deducting the cross-chain fee, ${amount} BCH were sent to your smartBCH account at height ${h}, in this transaction: //【跨链完成，进行另一笔交易请刷新】扣除跨链手续费之后，${amount}个BCH被发送至您的smartBCH账户，区块高度${h}，交易ID：`);
-		// window.FinishedCrossChainOnce = true;
-		// AddToDiv(divId, text, makeSmartBchTxLink(logs[i].transactionHash));
-	}
-
-  return fromBlock;
 }

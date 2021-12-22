@@ -378,20 +378,16 @@ export default function Bridge() {
         setTokenToBridge(tokenTo)
         setMethodId(methodId)
       }
-
-      // reset bridge state
-      window.shiftStatus = undefined
-      window.hopStatus = undefined
     },
     [anyswapInfo, chainFrom.id, handleTypeInput]
   )
 
   const bridgeButtonClick = () => {
-    window.bridgeId = randomId();
+    const address = hopDirection === HopDirection.in ? account : destinationAddress;
 
     const bridgeTransaction = {
       hash: randomId(),
-      hopStatus: {},
+      hopStatus: { destinationAddress: address, direction: hopDirection },
       shiftStatus: {},
       addedTime: new Date().getTime(),
       initialAmount: currencyAmount,
@@ -400,9 +396,14 @@ export default function Bridge() {
       srcChainId: chainFrom.id,
       destChainId: chainTo.id,
       methodId: methodId,
-      destinationAddress: destinationAddress
-    };
-    transactionUpdater(bridgeTransaction as TransactionDetails)
+      destinationAddress: address
+    } as TransactionDetails;
+
+    if (hopDirection === HopDirection.out) {
+      bridgeTransaction.hopStatus.sbchAmount = currencyAmount;
+    }
+
+    transactionUpdater(bridgeTransaction)
     setShowBridgeModal(true)
     setBridgeTransactionHash(bridgeTransaction.hash)
   }

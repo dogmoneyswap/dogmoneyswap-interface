@@ -13,7 +13,7 @@ import { formatNumber } from "../../functions";
 import { BridgeChains, Chain, DEFAULT_CHAIN_FROM, DEFAULT_CHAIN_TO } from "../../pages/bridge";
 
 import QRCode from "qrcode.react";
-import { HopDirection, hopInRefresh, HopStage, HopStatus, initHopWallet, randomId, showCCTransLogs } from "../../services/hop.cash";
+import { HopDirection, HopInProcess, HopOutProcess, HopStage } from "../../services/hop.cash";
 import { useActiveWeb3React } from "../../hooks";
 import { ShiftStage, ShiftStatus, xaiOrder, xaiStatus } from "../../services/sideshift.ai";
 import Dots from "../../components/Dots";
@@ -75,7 +75,7 @@ export default function BridgeModal({
   const chainFrom = BridgeChains[srcChainId]
   const chainTo = BridgeChains[destChainId]
 
-  const address = (window.shiftStatus || {}).depositAddress || (window.hopStatus || {}).depositAddress || null
+  const address = (bridgeTransaction.shiftStatus || {}).depositAddress || (bridgeTransaction.hopStatus || {}).depositAddress || null
   const [depositAddress, setDepositAddress] = useState<string | null>(address)
   const [memo, setMemo] = useState<string | null>(null)
   const [destinationTag, setDestinationTag] = useState<number | null>(null)
@@ -84,44 +84,29 @@ export default function BridgeModal({
   const [bchTransactionId, setBchTransactionId] = useState<string | null>(bridgeTransaction.hopStatus?.bchTxId)
   const [sbchTransactionId, setSbchTransactionId] = useState<string | null>(bridgeTransaction.hopStatus?.sbchTxId)
 
-  const bridgeDirectionIn = chainFrom === DEFAULT_CHAIN_FROM && chainTo === DEFAULT_CHAIN_TO
-  const bridgeDirectionOut = chainFrom === DEFAULT_CHAIN_TO && chainTo === DEFAULT_CHAIN_FROM
-
   const shiftNeeded = methodId !== "bch"
-  const hopDirection = (chainTo === DEFAULT_CHAIN_TO) ? HopDirection.in : HopDirection.out
 
-  window.hopStatus = {...bridgeTransaction.hopStatus}
+  const hopProcess = bridgeTransaction.hopStatus.direction === HopDirection.in ?
+    HopInProcess.fromObject({...bridgeTransaction.hopStatus}, provider) :
+    HopOutProcess.fromObject({...bridgeTransaction.hopStatus}, provider);
+
+  // window.hopStatus = {...bridgeTransaction.hopStatus}
   window.shiftStatus = {...bridgeTransaction.shiftStatus}
 
   useEffect(() => {
     const stateMachine = async () => {
       if (isOpen) {
         // hop.cash state machine
-        const hopStatus: HopStatus = {...(window.hopStatus || {})} as HopStatus
+        // const hopStatus: HopStatus = {...(window.hopStatus || {})} as HopStatus
         const shiftStatus: ShiftStatus = {...(window.shiftStatus || {})} as ShiftStatus
 
-        switch (hopStatus.stage) {
+        await hopProcess.work();
+
+        switch (hopProcess.stage) {
           case undefined:
           case HopStage.init:
-            const {cashAddr, fromBlock} = await initHopWallet(provider)
-            // window.bridgeId = randomId();
-
-            // bridgeTransaction = {...bridgeTransaction, ...{
-            //   hash: window.bridgeId,
-            //   hopStatus: {...hopStatus},
-            //   shiftStatus: {...shiftStatus},
-            //   addedTime: new Date().getTime(),
-            //   initialAmount: initialAmount,
-            //   symbol: symbol,
-            //   from: await provider.getSigner().getAddress(),
-            //   srcChainId: chainFrom.id,
-            //   destChainId: chainTo.id,
-            // }};
-
-            // sideshift.ai state machine
-            if (!shiftNeeded) {
-              setDepositAddress(cashAddr)
-            }
+            setStatusText("Initializing");
+            // await hopProcess.init();
             break;
           case HopStage.deposit:
             // sideshift.ai state machine
@@ -129,16 +114,15 @@ export default function BridgeModal({
               switch (shiftStatus.stage) {
                 case undefined:
                 case ShiftStage.init:
-                  const cashAddr = hopStatus.depositAddress;
+                  const cashAddr = hopProcess.depositAddress;
                   try {
                     const order = await xaiOrder(methodId, "bch", cashAddr);
                     setDepositAddress(order.depositAddress.address)
                     if (order.depositAddress.memo) setMemo(order.depositAddress.memo);
-                    if (order.depositAddress.destinationTag )setDestinationTag(order.depositAddress.destinationTag)
+                    if (order.depositAddress.destinationTag) setDestinationTag(order.depositAddress.destinationTag)
                     setSideShiftOrderId(order.orderId)
                   } catch (error) {
-                    hopStatus.stage = HopStage.cancelled
-                    console.log(error)
+                    hopProcess.cancel(error.message)
                     alert(error.message)
                   }
                   break;
@@ -155,24 +139,23 @@ export default function BridgeModal({
               }
               if (shiftStatus.stage == ShiftStage.deposit || shiftStatus.stage == ShiftStage.confirmation) {
                 // update order status and advance the state
-                await xaiStatus(shiftStatus.orderId);
+                await xaiStatus(shiftStatus.orderId)
               }
             } else {
-              setStatusText("Waiting for deposit");
+              setDepositAddress(hopProcess.depositAddress)
+              setStatusText("Waiting for deposit")
             }
-
-            await hopInRefresh(provider)
             break;
           case HopStage.sent:
-            const signer = provider.getSigner();
-            const ccTargetAddr = await signer.getAddress();
-            await showCCTransLogs("", provider, ccTargetAddr, hopStatus.fromBlock)
+            // await hopProcess.checkArrival();
             setDepositAddress(null)
-            setBchTransactionId(hopStatus.bchTxId);
+            setBchTransactionId(hopProcess.bchTxId);
+            setSbchTransactionId(hopProcess.sbchTxId);
             setStatusText("Funds sent to the cross-chain bridge");
             break;
           case HopStage.settled:
-            setSbchTransactionId(hopStatus.sbchTxId);
+            setBchTransactionId(hopProcess.bchTxId);
+            setSbchTransactionId(hopProcess.sbchTxId);
             setStatusText("Funds arrived to destination");
             break;
           case HopStage.cancelled:
@@ -180,14 +163,14 @@ export default function BridgeModal({
             break;
         }
 
-        if (hopStatus.stage != HopStage.settled && hopStatus.stage != HopStage.cancelled) {
+        if (hopProcess.stage != HopStage.settled && hopProcess.stage != HopStage.cancelled) {
           window.smTimeout = setTimeout(stateMachine, 1000)
         }
 
         const copy = {...bridgeTransaction}
 
         bridgeTransaction = {...bridgeTransaction, ...{
-          hopStatus: hopStatus,
+          hopStatus: hopProcess.toObject(),
           shiftStatus: shiftStatus,
         }};
 
@@ -276,7 +259,12 @@ export default function BridgeModal({
               {statusText}
             </Dots>)}
             {!needsDots(statusText) && (<div>{statusText}</div>)}
-            {window.hopStatus.stage === HopStage.settled && (<CheckCircle className="text-2xl text-green" />)}
+            {hopProcess.stage === HopStage.settled && (<CheckCircle className="text-2xl text-green" />)}
+          </div>
+        )}
+        {hopProcess.errorMessage && (
+          <div className="flex items-center justify-center text-sm">
+            <div>{hopProcess.errorMessage}</div>
           </div>
         )}
       </div>
