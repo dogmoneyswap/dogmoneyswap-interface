@@ -3,7 +3,7 @@ import { t } from "@lingui/macro";
 import { Currency } from "@mistswapdex/sdk";
 import React,{Component, useEffect, useState} from "react";
 import ReactDOM from "react-dom";
-import { Loader } from "react-feather";
+import { CheckCircle, Loader } from "react-feather";
 import Button from "../../components/Button";
 import Modal from "../../components/Modal";
 import ModalHeader from "../../components/ModalHeader";
@@ -20,6 +20,7 @@ import Dots from "../../components/Dots";
 import Copy from "../../components/AccountDetails/Copy";
 import { useTransactionGetter, useTransactionUpdater } from "../../state/bridgeTransactions/hooks";
 import { TransactionDetails } from "../../state/bridgeTransactions/reducer";
+import { ExternalLinkIcon } from "@heroicons/react/outline";
 
 const shorten = (text: string, size = 5) => {
   if (text.length > 20) {
@@ -242,9 +243,9 @@ export default function BridgeModal({
         {sideShiftOrderId && (<div>
           <div className="flex items-center justify-center">
             <a href={`https://sideshift.ai/orders/${sideShiftOrderId}`} target="_blank"
-              className="font-bold text-baseline text-primary"
+              className="flex flex-row items-center gap-1 font-bold text-baseline text-primary"
             >
-              sideshift.ai order {sideShiftOrderId} 🔗
+              sideshift.ai order {sideShiftOrderId} <ExternalLinkIcon width={20} height={20} />
             </a>
           </div>
         </div>)}
@@ -252,9 +253,9 @@ export default function BridgeModal({
         {bchTransactionId && (<div>
           <div className="flex items-center justify-center">
             <a href={`https://blockchair.com/bitcoin-cash/transaction/${bchTransactionId}`} target="_blank"
-              className="font-bold text-baseline text-primary"
+              className="flex flex-row items-center gap-1 font-bold text-baseline text-primary"
             >
-              BCH cross-chain tx {shorten(bchTransactionId)} 🔗
+              BCH cross-chain tx {shorten(bchTransactionId)} <ExternalLinkIcon width={20} height={20} />
             </a>
           </div>
         </div>)}
@@ -262,19 +263,20 @@ export default function BridgeModal({
         {sbchTransactionId && (<div>
           <div className="flex items-center justify-center">
             <a href={`https://www.smartscan.cash/transaction/${sbchTransactionId}`} target="_blank"
-              className="font-bold text-baseline text-primary"
+              className="flex flex-row items-center gap-1 font-bold text-baseline text-primary"
             >
-              SmartBCH cross-chain tx {shorten(sbchTransactionId)} 🔗
+              SmartBCH cross-chain tx {shorten(sbchTransactionId)} <ExternalLinkIcon width={20} height={20} />
             </a>
           </div>
         </div>)}
 
         {statusText && (
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-center gap-2">
             {needsDots(statusText) && (<Dots>
               {statusText}
             </Dots>)}
             {!needsDots(statusText) && (<div>{statusText}</div>)}
+            {window.hopStatus.stage === HopStage.settled && (<CheckCircle className="text-2xl text-green" />)}
           </div>
         )}
       </div>
