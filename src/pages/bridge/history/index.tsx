@@ -14,15 +14,12 @@ import { useWeb3React } from '@web3-react/core'
 import { useAllTransactions } from '../../../state/bridgeTransactions/hooks'
 import moment from 'moment'
 import { TransactionDetails } from '../../../state/bridgeTransactions/reducer'
-import { AvailableChainsInfo } from '../interface'
 import { HopStage } from '../../../services/hop.cash'
 import { useAppDispatch } from '../../../state/hooks'
 import { deleteTransaction } from '../../../state/bridgeTransactions/actions'
 import BridgeModal from '../../../modals/BridgeModal'
 import { TrashIcon } from '@heroicons/react/outline'
 import { BridgeChains } from '..'
-
-export type AnyswapTokensMap = { [chainId: number]: { [contract: string]: AvailableChainsInfo } }
 
 const Transaction: FC<{ chainId: string; hash: string, onClick: (hash) => any }> = ({ chainId, hash, onClick }) => {
   const { i18n } = useLingui()

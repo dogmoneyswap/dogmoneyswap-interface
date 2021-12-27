@@ -1,20 +1,12 @@
-import React, { ReactNode, useCallback, useState } from 'react'
-import { classNames, formatNumberScale } from '../../functions'
-import Button from '../Button'
+import React, { useCallback, useState } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/outline'
-import CurrencyLogo from '../CurrencyLogo'
-import CurrencySearchModal from '../../modals/SearchModal/CurrencySearchModal'
-import Lottie from 'lottie-react'
-import { Input as NumericalInput } from '../NumericalInput'
-import selectCoinAnimation from '../../animation/select-coin.json'
 import { t } from '@lingui/macro'
 import { useActiveWeb3React } from '../../hooks/useActiveWeb3React'
-import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { useLingui } from '@lingui/react'
 import Card from '../Card'
 import Logo from '../Logo'
 import ChainModal from '../../modals/ChainModal'
-import { Chain } from '../../pages/bridge'
+import { Chain } from '../../features/bridge/interface'
 
 interface ChainSelectProps {
   chains: { [chainId: number]: Chain }

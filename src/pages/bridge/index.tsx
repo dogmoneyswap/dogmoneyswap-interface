@@ -32,7 +32,7 @@ import { getBchPoolBalance, getSmartBchPoolBalance, HopDirection, randomId } fro
 import { useTransactionUpdater } from '../../state/bridgeTransactions/hooks';
 import { TransactionDetails } from '../../state/bridgeTransactions/reducer';
 import CashAddressInput from '../../components/Input/Cashaddress';
-import { AvailableChainsInfo, chains, Chain, anyswapInfo} from './interface';
+import { AvailableChainsInfo, chains, Chain, anyswapInfo} from '../../features/bridge/interface';
 
 export const DEFAULT_CHAIN_FROM: Chain = chains[0]
 export const DEFAULT_CHAIN_TO: Chain = chains[ChainId.SMARTBCH]
@@ -359,10 +359,10 @@ export default function Bridge() {
             {helpVisible && (<div className="p-3 mx-5 rounded bg-dark-800">
               <p>{i18n._(t`This service helps you to try out the SmartBCH network by converting your assets to BCH and bridging it to our network`)}</p>
               <p>{i18n._(t`Our bridge utilizes a two-step process:`)}</p>
-              <p className="pl-4">{i18n._(t`1) asset coversion from anything to BCH with`)} <a className="font-bold" target="_blank" href="https://sideshift.ai">SideShift.ai</a>.</p>
-              <p className="pl-4">{i18n._(t`2) bridging the BCH to SmartBCH with `)} <a className="font-bold" target="_blank" href="https://hop.cash">hop.cash</a></p>
-              <p>{i18n._(t`If you experience any issues with SideShift conversion, note the order id, visit their website and ask for support there or in their telegram group: `)} <a className="font-bold" target="_blank" href="https://t.me/sideshift">https://t.me/sideshift</a>.</p>
-              <p>{i18n._(t`For issues related to hop cash, note the BCH and SBCH transaction ids and ask for support here:`)} <a className="font-bold" target="_blank" href="https://t.me/hopcash">https://t.me/hopcash</a>.</p>
+              <p className="pl-4">{i18n._(t`1) asset coversion from anything to BCH with`)} <a className="font-bold" target="_blank" rel="noreferrer" href="https://sideshift.ai">SideShift.ai</a>.</p>
+              <p className="pl-4">{i18n._(t`2) bridging the BCH to SmartBCH with `)} <a className="font-bold" target="_blank" rel="noreferrer" href="https://hop.cash">hop.cash</a></p>
+              <p>{i18n._(t`If you experience any issues with SideShift conversion, note the order id, visit their website and ask for support there or in their telegram group: `)} <a className="font-bold" target="_blank" rel="noreferrer" href="https://t.me/sideshift">https://t.me/sideshift</a>.</p>
+              <p>{i18n._(t`For issues related to hop cash, note the BCH and SBCH transaction ids and ask for support here:`)} <a className="font-bold" target="_blank" rel="noreferrer" href="https://t.me/hopcash">https://t.me/hopcash</a>.</p>
             </div>)}
 
             <div className="flex flex-row items-center justify-between text-center">

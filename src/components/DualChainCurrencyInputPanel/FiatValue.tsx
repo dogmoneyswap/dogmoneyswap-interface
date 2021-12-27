@@ -1,9 +1,8 @@
 import { CurrencyAmount, Currency, Percent } from '@mistswapdex/sdk'
 import React, { useMemo } from 'react'
 
-import { t } from '@lingui/macro'
 import { warningSeverity } from '../../functions/prices'
-import { formatNumber, formatNumberScale } from '../../functions'
+import { formatNumberScale } from '../../functions'
 
 export function FiatValue({
   fiatValue,
