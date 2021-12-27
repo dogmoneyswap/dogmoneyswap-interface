@@ -27,6 +27,7 @@ import { BottomGrouping } from '../../features/exchange-v1/swap/styleds'
 import Button from '../../components/Button'
 import DualChainCurrencyInputPanel from '../../components/DualChainCurrencyInputPanel'
 import ChainSelect from '../../components/ChainSelect'
+import { QuestionMarkCircleIcon } from '@heroicons/react/solid'
 
 export type Chain = {
   id: ChainId
@@ -59,6 +60,7 @@ import { getBchPoolBalance, getSmartBchPoolBalance, HopDirection, randomId } fro
 import { useTransactionUpdater } from '../../state/bridgeTransactions/hooks';
 import { TransactionDetails } from '../../state/bridgeTransactions/reducer';
 import CashAddressInput from '../../components/Input/Cashaddress';
+import QuestionHelper from '../../components/QuestionHelper';
 
 type BridgeDataInfo = {
   methodId: string,
@@ -254,6 +256,7 @@ export default function Bridge() {
 
   const currentChainFrom = chainId && chains[chainId] &&
     { id: chainId, icon: chains[chainId].icon, name: chains[chainId].name }
+  const [helpVisible, setHelpVisible] = useState<boolean>(false)
 
   const [chainFrom, setChainFrom] = useState<Chain | null>(DEFAULT_CHAIN_FROM)
   const [chainTo, setChainTo] = useState<Chain | null>(DEFAULT_CHAIN_TO)
@@ -384,11 +387,11 @@ export default function Bridge() {
 
   const bridgeButtonClick = () => {
     const address = hopDirection === HopDirection.in ? account : destinationAddress;
-
+    console.log(methodId)
     const bridgeTransaction = {
       hash: randomId(),
       hopStatus: { destinationAddress: address, direction: hopDirection },
-      shiftStatus: {},
+      shiftStatus: { direction: hopDirection, methodId },
       addedTime: new Date().getTime(),
       initialAmount: currencyAmount,
       symbol: currency0.symbol,
@@ -670,13 +673,27 @@ export default function Bridge() {
               </div>
             </div>
 
-            <div className="p-4 text-center">
-              <div className="items-center justify-between space-x-3">
+            <div className="flex justify-center p-4 text-center">
+              <div className="flex items-center gap-1">
                 <Typography component="h3" variant="base">
                   {i18n._(t`Bridge tokens to and from the SmartBCH Network`)}
                 </Typography>
+                <QuestionMarkCircleIcon
+                  className="cursor-pointer"
+                  onClick={() => setHelpVisible(!helpVisible)}
+                  width={16}
+                  height={16} />
               </div>
             </div>
+
+            {helpVisible && (<div className="p-3 mx-5 rounded bg-dark-800">
+              <p>{i18n._(t`This service helps you to try out the SmartBCH network by converting your assets to BCH and bridging it to our network`)}</p>
+              <p>{i18n._(t`Our bridge utilizes a two-step process:`)}</p>
+              <p className="pl-4">{i18n._(t`1) asset coversion from anything to BCH with`)} <a className="font-bold" target="_blank" href="https://sideshift.ai">SideShift.ai</a>.</p>
+              <p className="pl-4">{i18n._(t`2) bridging the BCH to SmartBCH with `)} <a className="font-bold" target="_blank" href="https://hop.cash">hop.cash</a></p>
+              <p>{i18n._(t`If you experience any issues with SideShift conversion, note the order id, visit their website and ask for support there or in their telegram group: `)} <a className="font-bold" target="_blank" href="https://t.me/sideshift">https://t.me/sideshift</a>.</p>
+              <p>{i18n._(t`For issues related to hop cash, note the BCH and SBCH transaction ids and ask for support here:`)} <a className="font-bold" target="_blank" href="https://t.me/hopcash">https://t.me/hopcash</a>.</p>
+            </div>)}
 
             <div className="flex flex-row items-center justify-between text-center">
               <ChainSelect

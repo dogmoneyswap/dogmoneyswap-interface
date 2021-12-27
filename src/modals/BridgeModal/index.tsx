@@ -15,7 +15,7 @@ import { BridgeChains, Chain, DEFAULT_CHAIN_FROM, DEFAULT_CHAIN_TO } from "../..
 import QRCode from "qrcode.react";
 import { HopDirection, HopInProcess, HopOutProcess, HopStage } from "../../services/hop.cash";
 import { useActiveWeb3React } from "../../hooks";
-import { ShiftStage, ShiftStatus, xaiOrder, xaiStatus } from "../../services/sideshift.ai";
+import { ShiftInProcess, ShiftProcess, ShiftStage, ShiftStatus, xaiOrder, xaiStatus } from "../../services/sideshift.ai";
 import Dots from "../../components/Dots";
 import Copy from "../../components/AccountDetails/Copy";
 import { useTransactionGetter, useTransactionUpdater } from "../../state/bridgeTransactions/hooks";
@@ -88,58 +88,53 @@ export default function BridgeModal({
 
   const hopProcess = bridgeTransaction.hopStatus.direction === HopDirection.in ?
     HopInProcess.fromObject({...bridgeTransaction.hopStatus}, provider) :
-    HopOutProcess.fromObject({...bridgeTransaction.hopStatus}, provider);
+    HopOutProcess.fromObject({...bridgeTransaction.hopStatus}, provider)
 
-  // window.hopStatus = {...bridgeTransaction.hopStatus}
-  window.shiftStatus = {...bridgeTransaction.shiftStatus}
+  const shiftProcess = ShiftInProcess.fromObject({...bridgeTransaction.shiftStatus})
 
   useEffect(() => {
     const stateMachine = async () => {
       if (isOpen) {
         // hop.cash state machine
-        // const hopStatus: HopStatus = {...(window.hopStatus || {})} as HopStatus
-        const shiftStatus: ShiftStatus = {...(window.shiftStatus || {})} as ShiftStatus
-
-        await hopProcess.work();
+        await hopProcess.work()
 
         switch (hopProcess.stage) {
           case undefined:
           case HopStage.init:
-            setStatusText("Initializing");
-            // await hopProcess.init();
+            setStatusText("Initializing")
             break;
           case HopStage.deposit:
             // sideshift.ai state machine
             if (shiftNeeded) {
-              switch (shiftStatus.stage) {
-                case undefined:
-                case ShiftStage.init:
-                  const cashAddr = hopProcess.depositAddress;
-                  try {
-                    const order = await xaiOrder(methodId, "bch", cashAddr);
-                    setDepositAddress(order.depositAddress.address)
-                    if (order.depositAddress.memo) setMemo(order.depositAddress.memo);
-                    if (order.depositAddress.destinationTag) setDestinationTag(order.depositAddress.destinationTag)
-                    setSideShiftOrderId(order.orderId)
-                  } catch (error) {
-                    hopProcess.cancel(error.message)
-                    alert(error.message)
-                  }
-                  break;
-                case ShiftStage.deposit:
-                  setStatusText("Waiting for deposit");
-                  break;
-                case ShiftStage.confirmation:
-                  setStatusText(`Waiting for ${symbol} confirmations`);
-                  setDepositAddress(null)
-                  break;
-                case ShiftStage.settled:
-                  // transition to hop cash is automatic
-                  break;
-              }
-              if (shiftStatus.stage == ShiftStage.deposit || shiftStatus.stage == ShiftStage.confirmation) {
-                // update order status and advance the state
-                await xaiStatus(shiftStatus.orderId)
+              try {
+                shiftProcess.destinationAddress = hopProcess.depositAddress
+                await shiftProcess.work()
+
+                switch (shiftProcess.stage) {
+                  case undefined:
+                  case ShiftStage.init:
+                    setStatusText("Initializing side shift")
+                    break;
+                  case ShiftStage.deposit:
+                    setSideShiftOrderId(shiftProcess.orderId)
+                    setDepositAddress(shiftProcess.depositAddress)
+                    if (shiftProcess.memo) setMemo(shiftProcess.memo)
+                    if (shiftProcess.destinationTag) setDestinationTag(shiftProcess.destinationTag)
+                    setStatusText("Waiting for deposit")
+                    break;
+                  case ShiftStage.confirmation:
+                    setStatusText(`Waiting for ${symbol} confirmations`)
+                    setDepositAddress(null)
+                    break;
+                  case ShiftStage.settled:
+                    // transition to hop cash is automatic
+                    break;
+                }
+              } catch (error) {
+                shiftProcess.cancel(error.message)
+                hopProcess.cancel(error.message)
+                // process ui updates
+                await stateMachine()
               }
             } else {
               setDepositAddress(hopProcess.depositAddress)
@@ -149,17 +144,17 @@ export default function BridgeModal({
           case HopStage.sent:
             // await hopProcess.checkArrival();
             setDepositAddress(null)
-            setBchTransactionId(hopProcess.bchTxId);
-            setSbchTransactionId(hopProcess.sbchTxId);
-            setStatusText("Funds sent to the cross-chain bridge");
+            setBchTransactionId(hopProcess.bchTxId)
+            setSbchTransactionId(hopProcess.sbchTxId)
+            setStatusText("Funds sent to the cross-chain bridge")
             break;
           case HopStage.settled:
-            setBchTransactionId(hopProcess.bchTxId);
-            setSbchTransactionId(hopProcess.sbchTxId);
-            setStatusText("Funds arrived to destination");
+            setBchTransactionId(hopProcess.bchTxId)
+            setSbchTransactionId(hopProcess.sbchTxId)
+            setStatusText("Funds arrived to destination")
             break;
           case HopStage.cancelled:
-            setStatusText("Bridge process cancelled");
+            setStatusText("Bridge process cancelled")
             break;
         }
 
@@ -171,8 +166,8 @@ export default function BridgeModal({
 
         bridgeTransaction = {...bridgeTransaction, ...{
           hopStatus: hopProcess.toObject(),
-          shiftStatus: shiftStatus,
-        }};
+          shiftStatus: shiftProcess.toObject(),
+        }}
 
         // todo: need a better take on this
         if (bridgeTransaction.hash && JSON.stringify(copy) !== JSON.stringify(bridgeTransaction)) {
