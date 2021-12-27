@@ -104,7 +104,10 @@ const Transaction: FC<{ chainId: string; hash: string, onClick: (hash) => any }>
           </div>
           <Typography variant="sm" className="flex items-center md:py-0.5 justify-end">
             <div className={'text-primary'}>
-              {status === HopStage.settled ? 'Settled' : status === HopStage.cancelled ? 'Cancelled' : 'Pending'}
+              {status === HopStage.settled ? i18n._(t`Settled`)
+                : status === HopStage.cancelled ? i18n._(t`Cancelled`)
+                : i18n._(t`Pending`)
+              }
             </div>
           </Typography>
         </div>

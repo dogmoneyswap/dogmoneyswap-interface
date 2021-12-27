@@ -82,7 +82,7 @@ export default function BridgeModal({
         switch (hopProcess.stage) {
           case undefined:
           case HopStage.init:
-            setStatusText("Initializing")
+            setStatusText(i18n._(t`Initializing`))
             break;
           case HopStage.deposit:
             // sideshift.ai state machine
@@ -94,17 +94,17 @@ export default function BridgeModal({
                 switch (shiftProcess.stage) {
                   case undefined:
                   case ShiftStage.init:
-                    setStatusText("Initializing side shift")
+                    setStatusText(i18n._(t`Initializing SideShift`))
                     break;
                   case ShiftStage.deposit:
                     setSideShiftOrderId(shiftProcess.orderId)
                     setDepositAddress(shiftProcess.depositAddress)
                     if (shiftProcess.memo) setMemo(shiftProcess.memo)
                     if (shiftProcess.destinationTag) setDestinationTag(shiftProcess.destinationTag)
-                    setStatusText("Waiting for deposit")
+                    setStatusText(i18n._(t`Waiting for deposit`))
                     break;
                   case ShiftStage.confirmation:
-                    setStatusText(`Waiting for ${symbol} confirmations`)
+                    setStatusText(i18n._(t`Waiting for ${symbol} confirmations`))
                     setDepositAddress(null)
                     break;
                   case ShiftStage.settled:
@@ -119,23 +119,23 @@ export default function BridgeModal({
               }
             } else {
               setDepositAddress(hopProcess.depositAddress)
-              setStatusText("Waiting for deposit")
+              setStatusText(i18n._(t`Waiting for deposit`))
             }
             break;
           case HopStage.sent:
             setDepositAddress(null)
             setBchTransactionId(hopProcess.bchTxId)
             setSbchTransactionId(hopProcess.sbchTxId)
-            setStatusText("Funds sent to the cross-chain bridge")
+            setStatusText(i18n._(t`Funds sent to the cross-chain bridge`))
             break;
           case HopStage.settled:
             setDepositAddress(null)
             setBchTransactionId(hopProcess.bchTxId)
             setSbchTransactionId(hopProcess.sbchTxId)
-            setStatusText("Funds arrived to destination")
+            setStatusText(i18n._(t`Funds arrived to destination`))
             break;
           case HopStage.cancelled:
-            setStatusText("Bridge process cancelled")
+            setStatusText(i18n._(t`Bridge process cancelled`))
             break;
         }
 
@@ -187,14 +187,14 @@ export default function BridgeModal({
         {memo && (
           <div className="flex items-center justify-center">
             <Typography className="font-medium" variant="sm">
-              Your XLM deposit must contain the memo: "{memo}", otherwise the deposit might be lost
+              {i18n._(t`Your XLM deposit must contain the memo: "${memo}", otherwise the deposit might be lost`)}
             </Typography>
           </div>
         )}
         {destinationTag && (
           <div className="flex items-center justify-center">
             <Typography className="font-medium" variant="sm">
-              Your XRP deposit must contain the Destination Tag: "{destinationTag}", otherwise the deposit will be rejected by the network
+              {i18n._(t`Your XRP deposit must contain the Destination Tag: "${destinationTag}", otherwise the deposit will be rejected by the network`)}
             </Typography>
           </div>
         )}
@@ -204,7 +204,7 @@ export default function BridgeModal({
             <a href={`https://sideshift.ai/orders/${sideShiftOrderId}`} target="_blank"
               className="flex flex-row items-center gap-1 font-bold text-baseline text-primary"
             >
-              sideshift.ai order {sideShiftOrderId} <ExternalLinkIcon width={20} height={20} />
+              {i18n._(t`sideshift.ai order ${sideShiftOrderId}`)} <ExternalLinkIcon width={20} height={20} />
             </a>
           </div>
         </div>)}
@@ -214,7 +214,7 @@ export default function BridgeModal({
             <a href={`https://blockchair.com/bitcoin-cash/transaction/${bchTransactionId}`} target="_blank"
               className="flex flex-row items-center gap-1 font-bold text-baseline text-primary"
             >
-              BCH cross-chain tx {shorten(bchTransactionId)} <ExternalLinkIcon width={20} height={20} />
+              {i18n._(t`BCH cross-chain tx ${shorten(bchTransactionId)}`)} <ExternalLinkIcon width={20} height={20} />
             </a>
           </div>
         </div>)}
@@ -224,7 +224,7 @@ export default function BridgeModal({
             <a href={`https://www.smartscan.cash/transaction/${sbchTransactionId}`} target="_blank"
               className="flex flex-row items-center gap-1 font-bold text-baseline text-primary"
             >
-              SmartBCH cross-chain tx {shorten(sbchTransactionId)} <ExternalLinkIcon width={20} height={20} />
+              {i18n._(t`SmartBCH cross-chain tx ${shorten(sbchTransactionId)}`)} <ExternalLinkIcon width={20} height={20} />
             </a>
           </div>
         </div>)}

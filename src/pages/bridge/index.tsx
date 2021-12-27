@@ -60,7 +60,7 @@ export default function Bridge() {
   const [tokenToBridge, setTokenToBridge] = useState<AvailableChainsInfo | null>(null)
   const [showBridgeModal, setShowBridgeModal] = useState(false)
 
-  const hopDirection = (chainTo === DEFAULT_CHAIN_TO) ? "in" : "out"
+  const hopDirection = (chainTo === DEFAULT_CHAIN_TO) ? HopDirection.in : HopDirection.out
 
   useEffect(() => {
     let tokens: Currency[] = Object.keys((anyswapInfo && anyswapInfo[chainFrom.id]) || {})
@@ -263,18 +263,18 @@ export default function Bridge() {
     insufficientBalance()
 
   const buttonText =
-    !shiftAllowed ? `Bridge forbidden (blocked country)` :
+    !shiftAllowed ? i18n._(t`Bridge forbidden (blocked country)`) :
     !currency0
-      ? `Select a Token`
+      ? i18n._(t`Select a Token`)
       : !currencyAmount || currencyAmount == ''
-      ? 'Enter an Amount'
+      ? i18n._(t`Enter an Amount`)
       : !aboveMin()
-      ? `Below Minimum Amount`
+      ? i18n._(t`Below Minimum Amount`)
       : !belowMax()
-      ? `Above Maximum Amount`
+      ? i18n._(t`Above Maximum Amount`)
       : insufficientBalance()
-      ? `Insufficient Balance`
-      : `Bridge ${currency0?.symbol}`
+      ? i18n._(t`Insufficient Balance`)
+      : i18n._(t`Bridge ${currency0?.symbol}`)
 
   const anyswapChains = Object.keys(anyswapInfo).map(val => parseInt(val)) //[ChainId.SMARTBCH]
   let availableChains = Object.keys(anyswapInfo || {})
@@ -460,32 +460,26 @@ export default function Bridge() {
                 )}
                 <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
                   <div className="text-sm font-medium text-secondary">
-                    Minimum Bridge Amount: {swapInfo?.minimumAmount.toFixed(5)}{' '}
+                    {i18n._(t`Minimum Bridge Amount: `)}{swapInfo?.minimumAmount.toFixed(5)}{' '}
                     {tokenToBridge?.other?.Symbol}
                   </div>
                 </div>
                 <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
                   <div className="text-sm font-medium text-secondary">
-                    Maximum Bridge Amount: {formatNumber(swapInfo?.maximumAmount)}{' '}
+                    {i18n._(t`Maximum Bridge Amount: `)}{formatNumber(swapInfo?.maximumAmount)}{' '}
                     {tokenToBridge?.other?.Symbol}
                   </div>
                 </div>
                 <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
                   <div className="text-sm font-medium text-secondary">
-                    Estimated Fee Included: {swapInfo?.feeUsd.toFixed(2)} USD + {swapInfo?.feeBch.toFixed(5)} BCH
+                    {i18n._(t`Estimated Fee Included: `)}{swapInfo?.feeUsd.toFixed(2)} USD + {swapInfo?.feeBch.toFixed(5)} BCH
                   </div>
                 </div>
                 <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
                   <div className="text-sm font-medium text-secondary">
-                    You will receive about: {formatNumber(swapInfo?.receiveAmount)} BCH
+                    {i18n._(t`You will receive about: `)}{formatNumber(swapInfo?.receiveAmount)} BCH
                   </div>
                 </div>
-                {/* <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
-                  <div className="text-sm font-medium text-secondary">
-                    Amounts greater than {formatNumber(tokenToBridge?.other?.BigValueThreshold)}{' '}
-                    {tokenToBridge?.other?.Symbol} could take up to 12 hours.
-                  </div>
-                </div> */}
               </div>
             )}
 
@@ -502,7 +496,3 @@ export default function Bridge() {
     </>
   )
 }
-function useMultichainCurrencyBalance(id: ChainId, arg1: string, arg2: Currency) {
-  return 0
-}
-
