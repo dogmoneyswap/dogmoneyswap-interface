@@ -1,7 +1,4 @@
-import {
-  ChainId,
-} from '@mistswapdex/sdk'
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { FC, useCallback, useEffect, useState } from 'react'
 
 import Container from '../../../components/Container'
 import Head from 'next/head'
@@ -10,25 +7,12 @@ import { t } from '@lingui/macro'
 import { useActiveWeb3React } from '../../../hooks/useActiveWeb3React'
 import { useLingui } from '@lingui/react'
 import DoubleGlowShadow from '../../../components/DoubleGlowShadow'
-import SolarbeamLogo from '../../../components/SolarbeamLogo'
-import useSWR, { SWRResponse } from 'swr'
 import NavLink from '../../../components/NavLink'
-import Button from '../../../components/Button'
 import { BottomGrouping } from '../../../features/exchange-v1/swap/styleds'
 import Web3Connect from '../../../components/Web3Connect'
 import { useWeb3React } from '@web3-react/core'
 import { useAllTransactions } from '../../../state/bridgeTransactions/hooks'
-import { useDispatch } from 'react-redux'
-import { AppDispatch } from '../../../state'
-import { getExplorerLink } from '../../../functions/explorer'
-import { CheckCircleIcon, ExclamationIcon, RefreshIcon, XCircleIcon } from '@heroicons/react/solid'
-import { classNames } from '../../../functions'
-import Loader from '../../../components/Loader'
-import ExternalLink from '../../../components/ExternalLink'
-import { RefreshCw } from 'react-feather'
 import moment from 'moment'
-import { FixedSizeList } from 'react-window'
-import { NETWORK_LABEL } from '../../../config/networks'
 import { TransactionDetails } from '../../../state/bridgeTransactions/reducer'
 import { AvailableChainsInfo } from '../interface'
 import { HopStage } from '../../../services/hop.cash'
@@ -48,8 +32,6 @@ const Transaction: FC<{ chainId: string; hash: string, onClick: (hash) => any }>
 
   const destChainId = tx?.destChainId
   const srcChainId = tx?.srcChainId
-  const from = tx?.from
-  const pairId = "asdf"
   const status = tx?.hopStatus?.stage
 
   const tzTime = tx?.addedTime / 1000
