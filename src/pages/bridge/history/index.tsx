@@ -30,59 +30,15 @@ import moment from 'moment'
 import { FixedSizeList } from 'react-window'
 import { NETWORK_LABEL } from '../../../config/networks'
 import { TransactionDetails } from '../../../state/bridgeTransactions/reducer'
-import { BridgeChains } from '..'
+import { AvailableChainsInfo } from '../interface'
 import { HopStage } from '../../../services/hop.cash'
 import { useAppDispatch } from '../../../state/hooks'
 import { deleteTransaction } from '../../../state/bridgeTransactions/actions'
 import BridgeModal from '../../../modals/BridgeModal'
-type AnyswapTokenInfo = {
-  ID: string
-  Name: string
-  Symbol: string
-  Decimals: number
-  Description: string
-  BaseFeePercent: number
-  BigValueThreshold: number
-  DepositAddress: string
-  ContractAddress: string
-  DcrmAddress: string
-  DisableSwap: boolean
-  IsDelegateContract: boolean
-  MaximumSwap: number
-  MaximumSwapFee: number
-  MinimumSwap: number
-  MinimumSwapFee: number
-  PlusGasPricePercentage: number
-  SwapFeeRate: number
-}
-
-type AnyswapResultPairInfo = {
-  DestToken: AnyswapTokenInfo
-  PairID: string
-  SrcToken: AnyswapTokenInfo
-  destChainID: string
-  logoUrl: string
-  name: string
-  srcChainID: string
-  symbol: string
-}
-
-type AvailableChainsInfo = {
-  id: string
-  token: AnyswapTokenInfo
-  other: AnyswapTokenInfo
-  logoUrl: string
-  name: string
-  symbol: string
-  destChainID: string
-}
+import { TrashIcon } from '@heroicons/react/outline'
+import { BridgeChains } from '..'
 
 export type AnyswapTokensMap = { [chainId: number]: { [contract: string]: AvailableChainsInfo } }
-
-// we want the latest one to come first, so return negative if a is after b
-function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
-  return b.addedTime - a.addedTime
-}
 
 const Transaction: FC<{ chainId: string; hash: string, onClick: (hash) => any }> = ({ chainId, hash, onClick }) => {
   const { i18n } = useLingui()
@@ -162,7 +118,7 @@ const Transaction: FC<{ chainId: string; hash: string, onClick: (hash) => any }>
               e.nativeEvent.stopImmediatePropagation()
               deleteTransactionCallback(hash)
             }} >
-              🗑️
+              <TrashIcon width="20" height="20" />
             </div>
           </Typography>
         </div>
@@ -206,7 +162,6 @@ export default function Bridge() {
   const [bridgeTransactionHash, setBridgeTransactionHash] = useState<string | null>(null)
 
   useEffect(() => {
-    // activate(bridgeInjected)
   }, [activate, chainId, activeAccount, activeChainId])
 
   const onClick = (hash) => {
@@ -226,10 +181,8 @@ export default function Bridge() {
         <meta key="description" name="description" content="Bridge" />
       </Head>
 
-      {/* <SolarbeamLogo /> */}
-
-      <Container maxWidth="2xl" className="space-y-6">
-        <DoubleGlowShadow /*opacity="0.6"*/>
+      <Container maxWidth="2xl" className="mt-5 space-y-6">
+        <DoubleGlowShadow>
           <div className="p-4 space-y-4 rounded bg-dark-900" style={{ zIndex: 1 }}>
             <div className="flex items-center justify-center mb-4 space-x-3">
               <div className="grid grid-cols-2 rounded p-3px bg-dark-800 h-[46px]">
@@ -281,16 +234,6 @@ export default function Bridge() {
                 </Typography>
               </div>
             </div>
-            {/* <div className="flex items-center justify-between px-4">
-              <Typography weight={700}></Typography>
-              <div>
-                <RefreshCw
-                  onClick={() => setRefresher(refresher + 1)}
-                  size={20}
-                  className={'font-emphasis hover:font-high-emphasis cursor-pointer'}
-                />
-              </div>
-            </div> */}
             <BottomGrouping>
               {!account && activeAccount ? (
                 <Web3Connect size="lg" color="gradient" className="w-full" />
@@ -298,7 +241,7 @@ export default function Bridge() {
                 <div className="space-y-2 p-4 rounded bg-dark-800 mb-2 h-[455px] overflow-y-auto">
                   {allTransactions && Object.keys(allTransactions).length > 0 ? (
                     <>
-                      <div className="flex items-center hidden px-2 text-base font-bold md:flex text-primary">
+                      <div className="flex items-center px-2 text-base font-bold md:flex text-primary">
                         <div className="flex-none w-40">{i18n._(t`Date`)}</div>
                         <div className="flex-grow">{i18n._(t`Asset`)}</div>
                         <div className="flex-none w-24">{i18n._(t`From`)}</div>

@@ -44,7 +44,7 @@ export const CashAddressInput = React.memo(
           type="text"
           className={classNames(
             align === 'right' && 'text-right',
-            'font-medium bg-transparent whitespace-nowrap overflow-ellipsis flex-auto',
+            'font-medium bg-transparent whitespace-nowrap overflow-ellipsis flex-auto placeholder-low-emphesis',
             className
           )}
           style={{ fontSize }}

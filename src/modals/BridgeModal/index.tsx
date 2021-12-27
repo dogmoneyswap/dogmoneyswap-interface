@@ -1,21 +1,17 @@
 import { i18n } from "@lingui/core";
 import { t } from "@lingui/macro";
-import { Currency } from "@mistswapdex/sdk";
-import React,{Component, useEffect, useState} from "react";
-import ReactDOM from "react-dom";
-import { CheckCircle, Loader } from "react-feather";
-import Button from "../../components/Button";
+import React,{useEffect, useState} from "react";
+import { CheckCircle } from "react-feather";
 import Modal from "../../components/Modal";
 import ModalHeader from "../../components/ModalHeader";
-import { AutoRow } from "../../components/Row";
 import Typography from "../../components/Typography";
 import { formatNumber } from "../../functions";
-import { BridgeChains, Chain, DEFAULT_CHAIN_FROM, DEFAULT_CHAIN_TO } from "../../pages/bridge";
+import { BridgeChains } from "../../pages/bridge";
 
 import QRCode from "qrcode.react";
 import { HopDirection, HopInProcess, HopOutProcess, HopStage } from "../../services/hop.cash";
 import { useActiveWeb3React } from "../../hooks";
-import { ShiftInProcess, ShiftProcess, ShiftStage, ShiftStatus, xaiOrder, xaiStatus } from "../../services/sideshift.ai";
+import { ShiftInProcess, ShiftStage } from "../../services/sideshift.ai";
 import Dots from "../../components/Dots";
 import Copy from "../../components/AccountDetails/Copy";
 import { useTransactionGetter, useTransactionUpdater } from "../../state/bridgeTransactions/hooks";
@@ -43,48 +39,33 @@ export interface DepositAddress {
 }
 
 interface BridgeModalProps {
-  isOpen: boolean;
-  onDismiss: () => void;
-  // currency0?: Currency;
-  // currencyAmount?: string;
-  // chainFrom?: Chain;
-  // chainTo?: Chain;
-  // methodId?: string;
+  isOpen: boolean
   hash: string
+  onDismiss: () => void
 }
 
 export default function BridgeModal({
   isOpen,
+  hash,
   onDismiss,
-  // currency0,
-  // currencyAmount,
-  // chainFrom,
-  // chainTo,
-  // methodId,
-  hash
 }: BridgeModalProps) {
-  const [statusText, setStatusText] = useState<string | null>("Initializing")
+  const { library: provider } = useActiveWeb3React()
 
   const transactionGetter = useTransactionGetter;
   const transactionUpdater = useTransactionUpdater();
-
-  const { library: provider } = useActiveWeb3React()
   let bridgeTransaction = transactionGetter(hash) || {} as TransactionDetails;
-
-  const { methodId, srcChainId, destChainId, symbol, initialAmount } = bridgeTransaction
+  const { methodId, srcChainId, symbol, initialAmount } = bridgeTransaction
   const chainFrom = BridgeChains[srcChainId]
-  const chainTo = BridgeChains[destChainId]
-
   const address = (bridgeTransaction.shiftStatus || {}).depositAddress || (bridgeTransaction.hopStatus || {}).depositAddress || null
-  const [depositAddress, setDepositAddress] = useState<string | null>(address)
-  const [memo, setMemo] = useState<string | null>(null)
-  const [destinationTag, setDestinationTag] = useState<number | null>(null)
-  const [sideShiftOrderId, setSideShiftOrderId] = useState<string | null>(null)
+  const shiftNeeded = methodId !== "bch"
 
+  const [statusText, setStatusText] = useState<string | null>("Initializing")
+  const [depositAddress, setDepositAddress] = useState<string | null>(address)
+  const [memo, setMemo] = useState<string | null>(bridgeTransaction.shiftStatus?.memo)
+  const [destinationTag, setDestinationTag] = useState<number | null>(bridgeTransaction.shiftStatus.destinationTag)
+  const [sideShiftOrderId, setSideShiftOrderId] = useState<string | null>(bridgeTransaction.shiftStatus?.orderId)
   const [bchTransactionId, setBchTransactionId] = useState<string | null>(bridgeTransaction.hopStatus?.bchTxId)
   const [sbchTransactionId, setSbchTransactionId] = useState<string | null>(bridgeTransaction.hopStatus?.sbchTxId)
-
-  const shiftNeeded = methodId !== "bch"
 
   const hopProcess = bridgeTransaction.hopStatus.direction === HopDirection.in ?
     HopInProcess.fromObject({...bridgeTransaction.hopStatus}, provider) :
@@ -142,13 +123,13 @@ export default function BridgeModal({
             }
             break;
           case HopStage.sent:
-            // await hopProcess.checkArrival();
             setDepositAddress(null)
             setBchTransactionId(hopProcess.bchTxId)
             setSbchTransactionId(hopProcess.sbchTxId)
             setStatusText("Funds sent to the cross-chain bridge")
             break;
           case HopStage.settled:
+            setDepositAddress(null)
             setBchTransactionId(hopProcess.bchTxId)
             setSbchTransactionId(hopProcess.sbchTxId)
             setStatusText("Funds arrived to destination")
