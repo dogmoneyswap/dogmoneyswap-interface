@@ -67,7 +67,7 @@ export default function ChainSelect({
         switchOnSelect={switchOnSelect}
         availableChains={availableChains}
         onSelect={onChainSelect}
-        title={`Bridge ${label}`}
+        title={i18n._(t`Bridge ${label}`)}
         chain={chain}
         isOpen={modalOpen}
         onDismiss={handleDismissSearch}

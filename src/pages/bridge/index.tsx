@@ -369,7 +369,7 @@ export default function Bridge() {
               <ChainSelect
                 chains={chains}
                 availableChains={availableChains}
-                label="From"
+                label={i18n._(t`From`)}
                 chain={chainFrom}
                 otherChain={chainTo}
                 onChainSelect={(chain) => handleChainFrom(chain)}
@@ -389,7 +389,7 @@ export default function Bridge() {
               <ChainSelect
                 chains={chains}
                 availableChains={chainFrom.id == ChainId.SMARTBCH ? [0] : [ChainId.SMARTBCH]}
-                label="To"
+                label={i18n._(t`To`)}
                 chain={chainTo}
                 otherChain={chainFrom}
                 onChainSelect={(chain) => handleChainTo(chain)}
@@ -445,39 +445,35 @@ export default function Bridge() {
                 {tokenToBridge?.other?.MinimumSwapFee > 0 && (
                   <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
                     <div className="text-sm font-medium text-secondary">
-                      Minimum Bridge Fee: {formatNumber(tokenToBridge?.other?.MinimumSwapFee)}{' '}
-                      {tokenToBridge?.other?.Symbol}
+                      {i18n._(t`Minimum Bridge Fee: ${formatNumber(tokenToBridge?.other?.MinimumSwapFee)} ${tokenToBridge?.other?.Symbol}`)}
                     </div>
                   </div>
                 )}
                 {tokenToBridge?.other?.MaximumSwapFee > 0 && (
                   <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
                     <div className="text-sm font-medium text-secondary">
-                      Maximum Bridge Fee: {formatNumber(tokenToBridge?.other?.MaximumSwapFee)}{' '}
-                      {tokenToBridge?.other?.Symbol}
+                      {i18n._(t`Maximum Bridge Fee: ${formatNumber(tokenToBridge?.other?.MaximumSwapFee)} ${tokenToBridge?.other?.Symbol}`)}
                     </div>
                   </div>
                 )}
                 <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
                   <div className="text-sm font-medium text-secondary">
-                    {i18n._(t`Minimum Bridge Amount: `)}{swapInfo?.minimumAmount.toFixed(5)}{' '}
-                    {tokenToBridge?.other?.Symbol}
+                    {i18n._(t`Minimum Bridge Amount: ${swapInfo?.minimumAmount.toFixed(5)} ${tokenToBridge?.other?.Symbol}`)}
                   </div>
                 </div>
                 <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
                   <div className="text-sm font-medium text-secondary">
-                    {i18n._(t`Maximum Bridge Amount: `)}{formatNumber(swapInfo?.maximumAmount)}{' '}
-                    {tokenToBridge?.other?.Symbol}
+                    {i18n._(t`Maximum Bridge Amount: ${formatNumber(swapInfo?.maximumAmount)} ${tokenToBridge?.other?.Symbol}`)}
                   </div>
                 </div>
                 <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
                   <div className="text-sm font-medium text-secondary">
-                    {i18n._(t`Estimated Fee Included: `)}{swapInfo?.feeUsd.toFixed(2)} USD + {swapInfo?.feeBch.toFixed(5)} BCH
+                    {i18n._(t`Estimated Fee Included: ${swapInfo?.feeUsd.toFixed(2)} USD + ${swapInfo?.feeBch.toFixed(5)} BCH`)}
                   </div>
                 </div>
                 <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
                   <div className="text-sm font-medium text-secondary">
-                    {i18n._(t`You will receive about: `)}{formatNumber(swapInfo?.receiveAmount)} BCH
+                    {i18n._(t`You will receive about: ${formatNumber(swapInfo?.receiveAmount)} BCH`)}
                   </div>
                 </div>
               </div>
