@@ -61,8 +61,18 @@ const AccountDetails: FC<AccountDetailsProps> = ({
     const isMetaMask = !!(ethereum && ethereum.isMetaMask)
     const name = Object.keys(SUPPORTED_WALLETS)
       .filter(
-        (k) =>
-          SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))
+        (k) => {
+          // TODO dumb hack - with more wallets improve this section
+          if (k === 'WALLET_CONNECT' && connector.constructor.name === 'WalletConnectConnector') {
+            return true
+          }
+
+          if (SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))) {
+            return true
+          }
+
+          return false
+        }
       )
       .map((k) => SUPPORTED_WALLETS[k].name)[0]
     return <div className="font-medium text-baseline text-secondary">Connected with {name}</div>
@@ -73,14 +83,14 @@ const AccountDetails: FC<AccountDetailsProps> = ({
       return null
       // return <IconWrapper size={16}>{/* <Identicon /> */}</IconWrapper>
     } else if (connector.constructor.name === 'WalletConnectConnector') {
-      return <WalletIcon src="/wallet-connect.png" alt="Wallet Connect" size={16} />
+      return <WalletIcon src="/images/wallets/wallet-connect.svg" alt="Wallet Connect" size={16} />
     } else if (connector.constructor.name === 'WalletLinkConnector') {
-      return <WalletIcon src="/coinbase.svg" alt="Coinbase" size={16} />
+      return <WalletIcon src="/images/wallets/coinbase.svg" alt="Coinbase" size={16} />
     } else if (connector.constructor.name === 'FortmaticConnector') {
-      return <WalletIcon src="/formatic.png" alt="Fortmatic" size={16} />
+      return <WalletIcon src="/images/wallets/formatic.png" alt="Fortmatic" size={16} />
     } else if (connector.constructor.name === 'PortisConnector') {
       return (
-        <WalletIcon src="/portnis.png" alt="Portis" size={16}>
+        <WalletIcon src="/images/wallets/portnis.png" alt="Portis" size={16}>
           <Button
             onClick={async () => {
               // casting as PortisConnector here defeats the lazyload purpose
@@ -92,7 +102,7 @@ const AccountDetails: FC<AccountDetailsProps> = ({
         </WalletIcon>
       )
     } else if (connector.constructor.name === 'TorusConnector') {
-      return <WalletIcon src="/torus.png" alt="Torus" size={16} />
+      return <WalletIcon src="/images/wallets/torus.png" alt="Torus" size={16} />
     }
     return null
   }
@@ -138,14 +148,13 @@ const AccountDetails: FC<AccountDetailsProps> = ({
             </div>
           </div>
           <div id="web3-account-identifier-row" className="flex flex-col justify-center space-y-3">
+            {/*getStatusIcon()*/}
             {ENSName ? (
               <div className="bg-dark-800">
-                {getStatusIcon()}
                 <Typography>{ENSName}</Typography>
               </div>
             ) : (
               <div className="px-3 py-2 rounded bg-dark-800">
-                {getStatusIcon()}
                 <Typography>{account && shortenAddress(account)}</Typography>
               </div>
             )}
