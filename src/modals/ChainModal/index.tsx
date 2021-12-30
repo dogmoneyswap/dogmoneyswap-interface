@@ -92,10 +92,6 @@ export default function ChainModal({
 }: ChainModalProps): JSX.Element | null {
   const { chainId, library, account, activate } = useWeb3React()
 
-  // const goToRelay = () => {
-  //   window.open('https://app.relaychain.com/transfer', '_blank').focus()
-  // }
-
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxWidth={400}>
       <ModalHeader onClose={onDismiss} title={title} />

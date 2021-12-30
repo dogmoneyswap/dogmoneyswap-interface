@@ -33,6 +33,7 @@ import { useTransactionUpdater } from '../../state/bridgeTransactions/hooks';
 import { TransactionDetails } from '../../state/bridgeTransactions/reducer';
 import CashAddressInput from '../../components/Input/Cashaddress';
 import { AvailableChainsInfo, chains, Chain, anyswapInfo} from '../../features/bridge/interface';
+import { NetworkContextName } from '../../constants'
 
 export const DEFAULT_CHAIN_FROM: Chain = chains[0]
 export const DEFAULT_CHAIN_TO: Chain = chains[ChainId.SMARTBCH]
@@ -42,7 +43,8 @@ export default function Bridge() {
   const { i18n } = useLingui()
 
   const { account: activeAccount, chainId: activeChainId } = useActiveWeb3React()
-  const { account, library, activate, chainId } = useWeb3React()
+  const { account, activate, chainId } = useWeb3React()
+  const { library } = useWeb3React(NetworkContextName)
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const bchPrice = useEthPrice()
   const transactionUpdater = useTransactionUpdater();
@@ -129,6 +131,7 @@ export default function Bridge() {
 
         let hopCashMaximum: number
         if (hopDirection === HopDirection.in) {
+          console.log(window.ethereum)
           hopCashMaximum = library ? parseFloat(await getSmartBchPoolBalance(library)) || 0. : 0.
         } else {
           hopCashMaximum = parseFloat(await getBchPoolBalance()) || 0.
@@ -373,7 +376,7 @@ export default function Bridge() {
                 chain={chainFrom}
                 otherChain={chainTo}
                 onChainSelect={(chain) => handleChainFrom(chain)}
-                switchOnSelect={true}
+                switchOnSelect={false}
               />
               <button className={'sm:m-6'}>
                 <ArrowRight size="32" onClick={() => {
