@@ -106,6 +106,7 @@
   "For every swap on the exchange on every chain, 0.05% of the swap fees are distributed as MIST\nproportional to your share of the MistBar. When your MIST is staked into the MistBar, you receive\nxMIST in return.\nYour xMIST is continuously compounding, when you unstake you will receive all the originally deposited\nMIST and any additional from fees.": "每條鏈上之每一筆交易的 0.05% 手續費，以您的 MistBar 份額比例分配 MIST。\n當您的 MIST 被質押到 MistBar 時，您將收到 xMIST 作為回報。\n您的 xMIST 將不斷複利，當您取消質押時，您將收到所有最初存入的 MIST 加上手續費轉成的 MIST 利息。",
   "Gain exposure to tokens without reducing your assets. Leverage will enable you to take short positions against assets and earn from downside movements.": "在不減少資產的情況下獲得更多代幣。槓桿將使您能夠對資產做空，並從下跌趨勢中獲利。",
   "Gain governance rights with xMIST and earn 5% APR (0.05% of\nall swaps from all chains)": "通過 xMIST 獲得治理權並獲得 5% 的年利率（所有鏈上每筆交易的 0.05%）",
+  "Get {0}/{1} LP tokens for staking": "",
   "Go Back": "返回",
   "Harvest": "收穫",
   "Have assets you want to earn additional interest on? Lend them in isolated markets and earn interest from borrowers.": "您有想要賺取額外利息的資產嗎？ 在獨立的市場放貸並從借款人賺取利息。",

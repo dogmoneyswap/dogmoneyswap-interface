@@ -106,6 +106,7 @@
   "For every swap on the exchange on every chain, 0.05% of the swap fees are distributed as MIST\nproportional to your share of the MistBar. When your MIST is staked into the MistBar, you receive\nxMIST in return.\nYour xMIST is continuously compounding, when you unstake you will receive all the originally deposited\nMIST and any additional from fees.": "",
   "Gain exposure to tokens without reducing your assets. Leverage will enable you to take short positions against assets and earn from downside movements.": "अपनी संपत्ति को कम किए बिना टोकन प्राप्त करें। आपकी प्रभावन क्षमता आपको परिसंपत्तियों पर शॉर्ट पोजीशन लेने और इनके दाम नीचे जाने पर कमाई करने में सक्षम करेगी।",
   "Gain governance rights with xMIST and earn 5% APR (0.05% of\nall swaps from all chains)": "",
+  "Get {0}/{1} LP tokens for staking": "",
   "Go Back": "वापस जाओ",
   "Harvest": "",
   "Have assets you want to earn additional interest on? Lend them in isolated markets and earn interest from borrowers.": "क्या आपके पास ऐसी संपत्तियां हैं जिन पर आप अतिरिक्त ब्याज अर्जित करना चाहते हैं? उन्हें अलग-अलग बाजारों में उधार दें और कर्जदारों से ब्याज अर्जित करें।",
