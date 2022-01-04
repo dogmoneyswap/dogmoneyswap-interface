@@ -33,13 +33,13 @@ export const CashAddressInput = React.memo(
           }}
           // universal input options
           inputMode="text"
-          title="Wallet CashAddress"
+          title="Destination Address"
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
           spellCheck="false"
-          placeholder="Wallet CashAddress"
-          pattern="^bitcoincash:.*$"
+          placeholder="Destination Address"
+          // pattern="^bitcoincash:.*$"
           // text-specific options
           type="text"
           className={classNames(

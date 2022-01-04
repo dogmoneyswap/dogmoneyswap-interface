@@ -27,7 +27,7 @@ import { ChainId } from '@mistswapdex/sdk'
 import Logo from '../../components/Logo'
 
 function currencyKey(currency: Currency): string {
-  return `${currency.isToken ? currency.address : 'ETHER'}-${currency.symbol}`
+  return `${currency.isToken ? currency.address : 'ETHER'}-${currency.symbol}-${currency.name}`
 }
 
 const Tag = styled.div`

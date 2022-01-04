@@ -129,6 +129,19 @@ export class ShiftInProcess extends ShiftProcess {
   }
 }
 
+export class ShiftOutProcess extends ShiftInProcess {
+  async init(): Promise<void> {
+    const order = await xaiOrder("bch", this.methodId, this.destinationAddress);
+
+    this.depositAddress = order.depositAddress.address;
+    if (order.depositAddress.memo) this.memo = order.depositAddress.memo;
+    if (order.depositAddress.destinationTag) this.destinationTag = order.depositAddress.destinationTag;
+    this.orderId = order.orderId;
+
+    this.stage = ShiftStage.deposit;
+  }
+}
+
 async function checkResponse(response) {
   if (response.ok === false) {
     const json = await response.json();
@@ -166,12 +179,12 @@ export async function xaiQuote(from: string = "bch", to: string = "bch") {
 }
 
 // create a sideshift.ai order
-export async function xaiOrder(from = "bch", to = "bch", hopDepositAddress: string) {
+export async function xaiOrder(from = "bch", to = "bch", destinationAddress: string) {
 	const body = {
 			"type": "variable",
 			"depositMethodId": from,
 			"settleMethodId": to,
-			"settleAddress": hopDepositAddress,
+			"settleAddress": destinationAddress,
 			// "memo": "12345654565", // only for bch to XLM shifts
 			// "destinationTag": "3454354", // only for bch to XRP shifts
 			"affiliateId": "7DfBJo3oC", // change this

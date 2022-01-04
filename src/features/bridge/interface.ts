@@ -150,17 +150,24 @@ export const anyswapInfo: AnyswapTokensMap = (() => {
   })
 
   const nativeBch = result[0]["bch"]
-  result[ChainId.SMARTBCH] = {
-    "bch": {
-        destChainID: "0",
-        id: nativeBch.id,
-        logoUrl: nativeBch.logoUrl,
-        name: nativeBch.name,
-        symbol: nativeBch.symbol,
-        token: ourTokenInfo,
-        other: nativeBch.token,
+
+  bridgeData.forEach(val => {
+    result[ChainId.SMARTBCH][val.methodId] = {
+      destChainID: String(val.chainId),
+      id: val.methodId,
+      logoUrl: val.logoUrl,
+      name: val.title,
+      symbol: val.symbol,
+      other: {
+        Decimals: 18,
+        Symbol: val.symbol,
+        ID: val.methodId,
+        Name: val.title,
+        ContractAddress: val.methodId
+      } as AnyswapTokenInfo,
+      token: ourTokenInfo,
     }
-  }
+  })
 
   return result
 })()

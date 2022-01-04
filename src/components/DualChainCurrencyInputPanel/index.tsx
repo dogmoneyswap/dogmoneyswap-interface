@@ -27,6 +27,7 @@ interface CurrencyInputPanelProps {
   chainTo?: Chain | null
   tokenList?: Currency[] | []
   chainList: AnyswapTokensMap | null
+  symbol?: string | null
 }
 
 export default function DualChainCurrencyInputPanel({
@@ -41,6 +42,7 @@ export default function DualChainCurrencyInputPanel({
   chainTo,
   tokenList,
   chainList,
+  symbol
 }: CurrencyInputPanelProps) {
   const { i18n } = useLingui()
   const [modalOpen, setModalOpen] = useState(false)
@@ -162,6 +164,11 @@ export default function DualChainCurrencyInputPanel({
                   onUserInput(val)
                 }}
               />
+              {symbol && <div
+                className="font-medium bg-transparent text-secondary whitespace-nowrap"
+              >
+                {symbol}
+              </div>}
               {currency && selectedCurrencyBalance ? (
                 <div className="flex flex-col">
                   <div

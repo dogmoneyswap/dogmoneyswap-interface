@@ -11,7 +11,7 @@ import { BridgeChains } from "../../pages/bridge";
 import QRCode from "qrcode.react";
 import { HopDirection, HopInProcess, HopOutProcess, HopStage } from "../../services/hop.cash";
 import { useActiveWeb3React } from "../../hooks";
-import { ShiftInProcess, ShiftStage } from "../../services/sideshift.ai";
+import { ShiftInProcess, ShiftOutProcess, ShiftStage } from "../../services/sideshift.ai";
 import Dots from "../../components/Dots";
 import Copy from "../../components/AccountDetails/Copy";
 import { useTransactionGetter, useTransactionUpdater } from "../../state/bridgeTransactions/hooks";
@@ -71,75 +71,137 @@ export default function BridgeModal({
     HopInProcess.fromObject({...bridgeTransaction.hopStatus}, provider) :
     HopOutProcess.fromObject({...bridgeTransaction.hopStatus}, provider)
 
-  const shiftProcess = ShiftInProcess.fromObject({...bridgeTransaction.shiftStatus})
+  const shiftProcess = bridgeTransaction.hopStatus.direction === HopDirection.in ?
+    ShiftInProcess.fromObject({...bridgeTransaction.shiftStatus}) :
+    ShiftOutProcess.fromObject({...bridgeTransaction.shiftStatus})
 
   useEffect(() => {
     const stateMachine = async () => {
       if (isOpen) {
-        // hop.cash state machine
-        await hopProcess.work()
+        try {
+          if (hopProcess.direction === HopDirection.in) {
+            // hop in
+//#region hop.cash state machine
+            await hopProcess.work()
 
-        switch (hopProcess.stage) {
-          case undefined:
-          case HopStage.init:
-            setStatusText(i18n._(t`Initializing`))
-            break;
-          case HopStage.deposit:
-            // sideshift.ai state machine
-            if (shiftNeeded) {
-              try {
-                shiftProcess.destinationAddress = hopProcess.depositAddress
-                await shiftProcess.work()
+            switch (hopProcess.stage) {
+              case undefined:
+              case HopStage.init:
+                setStatusText(i18n._(t`Initializing`))
+                break;
+              case HopStage.deposit:
+                //#region sideshift.ai state machine
+                if (shiftNeeded) {
+                  shiftProcess.destinationAddress = hopProcess.depositAddress
+                  await shiftProcess.work()
 
-                switch (shiftProcess.stage) {
-                  case undefined:
-                  case ShiftStage.init:
-                    setStatusText(i18n._(t`Initializing SideShift`))
-                    break;
-                  case ShiftStage.deposit:
-                    setSideShiftOrderId(shiftProcess.orderId)
-                    setDepositAddress(shiftProcess.depositAddress)
-                    if (shiftProcess.memo) setMemo(shiftProcess.memo)
-                    if (shiftProcess.destinationTag) setDestinationTag(shiftProcess.destinationTag)
-                    setStatusText(i18n._(t`Waiting for deposit`))
-                    break;
-                  case ShiftStage.confirmation:
-                    setStatusText(i18n._(t`Waiting for ${symbol} confirmations`))
-                    setDepositAddress(null)
-                    break;
-                  case ShiftStage.settled:
-                    // transition to hop cash is automatic
-                    break;
+                  switch (shiftProcess.stage) {
+                    case undefined:
+                    case ShiftStage.init:
+                      setStatusText(i18n._(t`Initializing`))
+                      break;
+                    case ShiftStage.deposit:
+                      setSideShiftOrderId(shiftProcess.orderId)
+                      setDepositAddress(shiftProcess.depositAddress)
+                      if (shiftProcess.memo) setMemo(shiftProcess.memo)
+                      if (shiftProcess.destinationTag) setDestinationTag(shiftProcess.destinationTag)
+                      setStatusText(i18n._(t`Waiting for deposit`))
+                      break;
+                    case ShiftStage.confirmation:
+                      setStatusText(i18n._(t`Waiting for ${symbol} confirmations`))
+                      setDepositAddress(null)
+                      break;
+                    case ShiftStage.settled:
+                      // transition to hop cash is automatic when shifting in
+                      break;
+                  }
+                //#endregion sideshift.ai state machine
+                } else {
+                  setDepositAddress(hopProcess.depositAddress)
+                  setStatusText(i18n._(t`Waiting for deposit`))
                 }
-              } catch (error) {
-                shiftProcess.cancel(error.message)
-                hopProcess.cancel(error.message)
-                // process ui updates
-                await stateMachine()
-              }
-            } else {
-              setDepositAddress(hopProcess.depositAddress)
-              setStatusText(i18n._(t`Waiting for deposit`))
+                break;
+              case HopStage.sent:
+                setDepositAddress(null)
+                setBchTransactionId(hopProcess.bchTxId)
+                setSbchTransactionId(hopProcess.sbchTxId)
+                setStatusText(i18n._(t`Funds sent to the cross-chain bridge`))
+                break;
+              case HopStage.settled:
+                setDepositAddress(null)
+                setBchTransactionId(hopProcess.bchTxId)
+                setSbchTransactionId(hopProcess.sbchTxId)
+                setStatusText(i18n._(t`Funds arrived to destination`))
+                break;
+              case HopStage.cancelled:
+                setStatusText(i18n._(t`Bridge process cancelled`))
+                break;
             }
-            break;
-          case HopStage.sent:
-            setDepositAddress(null)
-            setBchTransactionId(hopProcess.bchTxId)
-            setSbchTransactionId(hopProcess.sbchTxId)
-            setStatusText(i18n._(t`Funds sent to the cross-chain bridge`))
-            break;
-          case HopStage.settled:
-            setDepositAddress(null)
-            setBchTransactionId(hopProcess.bchTxId)
-            setSbchTransactionId(hopProcess.sbchTxId)
-            setStatusText(i18n._(t`Funds arrived to destination`))
-            break;
-          case HopStage.cancelled:
-            setStatusText(i18n._(t`Bridge process cancelled`))
-            break;
+          } else {
+            // hop out
+            if (shiftNeeded) {
+              shiftProcess.destinationAddress = bridgeTransaction.destinationAddress
+              await shiftProcess.work()
+
+              switch (shiftProcess.stage) {
+                case undefined:
+                case ShiftStage.init:
+                  setStatusText(i18n._(t`Initializing`))
+                  break;
+                case ShiftStage.deposit:
+                  hopProcess.destinationAddress = shiftProcess.depositAddress
+                  setSideShiftOrderId(shiftProcess.orderId)
+                  if (shiftProcess.memo) setMemo(shiftProcess.memo)
+                  if (shiftProcess.destinationTag) setDestinationTag(shiftProcess.destinationTag)
+                  break;
+                case ShiftStage.confirmation:
+                  setStatusText(i18n._(t`Waiting for ${symbol} confirmations`))
+                  break;
+                case ShiftStage.settled:
+                  setStatusText(i18n._(t`Funds arrived to destination`))
+                  break;
+              }
+            }
+
+            await hopProcess.work()
+            switch (hopProcess.stage) {
+              case undefined:
+              case HopStage.init:
+                setStatusText(i18n._(t`Initializing`))
+                break;
+              case HopStage.deposit:
+                setStatusText(i18n._(t`Waiting for cross-chain transfer`))
+                break;
+              case HopStage.sent:
+                setBchTransactionId(hopProcess.bchTxId)
+                setSbchTransactionId(hopProcess.sbchTxId)
+                setStatusText(i18n._(t`Funds sent to the cross-chain bridge`))
+                break;
+              case HopStage.settled:
+                setBchTransactionId(hopProcess.bchTxId)
+                setSbchTransactionId(hopProcess.sbchTxId)
+                if (shiftNeeded) {
+                  // setStatusText(i18n._(t`Funds sent to SideShift`))
+                } else {
+                  setStatusText(i18n._(t`Funds arrived to destination`))
+                }
+                break;
+              case HopStage.cancelled:
+                setStatusText(i18n._(t`Bridge process cancelled`))
+                break;
+            }
+          }
+//#endregion hop.cash state machine
+        } catch (error) {
+          shiftProcess.cancel(error.message)
+          hopProcess.cancel(error.message)
+          // process ui updates
+          await stateMachine()
         }
 
-        if (hopProcess.stage != HopStage.settled && hopProcess.stage != HopStage.cancelled) {
+        if (hopProcess.stage != HopStage.settled && hopProcess.stage != HopStage.cancelled ||
+           (shiftNeeded && shiftProcess.stage != ShiftStage.settled && shiftProcess.stage != ShiftStage.cancelled)) 
+        {
           window.smTimeout = setTimeout(stateMachine, 1000)
         }
 
@@ -235,12 +297,14 @@ export default function BridgeModal({
               {statusText}
             </Dots>)}
             {!needsDots(statusText) && (<div>{statusText}</div>)}
-            {hopProcess.stage === HopStage.settled && (<CheckCircle className="text-2xl text-green" />)}
+            {hopProcess.stage === HopStage.settled &&
+              (!shiftNeeded || (shiftNeeded && shiftProcess.stage === ShiftStage.settled))
+              && (<CheckCircle className="text-2xl text-green" />)}
           </div>
         )}
         {hopProcess.errorMessage && (
-          <div className="flex items-center justify-center text-sm">
-            <div>{hopProcess.errorMessage}</div>
+          <div className="flex items-center justify-center text-sm text-blue">
+            {hopProcess.errorMessage}
           </div>
         )}
       </div>

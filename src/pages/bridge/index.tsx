@@ -43,8 +43,9 @@ export default function Bridge() {
   const { i18n } = useLingui()
 
   const { account: activeAccount, chainId: activeChainId } = useActiveWeb3React()
-  const { account, activate, chainId } = useWeb3React()
-  const { library } = useWeb3React(NetworkContextName)
+  const { account, activate, chainId, library: accountLibrary } = useWeb3React()
+  const { library: networkLibrary } = useWeb3React(NetworkContextName)
+  const library = accountLibrary || networkLibrary
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const bchPrice = useEthPrice()
   const transactionUpdater = useTransactionUpdater();
@@ -69,7 +70,7 @@ export default function Bridge() {
       .filter((r) => anyswapInfo[chainFrom.id][r].destChainID == chainTo.id.toString())
       .map((r) => {
         const info: AvailableChainsInfo = anyswapInfo[chainFrom.id][r]
-        const token = new Token(chainFrom.id, ethers.constants.AddressZero, info.other.Decimals, info.other.Symbol, info.other.Name) as any
+        const token = new Token(chainTo.id, ethers.constants.AddressZero, info.other.Decimals, info.other.Symbol, info.other.Name) as any
         token.logoURI = info.logoUrl
         return token
       })
@@ -119,7 +120,7 @@ export default function Bridge() {
       setCurrency0(currency)
       handleTypeInput('')
       if (currency) {
-        const methodId = Object.values(anyswapInfo[chainFrom.id]).filter((val: AvailableChainsInfo) => (currency.chainId === ChainId.SMARTBCH) || (val.symbol == currency.symbol && val.name == currency.name))[0].id
+        const methodId = Object.values(anyswapInfo[chainFrom.id]).filter((val: AvailableChainsInfo) => Number(val.destChainID) === currency.chainId && val.symbol == currency.symbol && val.name == currency.name)[0].id
         const tokenTo = anyswapInfo[chainFrom.id][methodId]
 
         tokenTo.other.MinimumSwap = 0
@@ -131,7 +132,6 @@ export default function Bridge() {
 
         let hopCashMaximum: number
         if (hopDirection === HopDirection.in) {
-          console.log(window.ethereum)
           hopCashMaximum = library ? parseFloat(await getSmartBchPoolBalance(library)) || 0. : 0.
         } else {
           hopCashMaximum = parseFloat(await getBchPoolBalance()) || 0.
@@ -142,7 +142,9 @@ export default function Bridge() {
           setShiftAllowed(allowed)
 
           if (allowed) {
-            const quote = await xaiQuote(methodId)
+            const from = hopDirection === HopDirection.in ? methodId : "bch"
+            const to = hopDirection === HopDirection.in ? "bch" : methodId
+            const quote = await xaiQuote(from, to)
 
             tokenTo.other.MinimumSwap = parseFloat(quote.min)
             tokenTo.other.MaximumSwap = Math.min(parseFloat(quote.max), hopCashMaximum)
@@ -150,10 +152,6 @@ export default function Bridge() {
             tokenTo.other.SwapRate = parseFloat(quote.rate)
           }
         } else {
-          if (!shiftAllowed) {
-            setShiftAllowed(true)
-          }
-
           tokenTo.other.MinimumSwap = 0.01001000
           tokenTo.other.MaximumSwap = hopCashMaximum
         }
@@ -165,19 +163,20 @@ export default function Bridge() {
   )
 
   const bridgeButtonClick = () => {
-    const address = hopDirection === HopDirection.in ? account : destinationAddress;
+    const destAddress = hopDirection === HopDirection.in ? (activeAccount || account) : destinationAddress
+
     const bridgeTransaction = {
       hash: randomId(),
-      hopStatus: { destinationAddress: address, direction: hopDirection },
+      hopStatus: { destinationAddress: destAddress, direction: hopDirection },
       shiftStatus: { direction: hopDirection, methodId },
       addedTime: new Date().getTime(),
       initialAmount: currencyAmount,
-      symbol: currency0.symbol,
+      symbol: hopDirection === HopDirection.in ? currency0.symbol : "BCH",
       from: activeAccount || account,
       srcChainId: chainFrom.id,
       destChainId: chainTo.id,
       methodId: methodId,
-      destinationAddress: address
+      destinationAddress: destAddress
     } as TransactionDetails;
 
     if (hopDirection === HopDirection.out) {
@@ -195,6 +194,8 @@ export default function Bridge() {
     feeUsd: number,
     feeBch: number,
     receiveAmount: number,
+    from: string,
+    to: string
   }
   const [swapInfo, setSwapInfo] = useState<SwapInfo | null>(null)
   useEffect(() => {
@@ -218,7 +219,9 @@ export default function Bridge() {
         maximumAmount: tokenToBridge.other.MaximumSwap,
         feeUsd: tokenToBridge.other.FeeUsd,
         feeBch: feeBch,
-        receiveAmount: receiveAmount
+        receiveAmount: receiveAmount,
+        from: hopDirection === HopDirection.in ? tokenToBridge.symbol : "BCH",
+        to: hopDirection === HopDirection.in ? "BCH" : tokenToBridge.symbol,
       })
     }
   }, [currencyAmount, tokenToBridge])
@@ -391,7 +394,7 @@ export default function Bridge() {
               </button>
               <ChainSelect
                 chains={chains}
-                availableChains={chainFrom.id == ChainId.SMARTBCH ? [0] : [ChainId.SMARTBCH]}
+                availableChains={chainFrom.id == ChainId.SMARTBCH ? availableChains : [ChainId.SMARTBCH]}
                 label={i18n._(t`To`)}
                 chain={chainTo}
                 otherChain={chainFrom}
@@ -401,7 +404,7 @@ export default function Bridge() {
             </div>
 
             <DualChainCurrencyInputPanel
-              label={i18n._(t`Token to bridge:`)}
+              label={hopDirection === HopDirection.in ? i18n._(t`Token to bridge:`) : i18n._(t`Token to receive:`)}
               value={currencyAmount}
               currency={currency0}
               onUserInput={handleTypeInput}
@@ -413,9 +416,10 @@ export default function Bridge() {
               chainTo={chainTo}
               tokenList={tokenList}
               chainList={anyswapInfo}
+              symbol={hopDirection === HopDirection.out ? "BCH" : null}
             />
 
-            {chainTo === BridgeChains[0] && <div className={classNames('mt-0 pt-0 p-5 rounded rounded-t-none bg-dark-800')} style={{margin: 0}}>
+            {hopDirection === HopDirection.out && <div className={classNames('mt-0 pt-0 p-5 rounded rounded-t-none bg-dark-800')} style={{margin: 0}}>
               <div className={"flex flex-col items-center md:text-xl text-base justify-between space-y-3 sm:space-y-0 sm:flex-row"}>
                 <div className={classNames('w-full sm:w-72')}>
                   Destination address
@@ -461,12 +465,12 @@ export default function Bridge() {
                 )}
                 <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
                   <div className="text-sm font-medium text-secondary">
-                    {i18n._(t`Minimum Bridge Amount: ${swapInfo?.minimumAmount.toFixed(5)} ${tokenToBridge?.other?.Symbol}`)}
+                    {i18n._(t`Minimum Bridge Amount: ${swapInfo?.minimumAmount.toFixed(5)} ${swapInfo?.from}`)}
                   </div>
                 </div>
                 <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
                   <div className="text-sm font-medium text-secondary">
-                    {i18n._(t`Maximum Bridge Amount: ${formatNumber(swapInfo?.maximumAmount)} ${tokenToBridge?.other?.Symbol}`)}
+                    {i18n._(t`Maximum Bridge Amount: ${formatNumber(swapInfo?.maximumAmount)} ${swapInfo?.from}`)}
                   </div>
                 </div>
                 <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
@@ -476,7 +480,7 @@ export default function Bridge() {
                 </div>
                 <div className="flex flex-col justify-between space-y-3 sm:space-y-0 sm:flex-row">
                   <div className="text-sm font-medium text-secondary">
-                    {i18n._(t`You will receive about: ${formatNumber(swapInfo?.receiveAmount)} BCH`)}
+                    {i18n._(t`You will receive about: ${formatNumber(swapInfo?.receiveAmount)} ${swapInfo?.to}`)}
                   </div>
                 </div>
               </div>
