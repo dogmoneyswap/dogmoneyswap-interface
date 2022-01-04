@@ -99,6 +99,9 @@ export class ShiftProcess implements ShiftStatus {
 export class ShiftInProcess extends ShiftProcess {
   async init(): Promise<void> {
     const order = await xaiOrder(this.methodId, "bch", this.destinationAddress);
+    if (order?.error?.message) {
+      throw Error(order?.error?.message);
+    }
 
     this.depositAddress = order.depositAddress.address;
     if (order.depositAddress.memo) this.memo = order.depositAddress.memo;
@@ -132,6 +135,9 @@ export class ShiftInProcess extends ShiftProcess {
 export class ShiftOutProcess extends ShiftInProcess {
   async init(): Promise<void> {
     const order = await xaiOrder("bch", this.methodId, this.destinationAddress);
+    if (order?.error?.message) {
+      throw Error(order?.error?.message);
+    }
 
     this.depositAddress = order.depositAddress.address;
     if (order.depositAddress.memo) this.memo = order.depositAddress.memo;
@@ -155,7 +161,7 @@ async function checkResponse(response) {
 // most notable, US is blocked
 // see https://help.sideshift.ai/en/articles/2874595-why-am-i-blocked-from-using-sideshift-ai
 export async function xaiGetPermissions(): Promise<boolean> {
-  const response = await fetch("https://sideshift.ai/api/v1/permissions", {
+  const response = await fetch("https://bridgeproxy.mistswap.fi/api/v1/permissions", {
     method: 'GET',
     redirect: 'follow'
   });
@@ -171,7 +177,7 @@ export async function xaiGetPermissions(): Promise<boolean> {
 // get sideshift.ai quote for a conversion
 // returned are min and max amounts, conversion rate and fee in USD
 export async function xaiQuote(from: string = "bch", to: string = "bch") {
-  const response = await fetch(`https://sideshift.ai/api/pairs/${from}/${to}`, {
+  const response = await fetch(`https://bridgeproxy.mistswap.fi/api/pairs/${from}/${to}`, {
     method: 'GET',
     redirect: 'follow'
   });
@@ -201,13 +207,13 @@ export async function xaiOrder(from = "bch", to = "bch", destinationAddress: str
 		redirect: 'follow'
 	};
 
-	const response = await fetch("https://sideshift.ai/api/orders", requestOptions);
+	const response = await fetch("https://bridgeproxy.mistswap.fi/api/orders", requestOptions);
 	return await (await checkResponse(response)).json();
 }
 
 // get order status and advance the order state machine
 export async function xaiStatus(orderId: string) {
-	const response = await fetch(`https://sideshift.ai/api/orders/${orderId}`, {
+	const response = await fetch(`https://bridgeproxy.mistswap.fi/api/orders/${orderId}`, {
 		method: 'GET',
 		redirect: 'follow'
 	});
