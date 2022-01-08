@@ -37,6 +37,7 @@ const nextConfig = {
   images: {
     domains: [
       'raw.githubusercontent.com',
+      'assets.mistswap.fi',
     ],
   },
   reactStrictMode: true,
