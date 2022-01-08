@@ -78,7 +78,7 @@ const FarmListItem = ({ farm, ...rest }) => {
                   <div className="hidden md:flex items-center space-x-2">
                     <div key="0" className="flex items-center">
                       <Image
-                        src="https://raw.githubusercontent.com/mistswapdex/assets/master/blockchains/smartbch/assets/0x5fA664f69c2A4A3ec94FaC3cBf7049BD9CA73129/logo.png"
+                        src="https://assets.mistswap.fi/blockchains/smartbch/assets/0x5fA664f69c2A4A3ec94FaC3cBf7049BD9CA73129/logo.png"
                         width="30px"
                         height="30px"
                         className="rounded-md"

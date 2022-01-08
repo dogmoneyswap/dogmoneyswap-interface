@@ -23,7 +23,7 @@ export function getCurrencyLogoUrls(currency) {
   urls.push(`https://raw.githubusercontent.com/mistswapdex/icons/master/token/${getCurrencySymbol(currency)}.jpg`)
   if (currency.chainId in BLOCKCHAIN) {
     urls.push(
-      `https://raw.githubusercontent.com/mistswapdex/assets/master/blockchains/${BLOCKCHAIN[currency.chainId]}/assets/${
+      `https://assets.mistswap.fi/blockchains/smartbch/assets/${
         currency.address
       }/logo.png`
     )

@@ -38,6 +38,7 @@ const nextConfig = {
     domains: [
       'raw.githubusercontent.com',
       'sideshift.ai',
+      'assets.mistswap.fi',
     ],
   },
   reactStrictMode: true,

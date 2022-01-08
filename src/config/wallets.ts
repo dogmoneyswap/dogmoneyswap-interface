@@ -45,7 +45,6 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     href: null,
     color: '#E8831D',
   },
-  /*
   WALLET_CONNECT: {
     connector: async () => {
       const WalletConnectConnector = (await import('@web3-react/walletconnect-connector')).WalletConnectConnector
@@ -66,6 +65,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     color: '#4196FC',
     mobile: true,
   },
+  /*
   KEYSTONE: {
     connector: async () => {
       const KeystoneConnector = (await import('@keystonehq/keystone-connector')).KeystoneConnector
