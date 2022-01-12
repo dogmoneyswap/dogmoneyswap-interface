@@ -164,8 +164,11 @@ export default function Bridge() {
     })
     const bridgeTransaction = await response.json() as TransactionDetails
 
-    // store the retreived transaction in the browser and deliver it to user's ui
-    transactionUpdater(bridgeTransaction)
+    if (response.ok) {
+      // store the retreived transaction in the browser and deliver it to user's ui
+      transactionUpdater(bridgeTransaction)
+    }
+
     onClick(hash)
   }
 
