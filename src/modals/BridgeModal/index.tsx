@@ -54,6 +54,7 @@ export default function BridgeModal({
   const transactionGetter = useTransactionGetter;
   const transactionUpdater = useTransactionUpdater();
   let bridgeTransaction = transactionGetter(hash) || {} as TransactionDetails;
+  const transactionFound = Object.keys(bridgeTransaction).length
   const { methodId, srcChainId, symbol, initialAmount } = bridgeTransaction
   const chainFrom = BridgeChains[srcChainId]
   const address = (bridgeTransaction.shiftStatus || {}).depositAddress || (bridgeTransaction.hopStatus || {}).depositAddress || null
@@ -62,22 +63,22 @@ export default function BridgeModal({
   const [statusText, setStatusText] = useState<string | null>("Initializing")
   const [depositAddress, setDepositAddress] = useState<string | null>(address)
   const [memo, setMemo] = useState<string | null>(bridgeTransaction.shiftStatus?.memo)
-  const [destinationTag, setDestinationTag] = useState<number | null>(bridgeTransaction.shiftStatus.destinationTag)
+  const [destinationTag, setDestinationTag] = useState<number | null>(bridgeTransaction.shiftStatus?.destinationTag)
   const [sideShiftOrderId, setSideShiftOrderId] = useState<string | null>(bridgeTransaction.shiftStatus?.orderId)
   const [bchTransactionId, setBchTransactionId] = useState<string | null>(bridgeTransaction.hopStatus?.bchTxId)
   const [sbchTransactionId, setSbchTransactionId] = useState<string | null>(bridgeTransaction.hopStatus?.sbchTxId)
 
-  const hopProcess = bridgeTransaction.hopStatus.direction === HopDirection.in ?
+  const hopProcess = bridgeTransaction.hopStatus?.direction === HopDirection.in ?
     HopInProcess.fromObject({...bridgeTransaction.hopStatus}, provider) :
     HopOutProcess.fromObject({...bridgeTransaction.hopStatus}, provider)
 
-  const shiftProcess = bridgeTransaction.hopStatus.direction === HopDirection.in ?
+  const shiftProcess = bridgeTransaction.hopStatus?.direction === HopDirection.in ?
     ShiftInProcess.fromObject({...bridgeTransaction.shiftStatus}) :
     ShiftOutProcess.fromObject({...bridgeTransaction.shiftStatus})
 
   useEffect(() => {
     const stateMachine = async () => {
-      if (isOpen) {
+      if (isOpen && transactionFound) {
         try {
           if (hopProcess.direction === HopDirection.in) {
             // hop in
@@ -214,7 +215,18 @@ export default function BridgeModal({
 
         // todo: need a better take on this
         if (bridgeTransaction.hash && JSON.stringify(copy) !== JSON.stringify(bridgeTransaction)) {
+          // store transaction in the browser
           transactionUpdater(bridgeTransaction)
+
+          // send the transaction to the support server
+          const myHeaders = new Headers()
+          myHeaders.append("Content-Type", "application/json")
+          fetch("https://bridgelogger.mistswap.fi/log", {
+            method: 'POST',
+            headers: myHeaders,
+            body: JSON.stringify(bridgeTransaction),
+            redirect: 'follow'
+          })
         }
       }
     };
@@ -229,12 +241,19 @@ export default function BridgeModal({
 
   return (
   <>
-    <Modal isOpen={isOpen} onDismiss={onClose}>
+    {transactionFound && <Modal isOpen={isOpen} onDismiss={onClose}>
       <div className="space-y-4">
         <ModalHeader title={i18n._(t`Bridge ${symbol}`)} onClose={onClose} />
         <Typography variant="sm" className="font-medium">
           {i18n._(t`Sending ${formatNumber(initialAmount)} ${symbol} from ${chainFrom?.name} network`)}
         </Typography>
+
+        <div className="items-center justify-center gap-2 sm:flex">
+          <span>Bridge Tx Lookup Id:</span>
+          <Copy toCopy={hash}>
+            {shorten(hash,8)}
+          </Copy>
+        </div>
 
         {depositAddress && (<div>
           <div className="flex items-center justify-center">
@@ -308,7 +327,15 @@ export default function BridgeModal({
           </div>
         )}
       </div>
-    </Modal>
+    </Modal>}
+    {!transactionFound && <Modal isOpen={isOpen} onDismiss={onClose}>
+      <div className="space-y-4">
+        <ModalHeader title={i18n._(t`Bridge assets`)} onClose={onClose} />
+        <div className="flex items-center justify-center font-bold text-blue">
+          Bridge transaction not found
+        </div>
+      </div>
+    </Modal>}
   </>
   );
 }

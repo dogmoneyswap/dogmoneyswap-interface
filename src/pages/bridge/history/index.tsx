@@ -11,7 +11,7 @@ import NavLink from '../../../components/NavLink'
 import { BottomGrouping } from '../../../features/exchange-v1/swap/styleds'
 import Web3Connect from '../../../components/Web3Connect'
 import { useWeb3React } from '@web3-react/core'
-import { useAllTransactions } from '../../../state/bridgeTransactions/hooks'
+import { useAllTransactions, useTransactionUpdater } from '../../../state/bridgeTransactions/hooks'
 import moment from 'moment'
 import { TransactionDetails } from '../../../state/bridgeTransactions/reducer'
 import { HopStage } from '../../../services/hop.cash'
@@ -20,6 +20,7 @@ import { deleteTransaction } from '../../../state/bridgeTransactions/actions'
 import BridgeModal from '../../../modals/BridgeModal'
 import { TrashIcon } from '@heroicons/react/outline'
 import { BridgeChains } from '..'
+import Button from '../../../components/Button'
 
 const Transaction: FC<{ chainId: string; hash: string, onClick: (hash) => any }> = ({ chainId, hash, onClick }) => {
   const { i18n } = useLingui()
@@ -137,8 +138,10 @@ export default function Bridge() {
   const { account: activeAccount, chainId: activeChainId } = useActiveWeb3React()
   const { account, chainId, library, activate } = useWeb3React()
   const [refresher, setRefresher] = useState(0)
+  const [lookupHash, setLookupHash] = useState<string>("")
 
   const allTransactions = useAllTransactions(refresher)
+  const transactionUpdater = useTransactionUpdater();
 
   const [showBridgeModal, setShowBridgeModal] = useState(false)
   const [bridgeTransactionHash, setBridgeTransactionHash] = useState<string | null>(null)
@@ -149,6 +152,21 @@ export default function Bridge() {
   const onClick = (hash) => {
     setBridgeTransactionHash(hash)
     setShowBridgeModal(true)
+  }
+
+  const onLookup = async (hash) => {
+    // fetch the bridge transaction from the support server
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    const response = await fetch(`https://bridgelogger.mistswap.fi/log/${hash}`, {
+      headers: myHeaders,
+      redirect: 'follow'
+    })
+    const bridgeTransaction = await response.json() as TransactionDetails
+
+    // store the retreived transaction in the browser and deliver it to user's ui
+    transactionUpdater(bridgeTransaction)
+    onClick(hash)
   }
 
   return (
@@ -242,6 +260,20 @@ export default function Bridge() {
                   )}
                 </div>
               )}
+              <div className='flex items-center gap-2 mx-4'>
+                <input
+                  id="list-add-input"
+                  type="text"
+                  placeholder="Bridge Tx Lookup Id"
+                  className="w-full px-6 py-3 my-1 text-base font-bold border border-transparent rounded appearance-none bg-dark-850 border-gradient-r-blue-pink-dark-900 placeholder-secondary focus:placeholder-primary"
+                  value={lookupHash}
+                  onChange={(e) => setLookupHash(e.target.value)}
+                  title="List URI"
+                  autoComplete="off"
+                  autoCorrect="off"
+                />
+                <Button color="gradient" variant="outlined" onClick={() => onLookup(lookupHash)}>Lookup</Button>
+              </div>
             </BottomGrouping>
           </div>
         </DoubleGlowShadow>
