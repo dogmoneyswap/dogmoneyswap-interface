@@ -61,7 +61,7 @@ export default function BridgeModal({
   const shiftNeeded = methodId !== "bch"
 
   const [statusText, setStatusText] = useState<string | null>("Initializing")
-  const [depositAddress, setDepositAddress] = useState<string | null>(address)
+  const [depositAddress, setDepositAddress] = useState<string | null>(bridgeTransaction.hopStatus?.direction === HopDirection.in ? address : null)
   const [memo, setMemo] = useState<string | null>(bridgeTransaction.shiftStatus?.memo)
   const [destinationTag, setDestinationTag] = useState<number | null>(bridgeTransaction.shiftStatus?.destinationTag)
   const [sideShiftOrderId, setSideShiftOrderId] = useState<string | null>(bridgeTransaction.shiftStatus?.orderId)
