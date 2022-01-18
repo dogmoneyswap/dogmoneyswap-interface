@@ -74,6 +74,10 @@ const nextConfig = {
         destination: '/bar',
       },
       {
+        source: '/vote',
+        destination: '/governance',
+      },
+      {
         source: '/add/:token*',
         destination: '/exchange/add/:token*',
       },
