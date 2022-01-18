@@ -159,6 +159,7 @@ export default function Dashboard(): JSX.Element {
           </div>
           <Search
             term={term}
+            placeholder={i18n._(t`Search by name, symbol, address`)}
             search={search}
             inputProps={{ className: 'placeholder-primary bg-opacity-50 w-full py-3 pl-4 pr-14 rounded bg-dark-900' }}
             className="border shadow-2xl border-dark-800"

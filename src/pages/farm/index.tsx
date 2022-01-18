@@ -569,6 +569,7 @@ export default function Farm(): JSX.Element {
       <div className={classNames('space-y-6 col-span-4 lg:col-span-3')}>
         <Search
           search={search}
+          placeholder={i18n._(t`Search by name, symbol, address`)}
           term={term}
           className={classNames('px-3 md:px-0 ')}
           inputProps={{
