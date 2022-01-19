@@ -11,8 +11,11 @@ import TokenList from '../../../features/analytics/Tokens/TokenList'
 import useFarmRewards from '../../../hooks/useFarmRewards'
 import { useFuse } from '../../../hooks'
 import Background from '../../../features/analytics/Background'
+import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 export default function Dashboard(): JSX.Element {
+  const { i18n } = useLingui()
   const [type, setType] = useState<'pools' | 'pairs' | 'tokens'>('pools')
 
   const block1d = useBlock({ daysAgo: 1 })

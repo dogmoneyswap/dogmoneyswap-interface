@@ -7,8 +7,11 @@ import PairTabs from '../../../features/analytics/Pairs/PairTabs'
 import Search from '../../../components/Search'
 import { useFuse } from '../../../hooks'
 import Background from '../../../features/analytics/Background'
+import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 export default function Pairs() {
+  const { i18n } = useLingui()
   const [type, setType] = useState<'all' | 'gainers' | 'losers'>('all')
 
   const block1d = useBlock({ daysAgo: 1 })

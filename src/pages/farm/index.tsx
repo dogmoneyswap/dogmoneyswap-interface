@@ -31,8 +31,11 @@ import { usePositions, usePendingSushi } from '../../features/onsen/hooks'
 import { useRouter } from 'next/router'
 import { updateUserFarmFilter } from '../../state/user/actions'
 import { getFarmFilter, useUpdateFarmFilter } from '../../state/user/hooks'
+import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 export default function Farm(): JSX.Element {
+  const { i18n } = useLingui()
   const { chainId } = useActiveWeb3React()
   const router = useRouter()
 

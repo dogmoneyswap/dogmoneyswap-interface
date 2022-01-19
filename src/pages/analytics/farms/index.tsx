@@ -5,8 +5,11 @@ import useFarmRewards from '../../../hooks/useFarmRewards'
 import { useFuse } from '../../../hooks'
 import { useMemo } from 'react'
 import Background from '../../../features/analytics/Background'
+import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 export default function Farms(): JSX.Element {
+  const { i18n } = useLingui()
   const farms = useFarmRewards()
 
   const farmsFormatted = useMemo(

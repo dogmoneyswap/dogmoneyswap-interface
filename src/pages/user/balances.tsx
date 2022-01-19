@@ -56,7 +56,7 @@ function Balances() {
                 <Search
                   search={search}
                   placeholder={i18n._(t`Search by name, symbol, address`)}
-                  term={term
+                  term={term}
                 />
               </div>
             </div>

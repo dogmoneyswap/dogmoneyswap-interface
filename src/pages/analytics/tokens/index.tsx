@@ -5,8 +5,11 @@ import Search from '../../../components/Search'
 import TokenList from '../../../features/analytics/Tokens/TokenList'
 import { useFuse } from '../../../hooks'
 import Background from '../../../features/analytics/Background'
+import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 export default function Tokens() {
+  const { i18n } = useLingui()
   const block1d = useBlock({ daysAgo: 1 })
   const block1w = useBlock({ daysAgo: 7 })
 

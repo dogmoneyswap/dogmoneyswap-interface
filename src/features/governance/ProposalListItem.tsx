@@ -8,7 +8,6 @@ import React from 'react'
 import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
 import { useCurrency } from '../../hooks/Tokens'
-import { usePendingSushi, useUserInfo } from './hooks'
 import { isMobile } from 'react-device-detect'
 
 const ProposalListItem = ({ proposal, ...rest }) => {
