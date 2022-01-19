@@ -2244,6 +2244,14 @@
     tiny-warning "^1.0.3"
     toformat "^2.0.0"
 
+"@mistswapdex/xmist-governance@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@mistswapdex/xmist-governance/-/xmist-governance-0.0.1.tgz#304594d6e41cd52b8c5b2bd8d8ec274bb66d1c6d"
+  integrity sha512-juMm32YYBk1jYP5FeQ29bRybuDf2BqWwaMdsSVss5q+nOrl2GM/T3w0i075M2Fy0+pxY9e/CF62BYz4gcDTCdg==
+  dependencies:
+    commitlint "^13.1.0"
+    lint-staged "^11.1.2"
+
 "@napi-rs/triples@^1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@napi-rs/triples/-/triples-1.0.3.tgz#76d6d0c3f4d16013c61e45dfca5ff1e6c31ae53c"

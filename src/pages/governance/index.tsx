@@ -1,5 +1,6 @@
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { BAR_ADDRESS, ZERO } from '@mistswapdex/sdk'
+import PROPOSAL_LIST from '@mistswapdex/xmist-governance'
 import React, { useEffect, useState } from 'react'
 import { MIST, XMIST } from '../../config/tokens'
 
@@ -43,22 +44,11 @@ export default function Vote() {
   const { i18n } = useLingui()
   const { account, chainId } = useActiveWeb3React()
 
-
-  // TODO load these from files
-  const data = [
-    {
-      id: '01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b',
-      title: 'Test',
-      description: 'This is an example proposal',
-      options: [
-        'YES',
-        'NO',
-      ],
-      snapshotBlock: '12345678',
-      endBlock: '12345678',
+  const data = Object.entries(PROPOSAL_LIST.proposals).map(([id, v]) => ({
+      id,
+      ...v,
       status: 'ACTIVE',
-    }
-  ];
+  }));
   const options = {
     keys: ['title'],
     threshold: 0.4,
