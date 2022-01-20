@@ -54,12 +54,17 @@ export default function Vote() {
     (url) => fetch(url).then((r) => {console.log(r); return r.json()})
   )
 
+  const zero = BigNumber.from(0);
   data?.forEach(proposal => {
     proposal.status = currentBlock > proposal.endBlock ? 'closed' : 'active'
 
     const weightedHistogram = proposal.histogram.map(val => BigNumber.from(val));
-    const sum = weightedHistogram.reduce((a, b) => a.add(b), BigNumber.from(0));
-    proposal.weightedHistogram = weightedHistogram.map(val => val.mul(1e4).div(sum).toNumber() / 1e2);
+    const sum = weightedHistogram.reduce((a, b) => a.add(b), zero);
+    if (sum.eq(zero)) {
+      proposal.weightedHistogram = proposal.histogram.map(() => 0);
+    } else {
+      proposal.weightedHistogram = weightedHistogram.map(val => val.mul(1e4).div(sum).toNumber() / 1e2);
+    }
   });
 
   const options = {
