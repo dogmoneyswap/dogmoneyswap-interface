@@ -29,7 +29,7 @@ const ProposalListItem = ({ proposal, ...rest }) => {
             )}
           >
             <div className="grid grid-cols-3">
-              <div className="flex col-span-2 space-x-4 md:col-span-1">
+              <div className="flex col-span-1 space-x-4">
                 <div className="flex flex-col justify-center">
                   <div>
                     <p className="font-bold">{proposal?.title}</p>

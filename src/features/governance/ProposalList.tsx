@@ -17,7 +17,7 @@ const ProposalList = ({ proposals, term }) => {
     <>
       <div className="grid grid-cols-3 text-base font-bold text-primary">
         <div
-          className="flex items-center col-span-2 px-4 cursor-pointer md:col-span-1"
+          className="flex items-center col-span-1 px-4 cursor-pointer"
           onClick={() => requestSort('title')}
         >
           <div className="hover:text-high-emphesis">{i18n._(t`Title`)}</div>
@@ -36,7 +36,7 @@ const ProposalList = ({ proposals, term }) => {
             ((sortConfig.direction === 'ascending' && <ChevronUpIcon width={12} height={12} />) ||
               (sortConfig.direction === 'descending' && <ChevronDownIcon width={12} height={12} />))}
         </div>
-        <div className="items-center justify-center hidden px-4 cursor-pointer md:flex hover:text-high-emphesis"
+        <div className="flex items-center justify-center px-4 cursor-pointer hover:text-high-emphesis"
           onClick={() => requestSort('endBlock')}
         >
           {i18n._(t`End Block`)}

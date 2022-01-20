@@ -22,11 +22,13 @@ import { t } from '@lingui/macro'
 import { tryParseAmount } from '../../functions/parse'
 import { useActiveWeb3React, useFuse } from '../../hooks'
 import { useLingui } from '@lingui/react'
-import useSWR from 'swr'
+import useSWR, { SWRResponse } from 'swr'
 import useSushiBar from '../../hooks/useSushiBar'
 import { getDayData, useMistPrice } from '../../services/graph'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { useWalletModalToggle } from '../../state/application/hooks'
+import { useBlockNumber, useWalletModalToggle } from '../../state/application/hooks'
+import { BigNumber } from '@ethersproject/bignumber'
+import useParsedQueryString from '../../hooks/useParsedQueryString'
 
 
 const tabStyle = 'flex justify-center items-center h-full w-full rounded-lg cursor-pointer text-sm md:text-base'
@@ -44,14 +46,26 @@ export default function Vote() {
   const { i18n } = useLingui()
   const { account, chainId } = useActiveWeb3React()
 
-  const data = Object.entries(PROPOSAL_LIST.proposals).map(([id, v]) => ({
-      id,
-      ...v,
-      status: 'ACTIVE',
-  }));
+  const parsedQs = useParsedQueryString();
+  const currentBlock = useBlockNumber();
+
+  const { data, error }: SWRResponse<any[], Error> = useSWR(
+    'http://localhost:3001/proposal/all',
+    (url) => fetch(url).then((r) => {console.log(r); return r.json()})
+  )
+
+  data?.forEach(proposal => {
+    proposal.status = currentBlock > proposal.endBlock ? 'closed' : 'active'
+
+    const weightedHistogram = proposal.histogram.map(val => BigNumber.from(val));
+    const sum = weightedHistogram.reduce((a, b) => a.add(b), BigNumber.from(0));
+    proposal.weightedHistogram = weightedHistogram.map(val => val.mul(1e4).div(sum).toNumber() / 1e2);
+  });
+
   const options = {
-    keys: ['title'],
+    keys: ['title', 'proposalId'],
     threshold: 0.4,
+    default: parsedQs.proposalId
   }
   const { result, term, search } = useFuse({
     data,
@@ -113,7 +127,7 @@ export default function Vote() {
                 }}
               />
 
-              <div className="hidden md:block flex items-center text-lg font-bold text-high-emphesis whitespace-nowrap">
+              <div className="flex items-center hidden text-lg font-bold md:block text-high-emphesis whitespace-nowrap">
                 Proposals{' '}
                 <div className="w-full h-0 ml-4 font-bold bg-transparent border border-b-0 border-transparent rounded text-high-emphesis md:border-gradient-r-blue-pink-dark-800 opacity-20"></div>
               </div>

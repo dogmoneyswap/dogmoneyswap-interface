@@ -83,13 +83,14 @@ const ProposalListItemDetails = ({ proposal }) => {
       leaveTo="opacity-0"
     >
       <Disclosure.Panel className="flex flex-col w-full border-t-0 rounded rounded-t-none bg-dark-800" static>
-        <div className="grid grid-cols-2 gap-4 p-4 pt-0">
+        <div className="grid grid-cols-2 gap-4 p-4 pt-4">
           {proposal?.content}
         </div>
-        <div className="grid grid-cols-2 gap-4 p-4 pt-0">
+        <div className="gap-4 p-4 pt-0">
           {proposal?.options.map((option, index) => (
             <ProposalVoteOption proposal={proposal} index={index} />
           ))}
+          <span className="float-right mt-2">Total votes: {proposal.voteCount}</span>
         </div>
       </Disclosure.Panel>
     </Transition>

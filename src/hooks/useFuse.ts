@@ -7,7 +7,7 @@ function fuzzySearch({ fuse, data, term }) {
 }
 
 function useFuse({ data, options }) {
-  const [term, setTerm] = useState<string>('')
+  const [term, setTerm] = useState<string>(options?.default || '')
   const fuseOptions = {
     ...options,
   }
