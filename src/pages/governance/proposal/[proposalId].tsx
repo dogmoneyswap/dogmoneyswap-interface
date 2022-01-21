@@ -121,7 +121,7 @@ export default function Proposal() {
                     </div>
                     <div className="gap-4">
                       {proposal?.options.map((option, index) => (
-                        <ProposalVoteOption proposal={proposal} index={index} />
+                        <ProposalVoteOption key={index} proposal={proposal} index={index} />
                       ))}
                       <span className="float-right mt-2">Total votes: {proposal?.voteCount}</span>
                     </div>
@@ -129,7 +129,7 @@ export default function Proposal() {
 
                   <div className="flex flex-col w-full p-4 border-t-0 rounded bg-dark-800">
                     {proposal?.votes.map(vote => (
-                      <div className="grid grid-cols-10">
+                      <div key={vote.address} className="grid grid-cols-10">
                         <div className="flex flex-col items-start col-span-3">
                           <Copy toCopy={vote.address}>
                             <span>{shortenAddress(vote.address)}</span>
