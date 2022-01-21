@@ -34,7 +34,9 @@ export default function Proposal() {
   const zero = BigNumber.from(0);
   if (data) {
     [data].forEach(proposal => {
-      proposal.status = currentBlock > proposal.endBlock ? 'closed' : 'active'
+      proposal.status = currentBlock > proposal.endBlock ?
+        i18n._(t`closed`) :
+        i18n._(t`active`)
 
       const weightedHistogram = proposal.histogram.map(val => BigNumber.from(val));
       const sum = weightedHistogram.reduce((a, b) => a.add(b), zero);
@@ -96,7 +98,7 @@ export default function Proposal() {
 
               {!proposal && (
                 <div className="text-xl font-bold">
-                  {`Proposal ${proposalId} not found`}
+                  {i18n._(t`Proposal ${proposalId} not found`)}
                 </div>
               )}
 
@@ -105,7 +107,7 @@ export default function Proposal() {
                   <div className="flex flex-col w-full p-4 border-t-0 rounded bg-dark-800">
                     <div>
                       <span className="float-right text-xs">
-                        Voting proposal {proposal?.proposalId}
+                        {i18n._(t`Voting proposal ${proposal?.proposalId}`)}
                       </span>
                     </div>
                     <div className="text-xl font-bold">
@@ -113,7 +115,7 @@ export default function Proposal() {
                     </div>
                     <div className="">
                       {proposal?.status}
-                      <span className="float-right">ends at block {proposal?.endBlock}</span>
+                      <span className="float-right">{i18n._(t`ends at block ${proposal?.endBlock}`)}</span>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4 pt-8 pb-8">
@@ -123,14 +125,14 @@ export default function Proposal() {
                       {proposal?.options.map((option, index) => (
                         <ProposalVoteOption key={index} proposal={proposal} index={index} />
                       ))}
-                      <span className="float-right mt-2">Total votes: {proposal?.voteCount}</span>
+                      <span className="float-right mt-2">{i18n._(t`Total votes: ${proposal?.voteCount}`)}</span>
                     </div>
                   </div>
 
                   <div className="flex flex-col w-full p-4 border-t-0 rounded bg-dark-800">
                     {proposal?.votes.length === 0 && (
                       <div className="text-base font-bold">
-                        {`No votes yet`}
+                        {i18n._(t`No votes yet`)}
                       </div>
                     )}
                     {proposal?.votes.map(vote => (

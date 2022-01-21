@@ -28,7 +28,9 @@ export default function Vote() {
 
   const zero = BigNumber.from(0);
   data?.forEach(proposal => {
-    proposal.status = currentBlock > proposal.endBlock ? 'closed' : 'active'
+    proposal.status = currentBlock > proposal.endBlock ?
+      i18n._(t`closed`) :
+      i18n._(t`active`)
 
     const weightedHistogram = proposal.histogram.map(val => BigNumber.from(val));
     const sum = weightedHistogram.reduce((a, b) => a.add(b), zero);
