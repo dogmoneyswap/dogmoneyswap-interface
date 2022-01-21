@@ -1,46 +1,18 @@
-import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import { BAR_ADDRESS, ZERO } from '@mistswapdex/sdk'
-import PROPOSAL_LIST from '@mistswapdex/xmist-governance'
-import React, { useEffect, useState } from 'react'
-import { MIST, XMIST } from '../../config/tokens'
+import React, {  } from 'react'
 
-import Button from '../../components/Button'
-import { ChainId } from '@mistswapdex/sdk'
 import Container from '../../components/Container'
 import ProposalList from '../../features/governance/ProposalList'
-import Dots from '../../components/Dots'
 import Head from 'next/head'
 import Image from 'next/image'
-import Input from '../../components/Input'
-import TransactionFailedModal from '../../modals/TransactionFailedModal'
-import { request } from 'graphql-request'
 import Search from '../../components/Search'
 import { classNames } from '../../functions'
-import styled from 'styled-components'
-import sushiData from '@sushiswap/sushi-data'
 import { t } from '@lingui/macro'
-import { tryParseAmount } from '../../functions/parse'
 import { useActiveWeb3React, useFuse } from '../../hooks'
 import { useLingui } from '@lingui/react'
 import useSWR, { SWRResponse } from 'swr'
-import useSushiBar from '../../hooks/useSushiBar'
-import { getDayData, useMistPrice } from '../../services/graph'
-import { useTokenBalance } from '../../state/wallet/hooks'
-import { useBlockNumber, useWalletModalToggle } from '../../state/application/hooks'
+import { useBlockNumber } from '../../state/application/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
-
-
-const tabStyle = 'flex justify-center items-center h-full w-full rounded-lg cursor-pointer text-sm md:text-base'
-const activeTabStyle = `${tabStyle} text-high-emphesis font-bold bg-dark-900`
-const inactiveTabStyle = `${tabStyle} text-secondary`
-
-const buttonStyle =
-  'flex justify-center items-center w-full h-14 rounded font-bold md:font-medium md:text-lg mt-5 text-sm focus:outline-none focus:ring'
-const buttonStyleEnabled = `${buttonStyle} text-high-emphesis bg-gradient-to-r from-pink-red to-light-brown hover:opacity-90`
-const buttonStyleInsufficientFunds = `${buttonStyleEnabled} opacity-60`
-const buttonStyleDisabled = `${buttonStyle} text-secondary bg-dark-700`
-const buttonStyleConnectWallet = `${buttonStyle} text-high-emphesis bg-cyan-blue hover:bg-opacity-90`
 
 export default function Vote() {
   const { i18n } = useLingui()
@@ -50,7 +22,7 @@ export default function Vote() {
   const currentBlock = useBlockNumber();
 
   const { data, error }: SWRResponse<any[], Error> = useSWR(
-    'http://localhost:3001/proposal/all',
+    'http://116.203.218.213:3000/proposal/all',
     (url) => fetch(url).then((r) => {console.log(r); return r.json()})
   )
 

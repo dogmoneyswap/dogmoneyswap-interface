@@ -29,7 +29,7 @@ const ProposalVoteOption = ({ proposal, index }) => {
       address: account
     });
 
-    const response = await fetch("http://localhost:3001/vote", {
+    const response = await fetch("http://116.203.218.213:3000/vote", {
       method: 'POST',
       body,
       headers: {
