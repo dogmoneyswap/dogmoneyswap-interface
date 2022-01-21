@@ -3,6 +3,7 @@ import { useLingui } from '@lingui/react'
 import { useRouter } from 'next/router'
 import millify from 'millify'
 import { useCallback } from 'react';
+import { mutate } from 'swr';
 
 const ProposalVoteOption = ({ proposal, index }) => {
   const { i18n } = useLingui()
@@ -38,6 +39,9 @@ const ProposalVoteOption = ({ proposal, index }) => {
     });
     const json = await response.json()
     if (json.error) alert(json.error);
+
+    mutate(`http://116.203.218.213:3000/proposal/all`)
+    mutate(`http://116.203.218.213:3000/proposal/${proposal.proposalId}`)
   }, [account]);
 
   return (

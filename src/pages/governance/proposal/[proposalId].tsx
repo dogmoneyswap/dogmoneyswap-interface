@@ -128,6 +128,11 @@ export default function Proposal() {
                   </div>
 
                   <div className="flex flex-col w-full p-4 border-t-0 rounded bg-dark-800">
+                    {proposal?.votes.length === 0 && (
+                      <div className="text-base font-bold">
+                        {`No votes yet`}
+                      </div>
+                    )}
                     {proposal?.votes.map(vote => (
                       <div key={vote.address} className="grid grid-cols-10">
                         <div className="flex flex-col items-start col-span-3">

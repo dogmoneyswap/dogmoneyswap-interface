@@ -92,8 +92,9 @@ const ProposalListItemDetails = ({ proposal }) => {
           ))}
           <span className="float-right mt-2">Total votes: {proposal.voteCount}</span>
           <Button
-            className="mt-2"
+            className="w-full mt-2"
             color="gradient"
+            variant="outlined"
             onClick={async () => {
               router.push(`/vote/${proposal.proposalId}`)
             }}
