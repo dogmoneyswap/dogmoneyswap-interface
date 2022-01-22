@@ -30,7 +30,7 @@ const ProposalVoteOption = ({ proposal, index }) => {
       address: account
     });
 
-    const response = await fetch("http://116.203.218.213:3000/vote", {
+    const response = await fetch("https://vote.mistswap.fi/vote", {
       method: 'POST',
       body,
       headers: {
@@ -40,8 +40,8 @@ const ProposalVoteOption = ({ proposal, index }) => {
     const json = await response.json()
     if (json.error) alert(json.error);
 
-    mutate(`http://116.203.218.213:3000/proposal/all`)
-    mutate(`http://116.203.218.213:3000/proposal/${proposal.proposalId}`)
+    mutate(`https://vote.mistswap.fi/proposal/all`)
+    mutate(`https://vote.mistswap.fi/proposal/${proposal.proposalId}`)
   }, [account]);
 
   return (

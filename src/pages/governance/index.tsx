@@ -22,7 +22,7 @@ export default function Vote() {
   const currentBlock = useBlockNumber();
 
   const { data, error }: SWRResponse<any[], Error> = useSWR(
-    'http://116.203.218.213:3000/proposal/all',
+    'https://vote.mistswap.fi/proposal/all',
     (url) => fetch(url).then((r) => {console.log(r); return r.json()})
   )
 
