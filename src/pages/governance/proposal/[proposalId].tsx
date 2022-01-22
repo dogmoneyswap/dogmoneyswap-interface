@@ -122,7 +122,9 @@ export default function Proposal() {
 
                     <div className="grid grid-cols-2 gap-4 pt-8 pb-8">
                       <div>
-                        <ReactMarkdown children={proposal?.content} remarkPlugins={[remarkGfm]} />
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                          {proposal?.content}
+                        </ReactMarkdown>
                       </div>
                     </div>
                     <div className="gap-4">
