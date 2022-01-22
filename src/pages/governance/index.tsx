@@ -93,7 +93,7 @@ export default function Vote() {
           </div>
         </div>
         <div className="flex justify-center mb-6">
-          <div className="flex flex-col w-full max-w-xl mt-auto mb-4">
+          <div className="flex flex-col w-full max-w-7xl mt-auto mb-4">
             <div className={classNames('space-y-6 col-span-4 lg:col-span-3')}>
               <Search
                 search={search}
