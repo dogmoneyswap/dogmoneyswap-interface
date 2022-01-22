@@ -166,6 +166,8 @@
   ],
   "dependencies": {
     "patch-package": "^6.4.7",
-    "postinstall-postinstall": "^2.1.0"
+    "postinstall-postinstall": "^2.1.0",
+    "react-markdown": "^8.0.0",
+    "remark-gfm": "^3.0.1"
   }
 }

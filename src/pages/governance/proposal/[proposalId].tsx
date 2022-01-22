@@ -1,4 +1,6 @@
 import React, {  } from 'react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 import Container from '../../../components/Container'
 import Head from 'next/head'
@@ -119,7 +121,9 @@ export default function Proposal() {
                     </div>
 
                     <div className="grid grid-cols-2 gap-4 pt-8 pb-8">
-                      {proposal?.content}
+                      <div>
+                        <ReactMarkdown children={proposal?.content} remarkPlugins={[remarkGfm]} />
+                      </div>
                     </div>
                     <div className="gap-4">
                       {proposal?.options.map((option, index) => (
