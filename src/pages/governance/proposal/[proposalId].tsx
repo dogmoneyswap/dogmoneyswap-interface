@@ -68,10 +68,10 @@ export default function Proposal() {
           name="twitter:description"
           content="Vote using xMIST on community created proposals."
         />
-        <meta key="twitter:image" name="twitter:image" content="https://app.mistswap.fi/xmist-sign.png" />
+        <meta key="twitter:image" name="twitter:image" content="https://app.mistswap.fi/xmist-governance.png" />
         <meta key="og:title" property="og:title" content="VOTE WITH XMIST" />
         <meta key="og:url" property="og:url" content="https://app.mistswap.fi/vote" />
-        <meta key="og:image" property="og:image" content="https://app.mistswap.fi/xmist-sign.png" />
+        <meta key="og:image" property="og:image" content="https://app.mistswap.fi/xmist-governance.png" />
         <meta
           key="og:description"
           property="og:description"
@@ -91,7 +91,7 @@ export default function Proposal() {
             </div>
           </div>
           <div className="hidden px-8 ml-6 md:block w-72">
-            <Image src="/xmist-sign.png" alt="xMIST sign" width="100%" height="100%" layout="responsive" />
+            <Image src="/xmist-governance.png" alt="xMIST Governance" width="100%" height="100%" layout="responsive" />
           </div>
         </div>
         <div className="flex justify-center mb-6">
