@@ -24,53 +24,6 @@ const ProposalListItemDetails = ({ proposal }) => {
   const router = useRouter()
 
   const { account, chainId } = useActiveWeb3React()
-  /*
-  const [pendingTx, setPendingTx] = useState(false)
-  const [depositValue, setDepositValue] = useState('')
-  const [withdrawValue, setWithdrawValue] = useState('')
-
-  const addTransaction = useTransactionAdder()
-
-  const liquidityToken = new Token(
-    chainId,
-    getAddress(farm.pair.id),
-    farm.pair.type === PairType.KASHI ? Number(farm.pair.asset.decimals) : 18,
-    farm.pair.symbol,
-    farm.pair.name
-  )
-
-  // User liquidity token balance
-  const balance = useTokenBalance(account, liquidityToken)
-
-  // TODO: Replace these
-  const amount = useUserInfo(farm, liquidityToken)
-
-  const pendingSushi = usePendingSushi(farm)
-
-  const reward = usePendingReward(farm)
-
-  const APPROVAL_ADDRESSES = {
-    [Chef.MASTERCHEF]: {
-      [ChainId.SMARTBCH]: MASTERCHEF_ADDRESS[ChainId.SMARTBCH],
-      [ChainId.SMARTBCH_AMBER]: MASTERCHEF_ADDRESS[ChainId.SMARTBCH_AMBER],
-    },
-  }
-
-  const typedDepositValue = tryParseAmount(depositValue, liquidityToken)
-  const typedWithdrawValue = tryParseAmount(withdrawValue, liquidityToken)
-
-  const [approvalState, approve] = useApproveCallback(typedDepositValue, APPROVAL_ADDRESSES[farm.chef][chainId])
-
-  const { deposit, withdraw, harvest } = useMasterChef(farm.chef)
-
-  const poolFraction = (Number.parseFloat(amount?.toFixed()) / farm.chefBalance) || 0
-  const token0Reserve = farm.pool.reserves ? (farm.pool.reserves.reserve0 as BigNumber).toString() : 0
-  const token0Amount = CurrencyAmount.fromRawAmount(farm.pair.token0, JSBI.BigInt(token0Reserve)).multiply(Math.round(poolFraction * 1e8)).divide(1e8)
-  const token1Reserve = farm.pool.reserves ? (farm.pool.reserves.reserve1 as BigNumber).toString() : 0
-  const token1Amount = CurrencyAmount.fromRawAmount(farm.pair.token1, JSBI.BigInt(token1Reserve)).multiply(Math.round(poolFraction * 1e8)).divide(1e8)
-  const token0Name = farm.pool.token0 === farm.pair.token0.id ? farm.pair.token0.symbol : farm.pair.token1.symbol
-  const token1Name = farm.pool.token1 === farm.pair.token1.id ? farm.pair.token1.symbol : farm.pair.token0.symbol
-  */
 
   return (
     <Transition
