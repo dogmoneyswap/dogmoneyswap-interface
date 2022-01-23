@@ -85,7 +85,7 @@ export default function Vote() {
               </div>
             </div>
             <div className="max-w-lg pr-3 mb-2 text-sm leading-5 text-gray-500 md:text-base md:mb-4 md:pr-0">
-              {i18n._(t`View proposals and vote on them using your xMIST.`)}
+              {i18n._(t`View proposals and vote on them using your xMIST. The amount of xMIST you hold at the snapshot block determines your vote weight. You may only vote once per proposal.`)}
             </div>
           </div>
           <div className="hidden px-8 ml-6 md:block w-72">
