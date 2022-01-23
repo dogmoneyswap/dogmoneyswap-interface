@@ -112,7 +112,7 @@ export default function Proposal() {
                 <div className="text-xl font-bold">
                 </div>
                 <div className="">
-                  <span className={`pl-2 pr-2 text-white rounded boder border-white ${proposal?.status === i18n._(t`active`) ? "bg-[#2edd7d]" : "bg-[#dd3a2e]"}`}>{proposal?.status}</span>
+                  <span className={`pl-2 pr-2 text-white rounded border border-white ${proposal?.status === i18n._(t`active`) ? "bg-[#2edd7d]" : "bg-[#dd3a2e]"}`}>{proposal?.status}</span>
                   <span className="float-right">{i18n._(t`ends at block ${proposal?.endBlock}`)}</span>
                 </div>
 
