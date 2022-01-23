@@ -149,9 +149,9 @@ export default function Proposal() {
               </div>
 
               <div className="flex flex-col w-full p-4 border-t-0 rounded bg-dark-800">
-                Select a voting option and click on "Vote"
+                Select a voting option and click on <b>Vote</b>
                 {proposal?.options.map((option, index) => (
-                  <div className="flex items-center justify-center mt-3">
+                  <div key={index} className="flex items-center justify-center mt-3">
                     <Button onClick={() => {setSelectedIndex(index)}} className="w-full"
                       color="blue"
                       variant={selectedIndex === index ? "filled" : "outlined"}
