@@ -14,16 +14,17 @@ import { useBlockNumber } from '../../state/application/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { VOTING_API_URL } from '../../features/governance/util'
+import { useWeb3React } from '@web3-react/core'
 
 export default function Vote() {
   const { i18n } = useLingui()
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId } = useWeb3React()
 
   const parsedQs = useParsedQueryString();
   const currentBlock = useBlockNumber();
 
   const { data, error }: SWRResponse<any[], Error> = useSWR(
-    `${VOTING_API_URL}/proposal/all${account && `?address=${account}`}`,
+    `${VOTING_API_URL}/proposal/all${account ? `?address=${account}` : ""}`,
     (url) => fetch(url).then((r) => r.json())
   )
 
@@ -94,7 +95,7 @@ export default function Vote() {
           </div>
         </div>
         <div className="flex justify-center mb-6">
-          <div className="flex flex-col w-full max-w-7xl mt-auto mb-4">
+          <div className="flex flex-col w-full mt-auto mb-4 max-w-7xl">
             <div className={classNames('space-y-6 col-span-4 lg:col-span-3')}>
               <Search
                 search={search}

@@ -4,10 +4,17 @@ export const VOTING_API_URL = "https://vote.mistswap.fi"
 // export const VOTING_API_URL = "http://localhost:3001"
 
 export const formatXmist = (amount: string) => {
+  if (!amount)
+    return "0";
   return millify(parseInt(amount.slice(0, -18) || "0"))
 }
 
 export const castVote = async ({proposal, index, cache, mutate, library, account}) => {
+  if (!account) {
+    alert(`Connect to a Web3 account first`);
+    return;
+  }
+
   if (index == undefined) {
     alert(`Select an option to vote for`);
     return;

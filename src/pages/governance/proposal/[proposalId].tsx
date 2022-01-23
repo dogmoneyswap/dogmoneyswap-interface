@@ -19,6 +19,7 @@ import ProposalVoteOption from '../../../features/governance/ProposalVoteOption'
 import Copy from '../../../components/AccountDetails/Copy'
 import { castVote, formatXmist, VOTING_API_URL } from '../../../features/governance/util'
 import Button from '../../../components/Button'
+import Web3Connect from '../../../components/Web3Connect'
 
 export default function Proposal() {
   const { i18n } = useLingui()
@@ -29,7 +30,7 @@ export default function Proposal() {
   const [selectedIndex, setSelectedIndex] = useState<Number | null>(null);
 
   const { data }: SWRResponse<any, Error> = useSWR(
-    `${VOTING_API_URL}/proposal/${proposalId}${account && `?address=${account}`}`,
+    `${VOTING_API_URL}/proposal/${proposalId}${account ? `?address=${account}` : ""}`,
     (url) => fetch(url).then((r) => r.json().then((json) => {
       if (!r.ok)
         throw Error(json.error);
@@ -152,12 +153,16 @@ export default function Proposal() {
                   </div>
                 ))}
                 <div className="flex self-center w-64 mt-4">
-                  <Button onClick={vote}
-                    color="gradient"
-                    variant="filled"
-                  >
-                    {i18n._(t`Vote`)}
-                  </Button>
+                  {!account ? (
+                    <Web3Connect size="lg" color="gradient" className="w-full" />
+                  ) : (
+                    <Button onClick={vote}
+                      color="gradient"
+                      variant="filled"
+                    >
+                      {i18n._(t`Vote`)}
+                    </Button>
+                  )}
                 </div>
               </div>
 
