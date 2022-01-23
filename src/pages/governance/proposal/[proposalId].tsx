@@ -116,7 +116,7 @@ export default function Proposal() {
                   <span className="float-right">{i18n._(t`ends at block ${proposal?.endBlock}`)}</span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 pt-8 pb-8">
+                <div className="grid gap-4 pt-8 pb-8">
                   <div>
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                       {proposal?.content}
