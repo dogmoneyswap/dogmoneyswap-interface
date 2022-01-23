@@ -99,16 +99,15 @@ export default function Proposal() {
               {proposal?.title}
             </div>
           )}
-
-          {!proposal && (
-            <div>
-              Proposal {proposalId} not found
-            </div>
-          )}
         </Typography>
       </div>
       <div className="p-4 space-y-4 rounded bg-dark-900">
         <div className="grid grid-flow-row gap-3">
+          {!proposal && (
+            <div>
+              {i18n._(t`Proposal ${proposalId} not found`)}
+            </div>
+          )}
           {proposal && (
             <>
               <div className="flex flex-col w-full p-4 border-t-0 rounded bg-dark-800">
