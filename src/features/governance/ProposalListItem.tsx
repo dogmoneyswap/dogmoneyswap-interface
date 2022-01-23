@@ -36,10 +36,14 @@ const ProposalListItem = ({ proposal, ...rest }) => {
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col items-center justify-center font-bold">{proposal?.status}</div>
-              <div className="flex flex-col items-center justify-center">
+              <div className="flex flex-col items-center justify-center font-bold">
+                <div>{proposal?.status}</div>
+                <div>{proposal?.statusText}</div>
+              </div>
+              <div className="flex flex-col items-center justify-center font-mono">
                 <div className="font-bold text-righttext-high-emphesis">
-                  {proposal?.endBlock}
+                  <div>{proposal?.snapshotBlock}</div>
+                  <div>{proposal?.endBlock}</div>
                 </div>
               </div>
             </div>

@@ -15,6 +15,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { VOTING_API_URL } from '../../features/governance/util'
 import { useWeb3React } from '@web3-react/core'
+import moment from 'moment'
 
 export default function Vote() {
   const { i18n } = useLingui()
@@ -30,9 +31,16 @@ export default function Vote() {
 
   const zero = BigNumber.from(0);
   data?.forEach(proposal => {
+    const blockDelta = proposal.endBlock - currentBlock;
+    const secondsLeft = blockDelta * 5.5;
+    const expireTime = moment().add(secondsLeft, "seconds").fromNow(true);
+
     proposal.status = currentBlock > proposal.endBlock ?
       i18n._(t`closed`) :
-      i18n._(t`active`)
+      i18n._(t`active`);
+    proposal.statusText = currentBlock > proposal.endBlock ?
+      i18n._(t`${expireTime} ago`) :
+      i18n._(t`${expireTime} left`);
 
     const weightedHistogram = proposal.histogram.map(val => BigNumber.from(val));
     const sum = weightedHistogram.reduce((a, b) => a.add(b), zero);

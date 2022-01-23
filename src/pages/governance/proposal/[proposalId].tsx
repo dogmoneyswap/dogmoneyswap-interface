@@ -20,6 +20,7 @@ import Copy from '../../../components/AccountDetails/Copy'
 import { castVote, formatXmist, VOTING_API_URL } from '../../../features/governance/util'
 import Button from '../../../components/Button'
 import Web3Connect from '../../../components/Web3Connect'
+import moment from 'moment'
 
 export default function Proposal() {
   const { i18n } = useLingui()
@@ -41,9 +42,16 @@ export default function Proposal() {
   const zero = BigNumber.from(0);
   if (data) {
     [data].forEach(proposal => {
+      const blockDelta = proposal.endBlock - currentBlock;
+      const secondsLeft = blockDelta * 5.5;
+      const expireTime = moment().add(secondsLeft, "seconds").fromNow(true);
+
       proposal.status = currentBlock > proposal.endBlock ?
         i18n._(t`closed`) :
-        i18n._(t`active`)
+        i18n._(t`active`);
+      proposal.statusText = currentBlock > proposal.endBlock ?
+        i18n._(t`${expireTime} ago`) :
+        i18n._(t`${expireTime} left`);
 
       const weightedHistogram = proposal.histogram.map(val => BigNumber.from(val));
       const sum = weightedHistogram.reduce((a, b) => a.add(b), zero);
@@ -121,7 +129,7 @@ export default function Proposal() {
                 </div>
                 <div className="">
                   <span className={`pl-2 pr-2 text-white rounded border border-white ${proposal?.status === i18n._(t`active`) ? "bg-[#2edd7d]" : "bg-[#dd3a2e]"}`}>{proposal?.status}</span>
-                  <span className="float-right">{i18n._(t`ends at block ${proposal?.endBlock}`)}</span>
+                  <span className="float-right">{i18n._(t`ends at block ${proposal?.endBlock} (${proposal?.statusText})`)}</span>
                 </div>
 
                 <div className="grid gap-4 pt-8 pb-8">
