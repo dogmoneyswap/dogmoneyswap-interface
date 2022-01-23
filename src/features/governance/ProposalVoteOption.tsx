@@ -1,16 +1,10 @@
 import useActiveWeb3React from '../../hooks/useActiveWeb3React'
-import { useLingui } from '@lingui/react'
-import { useRouter } from 'next/router'
 import { useCallback } from 'react';
 import { useSWRConfig } from 'swr';
-import { formatXmist, VOTING_API_URL } from './util';
+import { castVote, formatXmist } from './util';
 
 const ProposalVoteOption = ({ proposal, index }) => {
-  const { i18n } = useLingui()
-
-  const router = useRouter()
-
-  const { account, chainId, library } = useActiveWeb3React()
+  const { account, library } = useActiveWeb3React()
 
   const shorten = (text, max) => {
     if (text.length > max) {
@@ -21,37 +15,8 @@ const ProposalVoteOption = ({ proposal, index }) => {
 
   const { cache, mutate } = useSWRConfig()
 
-  const mutateAll = (key) => {
-    const mutations = [...cache.keys()].filter(val => val.indexOf(key) !== -1).map((key) => mutate(key))
-    return Promise.all(mutations)
-  }
-
   const vote = useCallback(async () => {
-    if (proposal.userVotingPower == "0") {
-      alert(`You already have voted or do not have voting power at block height ${proposal.snapshotBlock}`);
-      return;
-    }
-
-    const signature = await library.getSigner().signMessage(`I am casting vote for ${proposal.proposalId} with choice ${index}`);
-
-    const body = JSON.stringify({
-      sig: signature,
-      proposalId: proposal.proposalId,
-      choiceId: index,
-      address: account
-    });
-
-    const response = await fetch(`${VOTING_API_URL}/vote`, {
-      method: 'POST',
-      body,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    const json = await response.json()
-    if (json.error) alert(json.error);
-
-    mutateAll(VOTING_API_URL);
+    castVote({proposal, index, cache, mutate, library, account});
   }, [account, proposal]);
 
   return (

@@ -1,4 +1,4 @@
-import React, {  } from 'react'
+import React, { useCallback, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
@@ -7,24 +7,26 @@ import Back from '../../../components/Back'
 import Typography from '../../../components/Typography'
 import Head from 'next/head'
 import Image from 'next/image'
-import { classNames, shortenAddress } from '../../../functions'
+import { classNames, shortenAddress, shortenString } from '../../../functions'
 import { t } from '@lingui/macro'
 import { useActiveWeb3React } from '../../../hooks'
 import { useLingui } from '@lingui/react'
-import useSWR, { SWRResponse } from 'swr'
+import useSWR, { SWRResponse, useSWRConfig } from 'swr'
 import { useBlockNumber } from '../../../state/application/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useRouter } from 'next/router'
 import ProposalVoteOption from '../../../features/governance/ProposalVoteOption'
 import Copy from '../../../components/AccountDetails/Copy'
-import { formatXmist, VOTING_API_URL } from '../../../features/governance/util'
+import { castVote, formatXmist, VOTING_API_URL } from '../../../features/governance/util'
+import Button from '../../../components/Button'
 
 export default function Proposal() {
   const { i18n } = useLingui()
-  const { account, chainId } = useActiveWeb3React()
+  const { account, library } = useActiveWeb3React()
   const router = useRouter()
   const { proposalId } = router.query
   const currentBlock = useBlockNumber();
+  const [selectedIndex, setSelectedIndex] = useState<Number | null>(null);
 
   const { data }: SWRResponse<any, Error> = useSWR(
     `${VOTING_API_URL}/proposal/${proposalId}${account && `?address=${account}`}`,
@@ -53,6 +55,12 @@ export default function Proposal() {
   }
 
   const proposal = data;
+
+  const { cache, mutate } = useSWRConfig()
+
+  const vote = useCallback(async () => {
+    castVote({proposal, index: selectedIndex, cache, mutate, library, account});
+  }, [account, proposal, selectedIndex]);
 
   return (
     <Container id="vote-page" className="py-4 space-y-6 md:py-8 lg:py-12" maxWidth="2xl">
@@ -105,8 +113,8 @@ export default function Proposal() {
             <>
               <div className="flex flex-col w-full p-4 border-t-0 rounded bg-dark-800">
                 <div>
-                  <span className="float-right text-xs">
-                    {i18n._(t`Voting proposal ${proposal?.proposalId}`)}
+                  <span className="flex items-baseline float-right text-xs flex-nowrap">
+                    {i18n._(t`Voting proposal`)} <Copy className="ml-1 text-primary" toCopy={proposal?.proposalId}>{shortenString(proposal?.proposalId, 10)}</Copy>
                   </span>
                 </div>
                 <div className="text-xl font-bold">
@@ -133,6 +141,28 @@ export default function Proposal() {
               </div>
 
               <div className="flex flex-col w-full p-4 border-t-0 rounded bg-dark-800">
+                Select a voting option and click on "Vote"
+                {proposal?.options.map((option, index) => (
+                  <div className="flex items-center justify-center mt-3">
+                    <Button onClick={() => {setSelectedIndex(index)}} className="w-full"
+                      color="blue"
+                      variant={selectedIndex === index ? "filled" : "outlined"}
+                    >
+                      {option}
+                    </Button>
+                  </div>
+                ))}
+                <div className="flex self-center w-64 mt-4">
+                  <Button onClick={vote}
+                    color="gradient"
+                    variant="filled"
+                  >
+                    {i18n._(t`Vote`)}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="flex flex-col w-full p-4 border-t-0 rounded bg-dark-800">
                 {proposal?.votes.length === 0 && (
                   <div className="text-base font-bold">
                     {i18n._(t`No votes yet`)}
@@ -149,7 +179,7 @@ export default function Proposal() {
                       <span>{proposal.options[vote.choiceId]}</span>
                     </div>
                     <div className="flex flex-col items-end col-span-2">
-                    <span className='flex items-baseline flex-nowrap'>{formatXmist(vote.amount)} <span className="hidden pl-1 text-xs md:flex">xMIST</span></span>
+                    <span className="flex items-baseline flex-nowrap">{formatXmist(vote.amount)} <span className="hidden pl-1 text-xs md:flex">xMIST</span></span>
                     </div>
                   </div>
                 ))}
