@@ -149,7 +149,7 @@ export default function Proposal() {
               </div>
 
               <div className="flex flex-col w-full p-4 border-t-0 rounded bg-dark-800">
-                Select a voting option and click on <b>Vote</b>
+                <span className="flex flex-nowrap">Select a voting option and click on <span className="ml-1 font-bold">Vote</span></span>
                 {proposal?.options.map((option, index) => (
                   <div key={index} className="flex items-center justify-center mt-3">
                     <Button onClick={() => {setSelectedIndex(index)}} className="w-full"
