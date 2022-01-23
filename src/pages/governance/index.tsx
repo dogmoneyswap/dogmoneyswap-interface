@@ -13,24 +13,34 @@ import useSWR, { SWRResponse } from 'swr'
 import { useBlockNumber } from '../../state/application/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
+import { VOTING_API_URL } from '../../features/governance/util'
+import { useWeb3React } from '@web3-react/core'
+import moment from 'moment'
 
 export default function Vote() {
   const { i18n } = useLingui()
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId } = useWeb3React()
 
   const parsedQs = useParsedQueryString();
   const currentBlock = useBlockNumber();
 
   const { data, error }: SWRResponse<any[], Error> = useSWR(
-    'https://vote.mistswap.fi/proposal/all',
-    (url) => fetch(url).then((r) => {console.log(r); return r.json()})
+    `${VOTING_API_URL}/proposal/all${account ? `?address=${account}` : ""}`,
+    (url) => fetch(url).then((r) => r.json())
   )
 
   const zero = BigNumber.from(0);
   data?.forEach(proposal => {
+    const blockDelta = proposal.endBlock - currentBlock;
+    const secondsLeft = blockDelta * 5.5;
+    const expireTime = moment().add(secondsLeft, "seconds").fromNow(true);
+
     proposal.status = currentBlock > proposal.endBlock ?
       i18n._(t`closed`) :
-      i18n._(t`active`)
+      i18n._(t`active`);
+    proposal.statusText = currentBlock > proposal.endBlock ?
+      i18n._(t`${expireTime} ago`) :
+      i18n._(t`${expireTime} left`);
 
     const weightedHistogram = proposal.histogram.map(val => BigNumber.from(val));
     const sum = weightedHistogram.reduce((a, b) => a.add(b), zero);
@@ -93,7 +103,7 @@ export default function Vote() {
           </div>
         </div>
         <div className="flex justify-center mb-6">
-          <div className="flex flex-col w-full max-w-7xl mt-auto mb-4">
+          <div className="flex flex-col w-full mt-auto mb-4 max-w-7xl">
             <div className={classNames('space-y-6 col-span-4 lg:col-span-3')}>
               <Search
                 search={search}

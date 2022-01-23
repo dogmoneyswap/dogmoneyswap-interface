@@ -1,16 +1,10 @@
 import useActiveWeb3React from '../../hooks/useActiveWeb3React'
-import { useLingui } from '@lingui/react'
-import { useRouter } from 'next/router'
-import millify from 'millify'
 import { useCallback } from 'react';
-import { mutate } from 'swr';
+import { useSWRConfig } from 'swr';
+import { castVote, formatXmist } from './util';
 
 const ProposalVoteOption = ({ proposal, index }) => {
-  const { i18n } = useLingui()
-
-  const router = useRouter()
-
-  const { account, chainId, library } = useActiveWeb3React()
+  const { account, library } = useActiveWeb3React()
 
   const shorten = (text, max) => {
     if (text.length > max) {
@@ -19,37 +13,18 @@ const ProposalVoteOption = ({ proposal, index }) => {
     return text;
   }
 
+  const { cache, mutate } = useSWRConfig()
+
   const vote = useCallback(async () => {
-    const signature = await library.getSigner().signMessage(`I am casting vote for ${proposal.proposalId} with choice ${index}`);
-    console.log(signature);
-
-    const body = JSON.stringify({
-      sig: signature,
-      proposalId: proposal.proposalId,
-      choiceId: index,
-      address: account
-    });
-
-    const response = await fetch("https://vote.mistswap.fi/vote", {
-      method: 'POST',
-      body,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    const json = await response.json()
-    if (json.error) alert(json.error);
-
-    mutate(`https://vote.mistswap.fi/proposal/all`)
-    mutate(`https://vote.mistswap.fi/proposal/${proposal.proposalId}`)
-  }, [account]);
+    castVote({proposal, index, cache, mutate, library, account});
+  }, [account, proposal]);
 
   return (
     <>
       <div className="pt-2 cursor-pointer" onClick={vote}>
         <div>
           <span>{shorten(proposal?.options[index], 45)}</span>
-          <span className="ml-3">{millify(proposal?.histogram[index].slice(0, -18) || "0")} xMIST</span>
+          <span className="ml-3">{formatXmist(proposal?.histogram[index])} xMIST</span>
           <span className="float-right">{proposal?.weightedHistogram[index]}%</span>
         </div>
         <div className="relative flex h-2 mb-3 overflow-hidden rounded-full">

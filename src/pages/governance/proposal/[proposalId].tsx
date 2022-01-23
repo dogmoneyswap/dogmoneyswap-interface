@@ -1,4 +1,4 @@
-import React, {  } from 'react'
+import React, { useCallback, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
@@ -7,27 +7,31 @@ import Back from '../../../components/Back'
 import Typography from '../../../components/Typography'
 import Head from 'next/head'
 import Image from 'next/image'
-import { classNames, shortenAddress } from '../../../functions'
+import { classNames, shortenAddress, shortenString } from '../../../functions'
 import { t } from '@lingui/macro'
 import { useActiveWeb3React } from '../../../hooks'
 import { useLingui } from '@lingui/react'
-import useSWR, { SWRResponse } from 'swr'
+import useSWR, { SWRResponse, useSWRConfig } from 'swr'
 import { useBlockNumber } from '../../../state/application/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useRouter } from 'next/router'
 import ProposalVoteOption from '../../../features/governance/ProposalVoteOption'
-import millify from 'millify'
 import Copy from '../../../components/AccountDetails/Copy'
+import { castVote, formatXmist, VOTING_API_URL } from '../../../features/governance/util'
+import Button from '../../../components/Button'
+import Web3Connect from '../../../components/Web3Connect'
+import moment from 'moment'
 
 export default function Proposal() {
   const { i18n } = useLingui()
-  const { account, chainId } = useActiveWeb3React()
+  const { account, library } = useActiveWeb3React()
   const router = useRouter()
   const { proposalId } = router.query
   const currentBlock = useBlockNumber();
+  const [selectedIndex, setSelectedIndex] = useState<Number | null>(null);
 
   const { data }: SWRResponse<any, Error> = useSWR(
-    `https://vote.mistswap.fi/proposal/${proposalId}`,
+    `${VOTING_API_URL}/proposal/${proposalId}${account ? `?address=${account}` : ""}`,
     (url) => fetch(url).then((r) => r.json().then((json) => {
       if (!r.ok)
         throw Error(json.error);
@@ -38,9 +42,16 @@ export default function Proposal() {
   const zero = BigNumber.from(0);
   if (data) {
     [data].forEach(proposal => {
+      const blockDelta = proposal.endBlock - currentBlock;
+      const secondsLeft = blockDelta * 5.5;
+      const expireTime = moment().add(secondsLeft, "seconds").fromNow(true);
+
       proposal.status = currentBlock > proposal.endBlock ?
         i18n._(t`closed`) :
-        i18n._(t`active`)
+        i18n._(t`active`);
+      proposal.statusText = currentBlock > proposal.endBlock ?
+        i18n._(t`${expireTime} ago`) :
+        i18n._(t`${expireTime} left`);
 
       const weightedHistogram = proposal.histogram.map(val => BigNumber.from(val));
       const sum = weightedHistogram.reduce((a, b) => a.add(b), zero);
@@ -53,6 +64,12 @@ export default function Proposal() {
   }
 
   const proposal = data;
+
+  const { cache, mutate } = useSWRConfig()
+
+  const vote = useCallback(async () => {
+    castVote({proposal, index: selectedIndex, cache, mutate, library, account});
+  }, [account, proposal, selectedIndex]);
 
   return (
     <Container id="vote-page" className="py-4 space-y-6 md:py-8 lg:py-12" maxWidth="2xl">
@@ -91,29 +108,28 @@ export default function Proposal() {
               {proposal?.title}
             </div>
           )}
-
-          {!proposal && (
-            <div>
-              Proposal {proposalId} not found
-            </div>
-          )}
         </Typography>
       </div>
       <div className="p-4 space-y-4 rounded bg-dark-900">
         <div className="grid grid-flow-row gap-3">
+          {!proposal && (
+            <div>
+              {i18n._(t`Proposal ${proposalId} not found`)}
+            </div>
+          )}
           {proposal && (
             <>
               <div className="flex flex-col w-full p-4 border-t-0 rounded bg-dark-800">
                 <div>
-                  <span className="float-right text-xs">
-                    {i18n._(t`Voting proposal ${proposal?.proposalId}`)}
+                  <span className="flex items-baseline float-right text-xs flex-nowrap">
+                    {i18n._(t`Voting proposal`)} <Copy className="ml-1 text-primary" toCopy={proposal?.proposalId}>{shortenString(proposal?.proposalId, 10)}</Copy>
                   </span>
                 </div>
                 <div className="text-xl font-bold">
                 </div>
                 <div className="">
                   <span className={`pl-2 pr-2 text-white rounded border border-white ${proposal?.status === i18n._(t`active`) ? "bg-[#2edd7d]" : "bg-[#dd3a2e]"}`}>{proposal?.status}</span>
-                  <span className="float-right">{i18n._(t`ends at block ${proposal?.endBlock}`)}</span>
+                  <span className="float-right">{i18n._(t`ends at block ${proposal?.endBlock} (${proposal?.statusText})`)}</span>
                 </div>
 
                 <div className="grid gap-4 pt-8 pb-8">
@@ -127,7 +143,34 @@ export default function Proposal() {
                   {proposal?.options.map((option, index) => (
                     <ProposalVoteOption key={index} proposal={proposal} index={index} />
                   ))}
+                  <span className="float-left mt-2">Your voting power: {formatXmist(proposal.userVotingPower)} xMIST</span>
                   <span className="float-right mt-2">{i18n._(t`Total votes: ${proposal?.voteCount}`)}</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col w-full p-4 border-t-0 rounded bg-dark-800">
+                <span className="flex flex-nowrap">Select a voting option and click on <span className="ml-1 font-bold">Vote</span></span>
+                {proposal?.options.map((option, index) => (
+                  <div key={index} className="flex items-center justify-center mt-3">
+                    <Button onClick={() => {setSelectedIndex(index)}} className="w-full"
+                      color="blue"
+                      variant={selectedIndex === index ? "filled" : "outlined"}
+                    >
+                      {option}
+                    </Button>
+                  </div>
+                ))}
+                <div className="flex self-center w-64 mt-4">
+                  {!account ? (
+                    <Web3Connect size="lg" color="gradient" className="w-full" />
+                  ) : (
+                    <Button onClick={vote}
+                      color="gradient"
+                      variant="filled"
+                    >
+                      {i18n._(t`Vote`)}
+                    </Button>
+                  )}
                 </div>
               </div>
 
@@ -148,7 +191,7 @@ export default function Proposal() {
                       <span>{proposal.options[vote.choiceId]}</span>
                     </div>
                     <div className="flex flex-col items-end col-span-2">
-                      <span className='flex items-baseline flex-nowrap'>{millify(vote.amount.slice(0, -18) || "0")} <span className="hidden pl-1 text-xs md:flex">xMIST</span></span>
+                    <span className="flex items-baseline flex-nowrap">{formatXmist(vote.amount)} <span className="hidden pl-1 text-xs md:flex">xMIST</span></span>
                     </div>
                   </div>
                 ))}

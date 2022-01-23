@@ -19,6 +19,7 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import { isMobile } from 'react-device-detect'
 import { useRouter } from 'next/router'
+import { formatXmist } from './util'
 
 const ProposalListItemDetails = ({ proposal }) => {
   const { i18n } = useLingui()
@@ -49,13 +50,14 @@ const ProposalListItemDetails = ({ proposal }) => {
           {proposal?.options.map((option, index) => (
             <ProposalVoteOption proposal={proposal} index={index} />
           ))}
-          <span className="float-right mt-2">Total votes: {proposal.voteCount}</span>
+          <span className="float-left mt-2">Your voting power: {formatXmist(proposal?.userVotingPower)} xMIST</span>
+          <span className="float-right mt-2">Total votes: {proposal?.voteCount}</span>
           <Button
             className="w-full mt-2"
             color="gradient"
             variant="outlined"
             onClick={async () => {
-              router.push(`/vote/${proposal.proposalId}`)
+              router.push(`/vote/${proposal?.proposalId}`)
             }}
           >
             {i18n._(t`View proposal details`)}
