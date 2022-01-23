@@ -1,9 +1,9 @@
 import useActiveWeb3React from '../../hooks/useActiveWeb3React'
 import { useLingui } from '@lingui/react'
 import { useRouter } from 'next/router'
-import millify from 'millify'
 import { useCallback } from 'react';
-import { mutate } from 'swr';
+import { useSWRConfig } from 'swr';
+import { formatXmist, VOTING_API_URL } from './util';
 
 const ProposalVoteOption = ({ proposal, index }) => {
   const { i18n } = useLingui()
@@ -19,9 +19,15 @@ const ProposalVoteOption = ({ proposal, index }) => {
     return text;
   }
 
+  const { cache, mutate } = useSWRConfig()
+
+  const mutateAll = (key) => {
+    const mutations = [...cache.keys()].filter(val => val.indexOf(key) !== -1).map((key) => mutate(key))
+    return Promise.all(mutations)
+  }
+
   const vote = useCallback(async () => {
     const signature = await library.getSigner().signMessage(`I am casting vote for ${proposal.proposalId} with choice ${index}`);
-    console.log(signature);
 
     const body = JSON.stringify({
       sig: signature,
@@ -30,7 +36,7 @@ const ProposalVoteOption = ({ proposal, index }) => {
       address: account
     });
 
-    const response = await fetch("https://vote.mistswap.fi/vote", {
+    const response = await fetch(`${VOTING_API_URL}/vote`, {
       method: 'POST',
       body,
       headers: {
@@ -40,8 +46,11 @@ const ProposalVoteOption = ({ proposal, index }) => {
     const json = await response.json()
     if (json.error) alert(json.error);
 
-    mutate(`https://vote.mistswap.fi/proposal/all`)
-    mutate(`https://vote.mistswap.fi/proposal/${proposal.proposalId}`)
+    mutateAll(VOTING_API_URL);
+
+    // mutate(`${VOTING_API_URL}/proposal/all`)
+    // mutate(`${VOTING_API_URL}/proposal/${proposal.proposalId}`)
+
   }, [account]);
 
   return (
@@ -49,7 +58,7 @@ const ProposalVoteOption = ({ proposal, index }) => {
       <div className="pt-2 cursor-pointer" onClick={vote}>
         <div>
           <span>{shorten(proposal?.options[index], 45)}</span>
-          <span className="ml-3">{millify(proposal?.histogram[index].slice(0, -18) || "0")} xMIST</span>
+          <span className="ml-3">{formatXmist(proposal?.histogram[index])} xMIST</span>
           <span className="float-right">{proposal?.weightedHistogram[index]}%</span>
         </div>
         <div className="relative flex h-2 mb-3 overflow-hidden rounded-full">

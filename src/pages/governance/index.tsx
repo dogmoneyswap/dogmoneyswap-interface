@@ -13,6 +13,7 @@ import useSWR, { SWRResponse } from 'swr'
 import { useBlockNumber } from '../../state/application/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
+import { VOTING_API_URL } from '../../features/governance/util'
 
 export default function Vote() {
   const { i18n } = useLingui()
@@ -22,8 +23,8 @@ export default function Vote() {
   const currentBlock = useBlockNumber();
 
   const { data, error }: SWRResponse<any[], Error> = useSWR(
-    'https://vote.mistswap.fi/proposal/all',
-    (url) => fetch(url).then((r) => {console.log(r); return r.json()})
+    `${VOTING_API_URL}/proposal/all${account && `?address=${account}`}`,
+    (url) => fetch(url).then((r) => r.json())
   )
 
   const zero = BigNumber.from(0);

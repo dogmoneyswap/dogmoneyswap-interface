@@ -14,8 +14,8 @@ import { useBlockNumber } from '../../../state/application/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useRouter } from 'next/router'
 import ProposalVoteOption from '../../../features/governance/ProposalVoteOption'
-import millify from 'millify'
 import Copy from '../../../components/AccountDetails/Copy'
+import { formatXmist, VOTING_API_URL } from '../../../features/governance/util'
 
 export default function Proposal() {
   const { i18n } = useLingui()
@@ -25,7 +25,7 @@ export default function Proposal() {
   const currentBlock = useBlockNumber();
 
   const { data }: SWRResponse<any, Error> = useSWR(
-    `https://vote.mistswap.fi/proposal/${proposalId}`,
+    `${VOTING_API_URL}/proposal/${proposalId}${account && `?address=${account}`}`,
     (url) => fetch(url).then((r) => r.json().then((json) => {
       if (!r.ok)
         throw Error(json.error);
@@ -129,6 +129,7 @@ export default function Proposal() {
                       {proposal?.options.map((option, index) => (
                         <ProposalVoteOption key={index} proposal={proposal} index={index} />
                       ))}
+                      <span className="float-left mt-2">Your voting power: {formatXmist(proposal.userVotingPower)} xMIST</span>
                       <span className="float-right mt-2">{i18n._(t`Total votes: ${proposal?.voteCount}`)}</span>
                     </div>
                   </div>
@@ -150,7 +151,7 @@ export default function Proposal() {
                           <span>{proposal.options[vote.choiceId]}</span>
                         </div>
                         <div className="flex flex-col items-end col-span-2">
-                          <span className='flex items-baseline flex-nowrap'>{millify(vote.amount.slice(0, -18) || "0")} <span className="hidden pl-1 text-xs md:flex">xMIST</span></span>
+                          <span className='flex items-baseline flex-nowrap'>{formatXmist(vote.amount)} <span className="hidden pl-1 text-xs md:flex">xMIST</span></span>
                         </div>
                       </div>
                     ))}
