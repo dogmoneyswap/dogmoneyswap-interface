@@ -3,6 +3,8 @@ import { ChainId, CurrencyAmount, JSBI, MASTERCHEF_ADDRESS, MASTERCHEF_V2_ADDRES
 import { Disclosure, Transition } from '@headlessui/react'
 import ProposalVoteOption from './ProposalVoteOption'
 import React, { useState } from 'react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 import Button from '../../components/Button'
 import Dots from '../../components/Dots'
@@ -36,8 +38,12 @@ const ProposalListItemDetails = ({ proposal }) => {
       leaveTo="opacity-0"
     >
       <Disclosure.Panel className="flex flex-col w-full border-t-0 rounded rounded-t-none bg-dark-800" static>
-        <div className="grid grid-cols-2 gap-4 p-4 pt-4">
-          {shortenString(proposal?.content, 100)}
+        <div className="grid gap-4 p-4 pt-4">
+          <div>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {proposal?.content}
+            </ReactMarkdown>
+          </div>
         </div>
         <div className="gap-4 p-4 pt-0">
           {proposal?.options.map((option, index) => (
