@@ -27,6 +27,11 @@ const ProposalVoteOption = ({ proposal, index }) => {
   }
 
   const vote = useCallback(async () => {
+    if (proposal.userVotingPower == "0") {
+      alert(`You already have voted or do not have voting power at block height ${proposal.snapshotBlock}`);
+      return;
+    }
+
     const signature = await library.getSigner().signMessage(`I am casting vote for ${proposal.proposalId} with choice ${index}`);
 
     const body = JSON.stringify({
@@ -47,11 +52,7 @@ const ProposalVoteOption = ({ proposal, index }) => {
     if (json.error) alert(json.error);
 
     mutateAll(VOTING_API_URL);
-
-    // mutate(`${VOTING_API_URL}/proposal/all`)
-    // mutate(`${VOTING_API_URL}/proposal/${proposal.proposalId}`)
-
-  }, [account]);
+  }, [account, proposal]);
 
   return (
     <>
