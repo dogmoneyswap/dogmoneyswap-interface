@@ -63,6 +63,15 @@ export type AvailableChainsInfo = {
 
 export type AnyswapTokensMap = { [chainId: number]: { [contract: string]: AvailableChainsInfo } }
 
+export type SwapInfo = {
+  minimumAmount: number,
+  maximumAmount: number,
+  feeUsd: number,
+  feeBch: number,
+  receiveAmount: number,
+  from: string,
+  to: string
+}
 
 export const bridgeData: BridgeDataInfo[] = bridge;
 export const ourTokenInfo = { Symbol: "BCH", Name: "Bitcoin Cash", Decimals: 18, ContractAddress: "bch" } as AnyswapTokenInfo

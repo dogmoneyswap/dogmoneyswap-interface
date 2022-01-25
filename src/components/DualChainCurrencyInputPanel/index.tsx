@@ -27,7 +27,7 @@ interface CurrencyInputPanelProps {
   chainTo?: Chain | null
   tokenList?: Currency[] | []
   chainList: AnyswapTokensMap | null
-  symbol?: string | null
+  symbol?: string | null,
 }
 
 export default function DualChainCurrencyInputPanel({
@@ -42,8 +42,9 @@ export default function DualChainCurrencyInputPanel({
   chainTo,
   tokenList,
   chainList,
-  symbol
-}: CurrencyInputPanelProps) {
+  symbol,
+  children
+}: CurrencyInputPanelProps & React.HTMLAttributes<HTMLDivElement>) {
   const { i18n } = useLingui()
   const [modalOpen, setModalOpen] = useState(false)
   const [toCurrency, setToCurrency] = useState<Currency | null>(null)
@@ -188,6 +189,7 @@ export default function DualChainCurrencyInputPanel({
             </>
           </div>
         </div>
+        {children}
       </div>
       {/* <div
         className={classNames(

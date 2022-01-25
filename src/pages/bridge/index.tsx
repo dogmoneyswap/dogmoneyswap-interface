@@ -32,7 +32,7 @@ import { getBchPoolBalance, getSmartBchPoolBalance, HopDirection, randomId } fro
 import { useTransactionUpdater } from '../../state/bridgeTransactions/hooks';
 import { TransactionDetails } from '../../state/bridgeTransactions/reducer';
 import CashAddressInput from '../../components/Input/Cashaddress';
-import { AvailableChainsInfo, chains, Chain, anyswapInfo} from '../../features/bridge/interface';
+import { AvailableChainsInfo, chains, Chain, anyswapInfo, SwapInfo} from '../../features/bridge/interface';
 import { NetworkContextName } from '../../constants'
 
 export const DEFAULT_CHAIN_FROM: Chain = chains[0]
@@ -59,24 +59,31 @@ export default function Bridge() {
   const [destinationAddress, setDestinationAddress] = useState<string | null>("")
   const [tokenList, setTokenList] = useState<Currency[] | null>([])
   const [currency0, setCurrency0] = useState<Currency | null>(null)
-  const [currencyAmount, setCurrencyAmount] = useState<string | null>('')
+  const [sendAmount, setSendAmount] = useState<string | null>('')
+  const [receiveAmount, setReceiveAmount] = useState<string | null>('')
   const [tokenToBridge, setTokenToBridge] = useState<AvailableChainsInfo | null>(null)
   const [showBridgeModal, setShowBridgeModal] = useState(false)
+  const [BCH, setBCH] = useState<Currency | null>(null)
+  const [swapInfo, setSwapInfo] = useState<SwapInfo | null>(null)
 
   const hopDirection = (chainTo === DEFAULT_CHAIN_TO) ? HopDirection.in : HopDirection.out
 
   useEffect(() => {
+    const infoToCurrency = (chainId, r) => {
+      const info: AvailableChainsInfo = anyswapInfo[chainId][r]
+      const token = new Token(chainTo.id, ethers.constants.AddressZero, info.other.Decimals, info.other.Symbol, info.other.Name) as any
+      token.logoURI = info.logoUrl
+      return token
+    }
+
     let tokens: Currency[] = Object.keys((anyswapInfo && anyswapInfo[chainFrom.id]) || {})
       .filter((r) => anyswapInfo[chainFrom.id][r].destChainID == chainTo.id.toString())
-      .map((r) => {
-        const info: AvailableChainsInfo = anyswapInfo[chainFrom.id][r]
-        const token = new Token(chainTo.id, ethers.constants.AddressZero, info.other.Decimals, info.other.Symbol, info.other.Name) as any
-        token.logoURI = info.logoUrl
-        return token
-      })
+      .map((r) => infoToCurrency(chainFrom.id, r))
+
+    setBCH(infoToCurrency(0, 'bch'));
 
     setTokenList(tokens)
-    setCurrencyAmount('0')
+    setSendAmount('0')
     handleCurrencySelect(tokens[0])
   }, [chainFrom.id, chainTo.id, anyswapInfo])
 
@@ -108,17 +115,91 @@ export default function Bridge() {
     [chainFrom, chainTo]
   )
 
-  const handleTypeInput = useCallback(
-    (value: string) => {
-      setCurrencyAmount(value)
+  const handleSendAmount = useCallback(
+    (sendAmount: string) => {
+      setSendAmount(sendAmount);
+
+      if (tokenToBridge) {
+        const amount = parseFloat(sendAmount) || 0.
+        const feeUsdInBch = tokenToBridge.other.FeeUsd / bchPrice
+        const bchAmount = tokenToBridge.other.SwapRate * amount + (feeUsdInBch || 0.)
+        let feeBch = bchAmount * 0.001
+        if (feeBch < 0.0001)
+          feeBch = 0.0001
+
+        const minimumBchAmount = 0.01
+        let minimumAssetAmount = minimumBchAmount / tokenToBridge.other.SwapRate
+        minimumAssetAmount = Math.max(tokenToBridge.other.MinimumSwap, minimumBchAmount)
+        minimumAssetAmount = Math.ceil(minimumAssetAmount * 1e6) / 1e6
+
+        const receiveAmount = Math.max(tokenToBridge.other.SwapRate * amount - feeBch, 0)
+
+        setReceiveAmount(receiveAmount.toString());
+
+        setSwapInfo({
+          minimumAmount: minimumAssetAmount,
+          maximumAmount: tokenToBridge.other.MaximumSwap,
+          feeUsd: tokenToBridge.other.FeeUsd,
+          feeBch: feeBch,
+          receiveAmount: receiveAmount,
+          from: hopDirection === HopDirection.in ? tokenToBridge.symbol : "BCH",
+          to: hopDirection === HopDirection.in ? "BCH" : tokenToBridge.symbol,
+        })
+
+        if (!sendAmount) {
+          setReceiveAmount('');
+          return;
+        }
+      }
     },
-    [setCurrencyAmount]
+    [setSendAmount, tokenToBridge]
+  )
+
+  const handleReceiveAmount = useCallback(
+    (receiveAmount: string) => {
+      setReceiveAmount(receiveAmount)
+
+      if (tokenToBridge) {
+        const amount = parseFloat(receiveAmount) || 0.
+        const feeUsdInBch = tokenToBridge.other.FeeUsd / bchPrice
+        const bchAmount = amount / tokenToBridge.other.SwapRate + (feeUsdInBch || 0.)
+        let feeBch = bchAmount * 0.001
+        if (feeBch < 0.0001)
+          feeBch = 0.0001
+
+        const minimumBchAmount = 0.01
+        let minimumAssetAmount = minimumBchAmount / tokenToBridge.other.SwapRate
+        minimumAssetAmount = Math.max(tokenToBridge.other.MinimumSwap, minimumBchAmount)
+        minimumAssetAmount = Math.ceil(minimumAssetAmount * 1e6) / 1e6
+
+        const sendAmount = Math.max(amount / tokenToBridge.other.SwapRate + feeBch, 0)
+
+        setSendAmount(sendAmount.toString());
+
+        setSwapInfo({
+          minimumAmount: minimumAssetAmount,
+          maximumAmount: tokenToBridge.other.MaximumSwap,
+          feeUsd: tokenToBridge.other.FeeUsd,
+          feeBch: feeBch,
+          receiveAmount: parseFloat(receiveAmount) || 0.,
+          from: hopDirection === HopDirection.in ? tokenToBridge.symbol : "BCH",
+          to: hopDirection === HopDirection.in ? "BCH" : tokenToBridge.symbol,
+        })
+
+        if (!receiveAmount) {
+          setSendAmount('');
+          return;
+        }
+      }
+    },
+    [setReceiveAmount, tokenToBridge]
   )
 
   const handleCurrencySelect = useCallback(
     async (currency: Currency) => {
       setCurrency0(currency)
-      handleTypeInput('')
+      // setSendAmount('')
+      // setReceiveAmount('')
       if (currency) {
         const methodId = Object.values(anyswapInfo[chainFrom.id]).filter((val: AvailableChainsInfo) => Number(val.destChainID) === currency.chainId && val.symbol == currency.symbol && val.name == currency.name)[0].id
         const tokenTo = anyswapInfo[chainFrom.id][methodId]
@@ -159,7 +240,7 @@ export default function Bridge() {
         setMethodId(methodId)
       }
     },
-    [anyswapInfo, chainFrom.id, handleTypeInput]
+    [anyswapInfo, chainFrom.id]
   )
 
   const bridgeButtonClick = () => {
@@ -170,7 +251,7 @@ export default function Bridge() {
       hopStatus: { destinationAddress: destAddress, direction: hopDirection },
       shiftStatus: { direction: hopDirection, methodId },
       addedTime: new Date().getTime(),
-      initialAmount: currencyAmount,
+      initialAmount: sendAmount,
       symbol: hopDirection === HopDirection.in ? currency0.symbol : "BCH",
       from: activeAccount || account,
       srcChainId: chainFrom.id,
@@ -180,7 +261,7 @@ export default function Bridge() {
     } as TransactionDetails;
 
     if (hopDirection === HopDirection.out) {
-      bridgeTransaction.hopStatus.sbchAmount = currencyAmount;
+      bridgeTransaction.hopStatus.sbchAmount = sendAmount;
     }
 
     transactionUpdater(bridgeTransaction)
@@ -188,52 +269,18 @@ export default function Bridge() {
     setBridgeTransactionHash(bridgeTransaction.hash)
   }
 
-  type SwapInfo = {
-    minimumAmount: number,
-    maximumAmount: number,
-    feeUsd: number,
-    feeBch: number,
-    receiveAmount: number,
-    from: string,
-    to: string
-  }
-  const [swapInfo, setSwapInfo] = useState<SwapInfo | null>(null)
   useEffect(() => {
-    if (tokenToBridge) {
-      const amount = parseFloat(currencyAmount) || 0.
-      const feeUsdInBch = tokenToBridge.other.FeeUsd / bchPrice
-      const bchAmount = tokenToBridge.other.SwapRate * amount + (feeUsdInBch || 0.)
-      let feeBch = bchAmount * 0.001
-      if (feeBch < 0.0001)
-        feeBch = 0.0001
-
-      const minimumBchAmount = 0.01
-      let minimumAssetAmount = minimumBchAmount / tokenToBridge.other.SwapRate
-      minimumAssetAmount = Math.max(tokenToBridge.other.MinimumSwap, minimumBchAmount)
-      minimumAssetAmount = Math.ceil(minimumAssetAmount * 1e6) / 1e6
-
-      const receiveAmount = Math.max(tokenToBridge.other.SwapRate * amount - feeBch, 0)
-
-      setSwapInfo({
-        minimumAmount: minimumAssetAmount,
-        maximumAmount: tokenToBridge.other.MaximumSwap,
-        feeUsd: tokenToBridge.other.FeeUsd,
-        feeBch: feeBch,
-        receiveAmount: receiveAmount,
-        from: hopDirection === HopDirection.in ? tokenToBridge.symbol : "BCH",
-        to: hopDirection === HopDirection.in ? "BCH" : tokenToBridge.symbol,
-      })
-    }
-  }, [currencyAmount, tokenToBridge])
+    handleSendAmount(sendAmount);
+  }, [tokenToBridge])
 
   const insufficientBalance = () => {
     if (hopDirection !== HopDirection.out)
       return false;
 
-    if (currencyAmount) {
+    if (sendAmount) {
       try {
         const balance = parseFloat(userEthBalance.toFixed(currency0.decimals))
-        const amount = parseFloat(currencyAmount)
+        const amount = parseFloat(sendAmount)
         return amount > balance
       } catch (ex) {
         return false
@@ -243,8 +290,8 @@ export default function Bridge() {
   }
 
   const aboveMin = () => {
-    if (currencyAmount && tokenToBridge) {
-      const amount = parseFloat(currencyAmount)
+    if (sendAmount && tokenToBridge) {
+      const amount = parseFloat(sendAmount)
       const minAmount = parseFloat(tokenToBridge?.other?.MinimumSwap.toString())
       return amount >= minAmount
     }
@@ -252,8 +299,8 @@ export default function Bridge() {
   }
 
   const belowMax = () => {
-    if (currencyAmount && tokenToBridge) {
-      const amount = parseFloat(currencyAmount)
+    if (sendAmount && tokenToBridge) {
+      const amount = parseFloat(sendAmount)
       const maxAmount = parseFloat(tokenToBridge?.other?.MaximumSwap.toString())
       return amount <= maxAmount
     }
@@ -262,8 +309,8 @@ export default function Bridge() {
 
   const buttonDisabled =
     !currency0 ||
-    !currencyAmount ||
-    currencyAmount == '' ||
+    !sendAmount ||
+    sendAmount == '' ||
     !aboveMin() ||
     !belowMax() ||
     insufficientBalance()
@@ -272,7 +319,7 @@ export default function Bridge() {
     !shiftAllowed ? i18n._(t`Bridge forbidden (blocked country)`) :
     !currency0
       ? i18n._(t`Select a Token`)
-      : !currencyAmount || currencyAmount == ''
+      : !sendAmount || sendAmount == ''
       ? i18n._(t`Enter an Amount`)
       : !aboveMin()
       ? i18n._(t`Below Minimum Amount`)
@@ -403,34 +450,60 @@ export default function Bridge() {
               />
             </div>
 
-            <DualChainCurrencyInputPanel
-              label={hopDirection === HopDirection.in ? i18n._(t`Token to bridge:`) : i18n._(t`Token to receive:`)}
-              value={currencyAmount}
-              currency={currency0}
-              onUserInput={handleTypeInput}
-              onMax={(amount) => handleTypeInput(amount)}
-              onCurrencySelect={(currency) => {
-                handleCurrencySelect(currency)
-              }}
-              chainFrom={chainFrom}
-              chainTo={chainTo}
-              tokenList={tokenList}
-              chainList={anyswapInfo}
-              symbol={hopDirection === HopDirection.out ? "BCH" : null}
-            />
+            <div className={classNames('mt-0 pt-0 pb-0 rounded bg-dark-800')} style={{margin: 0}}>
+              <DualChainCurrencyInputPanel
+                label={i18n._(t`You send:`)}
+                value={sendAmount}
+                currency={chainFrom.id == ChainId.SMARTBCH ? BCH : currency0}
+                onUserInput={handleSendAmount}
+                onMax={(amount) => handleSendAmount(amount)}
+                onCurrencySelect={(currency) => {
+                  handleCurrencySelect(currency)
+                }}
+                chainFrom={chainFrom}
+                chainTo={chainTo}
+                tokenList={chainFrom.id == ChainId.SMARTBCH ? [BCH] : tokenList}
+                chainList={anyswapInfo}
+              />
 
-            {hopDirection === HopDirection.out && <div className={classNames('mt-0 pt-0 p-5 rounded rounded-t-none bg-dark-800')} style={{margin: 0}}>
-              <div className={"flex flex-col items-center md:text-xl text-base justify-between space-y-3 sm:space-y-0 sm:flex-row"}>
-                <div className={classNames('w-full sm:w-72')}>
-                  Destination address
+              <DualChainCurrencyInputPanel
+                label={i18n._(t`You receive:`)}
+                value={receiveAmount}
+                currency={chainTo.id == ChainId.SMARTBCH ? BCH : currency0}
+                onUserInput={handleReceiveAmount}
+                onMax={(amount) => handleReceiveAmount(amount)}
+                onCurrencySelect={(currency) => {
+                  handleCurrencySelect(currency)
+                }}
+                chainFrom={chainFrom}
+                chainTo={chainTo}
+                tokenList={chainTo.id == ChainId.SMARTBCH ? [BCH] : tokenList}
+                chainList={anyswapInfo}
+              >
+                <div className={classNames('')}>
+                  <div className="flex flex-col justify-end sm:flex-row">
+                    <span className="float-right pt-1 text-sm">
+                      {i18n._(t`*the amount received is estimated and may vary`)}
+                    </span>
+                  </div>
                 </div>
-                <div className={classNames('flex items-center w-full space-x-3 rounded bg-dark-900 focus:bg-dark-700 p-3')}>
-                  <CashAddressInput className='h-10 font-bold'
-                    value={destinationAddress}
-                    onUserInput={(value) => setDestinationAddress(value)} />
+              </DualChainCurrencyInputPanel>
+
+              {hopDirection === HopDirection.out && (
+                <div className={classNames('mt-0 p-5 pt-0 rounded rounded-t-none bg-dark-800')} style={{margin: 0}}>
+                  <div className={"flex flex-col items-center md:text-xl text-base justify-between space-y-3 sm:space-y-0 sm:flex-row"}>
+                    <div className={classNames('w-full sm:w-72')}>
+                      {i18n._(t`Destination address`)}
+                    </div>
+                    <div className={classNames('flex items-center w-full space-x-3 rounded bg-dark-900 focus:bg-dark-700 p-3')}>
+                      <CashAddressInput className='h-10 font-bold'
+                        value={destinationAddress}
+                        onUserInput={(value) => setDestinationAddress(value)} />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>}
+              )}
+            </div>
 
             <BottomGrouping>
               {!account ? (

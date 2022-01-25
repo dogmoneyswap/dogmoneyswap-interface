@@ -161,17 +161,20 @@ async function checkResponse(response) {
 // most notable, US is blocked
 // see https://help.sideshift.ai/en/articles/2874595-why-am-i-blocked-from-using-sideshift-ai
 export async function xaiGetPermissions(): Promise<boolean> {
-  const response = await fetch("https://bridgeproxy.mistswap.fi/api/v1/permissions", {
-    method: 'GET',
-    redirect: 'follow'
-  });
+  // bridgeproxy always allows shifts
+  return true;
 
-  const json = await response.json();
-  if (json.createOrder && json.createQuote) {
-    return true;
-  }
+  // const response = await fetch("https://bridgeproxy.mistswap.fi/api/v1/permissions", {
+  //   method: 'GET',
+  //   redirect: 'follow'
+  // });
 
-  return false;
+  // const json = await response.json();
+  // if (json.createOrder && json.createQuote) {
+  //   return true;
+  // }
+
+  // return false;
 }
 
 // get sideshift.ai quote for a conversion
