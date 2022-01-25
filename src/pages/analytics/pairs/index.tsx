@@ -7,8 +7,11 @@ import PairTabs from '../../../features/analytics/Pairs/PairTabs'
 import Search from '../../../components/Search'
 import { useFuse } from '../../../hooks'
 import Background from '../../../features/analytics/Background'
+import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 export default function Pairs() {
+  const { i18n } = useLingui()
   const [type, setType] = useState<'all' | 'gainers' | 'losers'>('all')
 
   const block1d = useBlock({ daysAgo: 1 })
@@ -97,6 +100,7 @@ export default function Pairs() {
           </div>
           <Search
             term={term}
+            placeholder={i18n._(t`Search by name, symbol, address`)}
             search={search}
             inputProps={{ className: 'placeholder-primary bg-opacity-50 w-full py-3 pl-4 pr-14 rounded bg-dark-900' }}
             className="border shadow-2xl border-dark-800"

@@ -53,7 +53,11 @@ function Balances() {
                 <div className="mr-4 text-3xl text-high-emphesis">{i18n._(t`BentoBox`)}</div>
               </div>
               <div className="flex justify-end w-2/3 py-4 md:py-0">
-                <Search search={search} term={term} />
+                <Search
+                  search={search}
+                  placeholder={i18n._(t`Search by name, symbol, address`)}
+                  term={term}
+                />
               </div>
             </div>
           </Card.Header>

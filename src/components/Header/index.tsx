@@ -116,6 +116,16 @@ function AppBar(): JSX.Element {
                             className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                           >
                             {i18n._(t`Bridge`)} <sup>BETA</sup>
+                            </a>
+                        </NavLink>
+                      )}
+                      {chainId && featureEnabled(Feature.GOVERNANCE, chainId) && (
+                        <NavLink href={'/vote'}>
+                          <a
+                            id={`governance-nav-link`}
+                            className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                          >
+                            {i18n._(t`Vote`)}
                           </a>
                         </NavLink>
                       )}
