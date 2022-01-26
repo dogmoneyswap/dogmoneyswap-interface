@@ -268,6 +268,11 @@ export class HopOutProcess extends HopProcess {
 
     this.stage = HopStage.init;
 
+    if (bchaddr.isLegacyAddress(this.destinationAddress)) {
+      this.cancel(`Legacy bitcoin addresses are not supported. Please ensure you are sending to a bitcoincash address.`);
+      return;
+    }
+
     if(!bchaddr.isValidAddress(this.destinationAddress) || bchaddr.isBitpayAddress(this.destinationAddress)) {
       this.cancel(`Invalid address for BCH main chain: ${this.destinationAddress}`);
       return;

@@ -83,7 +83,8 @@ export default function Bridge() {
     setBCH(infoToCurrency(0, 'bch'));
 
     setTokenList(tokens)
-    setSendAmount('0')
+    setSendAmount('')
+    setReceiveAmount('')
     handleCurrencySelect(tokens[0])
   }, [chainFrom.id, chainTo.id, anyswapInfo])
 
