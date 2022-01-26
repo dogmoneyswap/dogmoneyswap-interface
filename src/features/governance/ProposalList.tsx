@@ -39,7 +39,7 @@ const ProposalList = ({ proposals, term }) => {
         <div className="flex items-center justify-center px-4 cursor-pointer hover:text-high-emphesis"
           onClick={() => requestSort('endBlock')}
         >
-          {i18n._(t`End Block`)}
+          {i18n._(t`Start/End Block`)}
           {sortConfig &&
             sortConfig.key === 'endBlock' &&
             ((sortConfig.direction === 'ascending' && <ChevronUpIcon width={12} height={12} />) ||
