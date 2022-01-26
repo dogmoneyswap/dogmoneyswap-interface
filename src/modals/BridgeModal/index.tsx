@@ -68,6 +68,8 @@ export default function BridgeModal({
   const [bchTransactionId, setBchTransactionId] = useState<string | null>(bridgeTransaction.hopStatus?.bchTxId)
   const [sbchTransactionId, setSbchTransactionId] = useState<string | null>(bridgeTransaction.hopStatus?.sbchTxId)
 
+  const depositAddressWithAmount = shiftNeeded ? depositAddress : `${depositAddress}?amount=${bridgeTransaction.initialAmount}`
+
   const hopProcess = bridgeTransaction.hopStatus?.direction === HopDirection.in ?
     HopInProcess.fromObject({...bridgeTransaction.hopStatus}, provider) :
     HopOutProcess.fromObject({...bridgeTransaction.hopStatus}, provider)
@@ -257,10 +259,10 @@ export default function BridgeModal({
 
         {depositAddress && (<div>
           <div className="flex items-center justify-center">
-            <QRCode size={200}  value={depositAddress} includeMargin={true} />
+            <QRCode size={200}  value={depositAddressWithAmount} includeMargin={true} />
           </div>
           <div className="flex items-center justify-center">
-            <Copy toCopy={depositAddress}>
+            <Copy toCopy={depositAddressWithAmount}>
               <Typography variant="sm">{shorten(depositAddress, 10)}</Typography>
             </Copy>
           </div>
