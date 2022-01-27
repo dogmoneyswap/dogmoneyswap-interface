@@ -8,6 +8,7 @@ import { randomBytes } from "crypto";
 import { sha256 } from "ethers/utils/sha2";
 import bchaddr from "bchaddrjs";
 import hex2wif from "./hex2wif";
+import { Wallet, WatchWallet } from "mainnet-js";
 
 // The smart contract CrossChainTransfer's deployed address
 const CCTransAddress = "0xBAe8Af26E08D3332C7163462538B82F0CBe45f2a"
@@ -198,7 +199,7 @@ export class HopInProcess extends HopProcess {
     if(balance >= 1000000/*0.01BCH*/) {
       const amt = maxAmount.sat - 400 // 400 sats margin, for getMaxAmountToSend is not accurate
       const txData = await this.hopwallet.send([
-        OpReturnDataFromString(this.destinationAddress), //first output is just OP_RETURN
+        {dataString: this.destinationAddress}, //first output is just OP_RETURN
         {cashaddr: IncomeAddrOnBCH, value: amt, unit: "sat"}, //second output has BCH
       ]);
       const a = amt/100000000.0;
@@ -253,7 +254,7 @@ export class HopOutProcess extends HopProcess {
   }
 
   private async initRecipientWallet() {
-    this.recipientWallet = await Wallet.watchOnly(this.destinationAddress);
+    this.recipientWallet = await WatchWallet.fromCashaddr(this.destinationAddress);
     this.lastSeenBalance = await this.recipientWallet.getBalance("sat");
   }
 
@@ -293,12 +294,7 @@ export class HopOutProcess extends HopProcess {
       this.cancel("Please enter valid transfer amount.");
       return;
     }
-    var poolBalance: string | number = await getBchPoolBalance() //as string
-    if(poolBalance.length == 0) {
-      this.cancel("Cannot get the pool's balance on BCH main chain.");
-      return;
-    }
-    poolBalance = parseFloat(poolBalance) * 1.0 // as number
+    var poolBalance: number = await getBchPoolBalance()
     if(poolBalance < amount) {
       this.cancel(`The coins in pool are not enough for this transfer. ${poolBalance} < ${amount}`);
       return;
@@ -371,9 +367,9 @@ export function randomId() {
 	return hexlify(arrayify(randomBytes(10)));
 }
 
-export async function getBchPoolBalance(): Promise<string> {
-  const bchPoolWallet = await Wallet.watchOnly(PoolAddrOnBCH);
-	return await bchPoolWallet.getBalance("bch");
+export async function getBchPoolBalance(): Promise<number> {
+  const bchPoolWallet = await WatchWallet.fromCashaddr(PoolAddrOnBCH);
+	return await bchPoolWallet.getBalance("bch") as number;
 }
 
 export async function getSmartBchPoolBalance(provider): Promise<string> {

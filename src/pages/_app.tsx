@@ -147,7 +147,6 @@ function MyApp({
           property="og:description"
           content="Trade, launch, stake, farm, invest, automate, build on the premier DeFi platform of smartBCH"
         />
-        <script src="https://hop.cash/assets/mainnet.bundle.js" type="application/javascript"></script>
       </Head>
       <I18nProvider i18n={i18n} forceRenderOnLocaleChange={false}>
         <Web3ReactProvider getLibrary={getLibrary}>

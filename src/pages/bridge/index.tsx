@@ -216,7 +216,7 @@ export default function Bridge() {
         if (hopDirection === HopDirection.in) {
           hopCashMaximum = library ? parseFloat(await getSmartBchPoolBalance(library)) || 0. : 0.
         } else {
-          hopCashMaximum = parseFloat(await getBchPoolBalance()) || 0.
+          hopCashMaximum = await getBchPoolBalance()
         }
 
         if (shiftNeeded) {
