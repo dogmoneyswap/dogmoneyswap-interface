@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/outline'
 import { t } from '@lingui/macro'
-import { useActiveWeb3React } from '../../hooks/useActiveWeb3React'
 import { useLingui } from '@lingui/react'
 import Card from '../Card'
 import Logo from '../Logo'
@@ -15,7 +14,6 @@ interface ChainSelectProps {
   onChainSelect?: (chain: Chain) => void
   chain?: Chain | null
   otherChain?: Chain | null
-  switchOnSelect?: boolean
 }
 
 export default function ChainSelect({
@@ -25,11 +23,9 @@ export default function ChainSelect({
   onChainSelect,
   chain,
   otherChain,
-  switchOnSelect,
 }: ChainSelectProps) {
   const { i18n } = useLingui()
   const [modalOpen, setModalOpen] = useState(false)
-  const { account } = useActiveWeb3React()
 
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
@@ -64,7 +60,6 @@ export default function ChainSelect({
       </Card>
       <ChainModal
         chains={chains}
-        switchOnSelect={switchOnSelect}
         availableChains={availableChains}
         onSelect={onChainSelect}
         title={i18n._(t`Bridge ${label}`)}

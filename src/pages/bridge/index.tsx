@@ -427,7 +427,6 @@ export default function Bridge() {
                 chain={chainFrom}
                 otherChain={chainTo}
                 onChainSelect={(chain) => handleChainFrom(chain)}
-                switchOnSelect={false}
               />
               <button className={'sm:m-6'}>
                 <ArrowRight size="32" onClick={() => {
@@ -447,7 +446,6 @@ export default function Bridge() {
                 chain={chainTo}
                 otherChain={chainFrom}
                 onChainSelect={(chain) => handleChainTo(chain)}
-                switchOnSelect={false}
               />
             </div>
 
