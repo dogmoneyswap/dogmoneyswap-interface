@@ -110,6 +110,15 @@ function AppBar(): JSX.Element {
                           </a>
                         </NavLink>
                       )}
+                      {chainId && featureEnabled(Feature.BRIDGE, chainId) && (
+                        <NavLink href={'/bridge'}>
+                          <a
+                            className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                          >
+                            {i18n._(t`Bridge`)} <sup>BETA</sup>
+                            </a>
+                        </NavLink>
+                      )}
                       {chainId && featureEnabled(Feature.GOVERNANCE, chainId) && (
                         <NavLink href={'/vote'}>
                           <a
@@ -304,6 +313,16 @@ function AppBar(): JSX.Element {
                       className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                     >
                       {i18n._(t`Stake`)}
+                    </a>
+                  </Link>
+                )}
+
+                {chainId && featureEnabled(Feature.BRIDGE, chainId) && (
+                  <Link href={'/bridge'}>
+                    <a
+                      className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                    >
+                      {i18n._(t`Bridge`)} <sup>BETA</sup>
                     </a>
                   </Link>
                 )}

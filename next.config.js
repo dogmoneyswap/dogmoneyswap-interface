@@ -37,6 +37,7 @@ const nextConfig = {
   images: {
     domains: [
       'raw.githubusercontent.com',
+      'sideshift.ai',
       'assets.mistswap.fi',
     ],
   },

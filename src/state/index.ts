@@ -8,7 +8,7 @@ import { useMemo } from 'react'
 
 let store
 
-const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists', 'swap']
+const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists', 'swap', 'bridgeTransactions']
 
 const persistConfig = {
   key: 'root',

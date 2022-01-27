@@ -10,6 +10,7 @@ export enum Feature {
   ANALYTICS = 'Analytics',
   MIGRATE = 'Migrate',
   STAKING = 'Staking',
+  BRIDGE = 'Bridge',
   GOVERNANCE = 'Governance',
 }
 
@@ -20,6 +21,7 @@ const features = {
     // Feature.MIGRATE,
     Feature.ANALYTICS,
     Feature.STAKING,
+    Feature.BRIDGE,
     Feature.GOVERNANCE,
   ],
   [ChainId.SMARTBCH_AMBER]: [
