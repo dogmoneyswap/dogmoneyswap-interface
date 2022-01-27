@@ -147,7 +147,6 @@ function MyApp({
           property="og:description"
           content="Trade, launch, stake, farm, invest, automate, build on the premier DeFi platform of smartBCH"
         />
-        <script src="https://hop.cash/assets/bchaddrjs-0.5.2.min.js" type="application/javascript"></script>
         <script src="https://hop.cash/assets/hex2wif.bundle.js" type="application/javascript"></script>
         <script src="https://hop.cash/assets/mainnet.bundle.js" type="application/javascript"></script>
       </Head>

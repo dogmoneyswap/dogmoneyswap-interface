@@ -8,7 +8,6 @@ declare module 'fortmatic'
 declare global {
   function hex2wif(hex): string
   const Wallet: any
-  const bchaddr: any
   function OpReturnDataFromString(string): any
 
   interface String {
