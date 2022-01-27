@@ -1,12 +1,13 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import { arrayify, hexlify, hexZeroPad } from '@ethersproject/bytes';
-import { id } from '@ethersproject/hash';
+import { BigNumber } from "@ethersproject/bignumber"
+import { arrayify, hexlify, hexZeroPad } from "@ethersproject/bytes";
+import { id } from "@ethersproject/hash";
 import { Web3Provider } from "@ethersproject/providers";
-import { toUtf8Bytes } from '@ethersproject/strings';
-import { formatUnits, parseUnits } from '@ethersproject/units';
-import { randomBytes } from 'crypto';
+import { toUtf8Bytes } from "@ethersproject/strings";
+import { formatUnits, parseUnits } from "@ethersproject/units";
+import { randomBytes } from "crypto";
 import { sha256 } from "ethers/utils/sha2";
-import bchaddr from 'bchaddrjs';
+import bchaddr from "bchaddrjs";
+import hex2wif from "./hex2wif";
 
 // The smart contract CrossChainTransfer's deployed address
 const CCTransAddress = "0xBAe8Af26E08D3332C7163462538B82F0CBe45f2a"

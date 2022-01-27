@@ -171,6 +171,7 @@
     "postinstall-postinstall": "^2.1.0",
     "qrcode.react": "^1.0.1",
     "react-markdown": "^8.0.0",
-    "remark-gfm": "^3.0.1"
+    "remark-gfm": "^3.0.1",
+    "wif": "^2.0.6"
   }
 }
