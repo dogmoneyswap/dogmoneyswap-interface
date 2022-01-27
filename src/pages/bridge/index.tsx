@@ -275,6 +275,8 @@ export default function Bridge() {
   }, [tokenToBridge])
 
   const insufficientBalance = () => {
+    if (hopDirection !== HopDirection.out)
+      return false;
 
     if (sendAmount) {
       try {
