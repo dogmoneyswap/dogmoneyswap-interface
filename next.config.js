@@ -32,6 +32,7 @@ const nextConfig = {
         ...config.resolve.alias,
         tls: false,
         net: false,
+        fs: false,
       }
     }
 

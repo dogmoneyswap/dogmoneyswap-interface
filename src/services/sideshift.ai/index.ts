@@ -114,7 +114,7 @@ export class ShiftInProcess extends ShiftProcess {
   async checkDeposit() {
     const status = await xaiStatus(this.orderId);
 
-    if (status.deposits.length) {
+    if (status.deposits?.length) {
       if (status.deposits.some(val => val.status == "pending")) {
         this.stage = ShiftStage.confirmation;
       }
@@ -124,7 +124,7 @@ export class ShiftInProcess extends ShiftProcess {
   async checkArrival() {
     const status = await xaiStatus(this.orderId);
 
-    if (status.deposits.length) {
+    if (status.deposits?.length) {
       if (status.deposits.every(val => val.status == "settled")) {
         this.stage = ShiftStage.settled;
       }
