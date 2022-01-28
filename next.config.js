@@ -26,6 +26,15 @@ const nextConfig = {
       },
     ]
 
+    config.resolve = {
+      ...config.resolve,
+      alias: {
+        ...config.resolve.alias,
+        tls: false,
+        net: false,
+      }
+    }
+
     return config
   },
   experimental: { esmExternals: true },

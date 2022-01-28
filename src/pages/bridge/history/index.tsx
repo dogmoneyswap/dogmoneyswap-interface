@@ -275,7 +275,7 @@ export default function Bridge() {
                   autoComplete="off"
                   autoCorrect="off"
                 />
-                <Button color="gradient" variant="outlined" onClick={() => onLookup(lookupHash)}>Lookup</Button>
+                <Button color="gradient" variant="outlined" onClick={() => onLookup(lookupHash)}>{i18n._(t`Lookup`)}</Button>
               </div>
             </BottomGrouping>
           </div>

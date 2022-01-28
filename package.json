@@ -165,11 +165,14 @@
     "not op_mini all"
   ],
   "dependencies": {
+    "bchaddrjs": "^0.5.2",
+    "mainnet-js": "^0.4.34",
     "moment": "^2.29.1",
     "patch-package": "^6.4.7",
     "postinstall-postinstall": "^2.1.0",
     "qrcode.react": "^1.0.1",
     "react-markdown": "^8.0.0",
-    "remark-gfm": "^3.0.1"
+    "remark-gfm": "^3.0.1",
+    "wif": "^2.0.6"
   }
 }

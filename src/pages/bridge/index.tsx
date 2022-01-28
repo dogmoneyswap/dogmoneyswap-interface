@@ -216,7 +216,7 @@ export default function Bridge() {
         if (hopDirection === HopDirection.in) {
           hopCashMaximum = library ? parseFloat(await getSmartBchPoolBalance(library)) || 0. : 0.
         } else {
-          hopCashMaximum = parseFloat(await getBchPoolBalance()) || 0.
+          hopCashMaximum = await getBchPoolBalance()
         }
 
         if (shiftNeeded) {
@@ -427,7 +427,6 @@ export default function Bridge() {
                 chain={chainFrom}
                 otherChain={chainTo}
                 onChainSelect={(chain) => handleChainFrom(chain)}
-                switchOnSelect={false}
               />
               <button className={'sm:m-6'}>
                 <ArrowRight size="32" onClick={() => {
@@ -447,7 +446,6 @@ export default function Bridge() {
                 chain={chainTo}
                 otherChain={chainFrom}
                 onChainSelect={(chain) => handleChainTo(chain)}
-                switchOnSelect={false}
               />
             </div>
 

@@ -26,16 +26,10 @@ const shorten = (text: string, size = 5) => {
 }
 
 const needsDots = (message: string) => {
-  if (message.includes("cancelled") || message.includes("arrived to destination")) {
+  if (message.includes(i18n._(t`Bridge process cancelled`)) || message.includes(i18n._(t`Funds arrived to destination`))) {
     return false
   }
   return true
-}
-
-export interface DepositAddress {
-  address: string
-  destinationTag?: number
-  memo?: string
 }
 
 interface BridgeModalProps {
@@ -251,7 +245,7 @@ export default function BridgeModal({
         </Typography>
 
         <div className="items-center justify-center gap-2 sm:flex">
-          <span>Bridge Tx Lookup Id:</span>
+          <span>{i18n._(t`Bridge Tx Lookup Id:`)}</span>
           <Copy toCopy={hash}>
             {shorten(hash,8)}
           </Copy>
@@ -334,7 +328,7 @@ export default function BridgeModal({
       <div className="space-y-4">
         <ModalHeader title={i18n._(t`Bridge assets`)} onClose={onClose} />
         <div className="flex items-center justify-center font-bold text-blue">
-          Bridge transaction not found
+          {i18n._(t`Bridge transaction not found`)}
         </div>
       </div>
     </Modal>}
