@@ -19,6 +19,9 @@ import { TransactionDetails } from "../../state/bridgeTransactions/reducer";
 import { ExternalLinkIcon } from "@heroicons/react/outline";
 
 const shorten = (text: string, size = 5) => {
+  if (!text)
+    return "";
+
   if (text.length > 20) {
     return `${text.slice(0, size)}...${text.slice(-size)}`
   }
@@ -256,7 +259,7 @@ export default function BridgeModal({
             <QRCode size={200}  value={depositAddressWithAmount} includeMargin={true} />
           </div>
           <div className="flex items-center justify-center">
-            <Copy toCopy={depositAddressWithAmount}>
+            <Copy toCopy={depositAddress}>
               <Typography variant="sm">{shorten(depositAddress, 10)}</Typography>
             </Copy>
           </div>
