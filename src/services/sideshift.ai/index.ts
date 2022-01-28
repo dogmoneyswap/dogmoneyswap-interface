@@ -196,7 +196,7 @@ export async function xaiOrder(from = "bch", to = "bch", destinationAddress: str
 			"settleAddress": destinationAddress,
 			// "memo": "12345654565", // only for bch to XLM shifts
 			// "destinationTag": "3454354", // only for bch to XRP shifts
-			"affiliateId": "7DfBJo3oC", // change this
+			"affiliateId": "1hvUQFS7T", // change this
 			// "refundAddress": "we omit it here, user will be able to set it on sideshift"
 	}
 
