@@ -17,6 +17,7 @@ import Copy from "../../components/AccountDetails/Copy";
 import { useTransactionGetter, useTransactionUpdater } from "../../state/bridgeTransactions/hooks";
 import { TransactionDetails } from "../../state/bridgeTransactions/reducer";
 import { ExternalLinkIcon } from "@heroicons/react/outline";
+import { useWeb3React } from "@web3-react/core";
 
 const shorten = (text: string, size = 5) => {
   if (!text)
@@ -46,7 +47,7 @@ export default function BridgeModal({
   hash,
   onDismiss,
 }: BridgeModalProps) {
-  const { library: provider } = useActiveWeb3React()
+  const { library: provider } = useWeb3React()
 
   const transactionGetter = useTransactionGetter;
   const transactionUpdater = useTransactionUpdater();
@@ -279,35 +280,40 @@ export default function BridgeModal({
           </div>
         )}
 
-        {sideShiftOrderId && (<div>
-          <div className="flex items-center justify-center">
-            <a href={`https://sideshift.ai/orders/${sideShiftOrderId}`} target="_blank"
-              className="flex flex-row items-center gap-1 font-bold text-baseline text-primary"
-            >
-              {i18n._(t`sideshift.ai order ${sideShiftOrderId}`)} <ExternalLinkIcon width={20} height={20} />
-            </a>
-          </div>
-        </div>)}
+        <div className="gap-y-1"
+          style={{ display: "flex",
+            "flex-direction": hopProcess?.direction === HopDirection.in ? "column" : "column-reverse" } as any}
+        >
+          {sideShiftOrderId && (<div>
+            <div className="flex items-center justify-center">
+              <a href={`https://sideshift.ai/orders/${sideShiftOrderId}`} target="_blank"
+                className="flex flex-row items-center gap-1 font-bold text-baseline text-primary"
+              >
+                {i18n._(t`sideshift.ai order ${sideShiftOrderId}`)} <ExternalLinkIcon width={20} height={20} />
+              </a>
+            </div>
+          </div>)}
 
-        {bchTransactionId && (<div>
-          <div className="flex items-center justify-center">
-            <a href={`https://blockchair.com/bitcoin-cash/transaction/${bchTransactionId}`} target="_blank"
-              className="flex flex-row items-center gap-1 font-bold text-baseline text-primary"
-            >
-              {i18n._(t`BCH cross-chain tx ${shorten(bchTransactionId)}`)} <ExternalLinkIcon width={20} height={20} />
-            </a>
-          </div>
-        </div>)}
+          {bchTransactionId && (<div>
+            <div className="flex items-center justify-center">
+              <a href={`https://blockchair.com/bitcoin-cash/transaction/${bchTransactionId}`} target="_blank"
+                className="flex flex-row items-center gap-1 font-bold text-baseline text-primary"
+              >
+                {i18n._(t`BCH cross-chain tx ${shorten(bchTransactionId)}`)} <ExternalLinkIcon width={20} height={20} />
+              </a>
+            </div>
+          </div>)}
 
-        {sbchTransactionId && (<div>
-          <div className="flex items-center justify-center">
-            <a href={`https://www.smartscan.cash/transaction/${sbchTransactionId}`} target="_blank"
-              className="flex flex-row items-center gap-1 font-bold text-baseline text-primary"
-            >
-              {i18n._(t`SmartBCH cross-chain tx ${shorten(sbchTransactionId)}`)} <ExternalLinkIcon width={20} height={20} />
-            </a>
-          </div>
-        </div>)}
+          {sbchTransactionId && (<div>
+            <div className="flex items-center justify-center">
+              <a href={`https://www.smartscan.cash/transaction/${sbchTransactionId}`} target="_blank"
+                className="flex flex-row items-center gap-1 font-bold text-baseline text-primary"
+              >
+                {i18n._(t`SmartBCH cross-chain tx ${shorten(sbchTransactionId)}`)} <ExternalLinkIcon width={20} height={20} />
+              </a>
+            </div>
+          </div>)}
+        </div>
 
         {statusText && (
           <div className="flex items-center justify-center gap-2">
