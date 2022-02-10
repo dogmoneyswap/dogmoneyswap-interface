@@ -66,12 +66,12 @@ const CurrencyLogo: FunctionComponent<CurrencyLogoProps> = ({
   )
 
   const srcs = useMemo(() => {
-    if (currency["logoURI"]) {
-      return [currency["logoURI"]]
-    }
-
     if (!currency) {
       return [unknown]
+    }
+
+    if (currency["logoURI"]) {
+      return [currency["logoURI"]]
     }
 
     if (currency.isNative || currency.equals(WNATIVE[currency.chainId])) {
