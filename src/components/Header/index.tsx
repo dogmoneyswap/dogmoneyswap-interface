@@ -327,6 +327,16 @@ function AppBar(): JSX.Element {
                   </Link>
                 )}
 
+                {chainId && featureEnabled(Feature.GOVERNANCE, chainId) && (
+                  <Link href={'/vote'}>
+                    <a
+                      className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                    >
+                      {i18n._(t`Vote`)}
+                    </a>
+                  </Link>
+                )}
+
                 {chainId && featureEnabled(Feature.ANALYTICS, chainId) && (
                   <ExternalLink
                     id={`analytics-nav-link`}
