@@ -258,7 +258,9 @@ export default function Bridge() {
       srcChainId: chainFrom.id,
       destChainId: chainTo.id,
       methodId: methodId,
-      destinationAddress: destAddress
+      destinationAddress: destAddress,
+      errorTrace: null,
+      beforeError: null
     } as TransactionDetails;
 
     if (hopDirection === HopDirection.out) {

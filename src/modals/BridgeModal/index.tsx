@@ -1,6 +1,6 @@
 import { i18n } from "@lingui/core";
 import { t } from "@lingui/macro";
-import React,{useEffect, useState} from "react";
+import React,{useCallback, useEffect, useState} from "react";
 import { CheckCircle } from "react-feather";
 import Modal from "../../components/Modal";
 import ModalHeader from "../../components/ModalHeader";
@@ -30,7 +30,7 @@ const shorten = (text: string, size = 5) => {
 }
 
 const needsDots = (message: string) => {
-  if (message.includes(i18n._(t`Bridge process cancelled`)) || message.includes(i18n._(t`Funds arrived to destination`))) {
+  if (message.includes(i18n._(t`Bridge process cancelled due to error:`)) || message.includes(i18n._(t`Funds arrived to destination`))) {
     return false
   }
   return true
@@ -66,19 +66,23 @@ export default function BridgeModal({
   const [bchTransactionId, setBchTransactionId] = useState<string | null>(bridgeTransaction.hopStatus?.bchTxId)
   const [sbchTransactionId, setSbchTransactionId] = useState<string | null>(bridgeTransaction.hopStatus?.sbchTxId)
 
+  const [retryAttempt, setRetryAttempt] = useState<number>(0)
+  const [errorTrace, setErrorTrace] = useState<string>("")
+
   const depositAddressWithAmount = shiftNeeded ? depositAddress : `${depositAddress}?amount=${bridgeTransaction.initialAmount}`
-
-  const hopProcess = bridgeTransaction.hopStatus?.direction === HopDirection.in ?
-    HopInProcess.fromObject({...bridgeTransaction.hopStatus}, provider) :
-    HopOutProcess.fromObject({...bridgeTransaction.hopStatus}, provider)
-
-  const shiftProcess = bridgeTransaction.hopStatus?.direction === HopDirection.in ?
-    ShiftInProcess.fromObject({...bridgeTransaction.shiftStatus}) :
-    ShiftOutProcess.fromObject({...bridgeTransaction.shiftStatus})
 
   useEffect(() => {
     const stateMachine = async () => {
       if (isOpen && transactionFound) {
+        const hopProcess = bridgeTransaction.hopStatus?.direction === HopDirection.in ?
+          HopInProcess.fromObject({...bridgeTransaction.hopStatus}, provider) :
+          HopOutProcess.fromObject({...bridgeTransaction.hopStatus}, provider)
+
+        const shiftProcess = bridgeTransaction.hopStatus?.direction === HopDirection.in ?
+          ShiftInProcess.fromObject({...bridgeTransaction.shiftStatus}) :
+          ShiftOutProcess.fromObject({...bridgeTransaction.shiftStatus})
+
+        const previousStep = {...bridgeTransaction}
         try {
           if (hopProcess.direction === HopDirection.in) {
             // hop in
@@ -135,7 +139,7 @@ export default function BridgeModal({
                 setStatusText(i18n._(t`Funds arrived to destination`))
                 break;
               case HopStage.cancelled:
-                setStatusText(i18n._(t`Bridge process cancelled`))
+                setStatusText(i18n._(t`Bridge process cancelled due to error:`))
                 break;
             }
           } else {
@@ -188,16 +192,22 @@ export default function BridgeModal({
                 }
                 break;
               case HopStage.cancelled:
-                setStatusText(i18n._(t`Bridge process cancelled`))
+                setStatusText(i18n._(t`Bridge process cancelled due to error:`))
                 break;
             }
           }
 //#endregion hop.cash state machine
         } catch (error) {
+          bridgeTransaction = {...bridgeTransaction, ...{
+            beforeError: previousStep,
+            errorTrace: error.stack
+          }}
+          console.log("Error bridging assets", bridgeTransaction)
+          console.error(error)
           shiftProcess.cancel(error.message)
           hopProcess.cancel(error.message)
-          // process ui updates
-          await stateMachine()
+          setErrorTrace(error.stack)
+          setErrorTrace("")
         }
 
         if (hopProcess.stage != HopStage.settled && hopProcess.stage != HopStage.cancelled ||
@@ -231,7 +241,13 @@ export default function BridgeModal({
       }
     };
     stateMachine();
-  }, [isOpen]);
+  }, [isOpen, retryAttempt]);
+
+  const retry = useCallback(() => {
+    transactionUpdater(bridgeTransaction?.beforeError || bridgeTransaction)
+    setRetryAttempt(retryAttempt+1)
+    setStatusText('')
+  }, [errorTrace])
 
   const onClose = () => {
     clearTimeout(window.smTimeout)
@@ -282,7 +298,7 @@ export default function BridgeModal({
 
         <div className="gap-y-1"
           style={{ display: "flex",
-            "flex-direction": hopProcess?.direction === HopDirection.in ? "column" : "column-reverse" } as any}
+            "flex-direction": bridgeTransaction.hopStatus.direction === HopDirection.in ? "column" : "column-reverse" } as any}
         >
           {sideShiftOrderId && (<div>
             <div className="flex items-center justify-center">
@@ -321,14 +337,19 @@ export default function BridgeModal({
               {statusText}
             </Dots>)}
             {!needsDots(statusText) && (<div>{statusText}</div>)}
-            {hopProcess.stage === HopStage.settled &&
-              (!shiftNeeded || (shiftNeeded && shiftProcess.stage === ShiftStage.settled))
+            {bridgeTransaction.hopStatus.stage === HopStage.settled &&
+              (!shiftNeeded || (shiftNeeded && bridgeTransaction.shiftStatus.stage === ShiftStage.settled))
               && (<CheckCircle className="text-2xl text-green" />)}
           </div>
         )}
-        {hopProcess.errorMessage && (
+        {bridgeTransaction.hopStatus.errorMessage && (
           <div className="flex items-center justify-center text-sm text-blue">
-            {hopProcess.errorMessage}
+            {bridgeTransaction.hopStatus.errorMessage}
+          </div>
+        )}
+        {bridgeTransaction.errorTrace && bridgeTransaction.beforeError && (
+          <div className="flex items-center justify-center text-sm cursor-pointer text-blue" onClick={retry}>
+            {i18n._(t`Retry from previous step`)}
           </div>
         )}
       </div>
