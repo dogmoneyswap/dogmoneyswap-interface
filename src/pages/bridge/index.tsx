@@ -86,7 +86,7 @@ export default function Bridge() {
     setSendAmount('')
     setReceiveAmount('')
     handleCurrencySelect(tokens[0])
-  }, [chainFrom.id, chainTo.id, anyswapInfo])
+  }, [chainFrom.id, chainTo.id])
 
   const handleChainFrom = useCallback(
     (chain: Chain) => {
@@ -97,7 +97,7 @@ export default function Bridge() {
       }
       setChainFrom(chain)
     },
-    [chainFrom, chainTo]
+    [chainFrom.id, chainTo.id]
   )
 
   const handleChainTo = useCallback(
@@ -113,7 +113,7 @@ export default function Bridge() {
       }
       setChainTo(chain)
     },
-    [chainFrom, chainTo]
+    [chainFrom.id, chainTo.id]
   )
 
   const handleSendAmount = useCallback(
@@ -241,7 +241,7 @@ export default function Bridge() {
         setMethodId(methodId)
       }
     },
-    [anyswapInfo, chainFrom.id]
+    [chainFrom.id]
   )
 
   const bridgeButtonClick = () => {
@@ -258,7 +258,9 @@ export default function Bridge() {
       srcChainId: chainFrom.id,
       destChainId: chainTo.id,
       methodId: methodId,
-      destinationAddress: destAddress
+      destinationAddress: destAddress,
+      errorTrace: null,
+      beforeError: null
     } as TransactionDetails;
 
     if (hopDirection === HopDirection.out) {

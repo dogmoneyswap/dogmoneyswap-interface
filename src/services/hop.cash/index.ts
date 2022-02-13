@@ -64,9 +64,10 @@ export class HopProcess implements HopStatus {
   destinationAddress: string
   errorMessage: string
 
-  provider: Web3Provider
+  provider: Web3Provider // provider with signer
+  networkProvider: Web3Provider // provider without signer capabilities
 
-  static fromObject(object: HopStatus, provider: Web3Provider): HopProcess {
+  static fromObject(object: HopStatus, provider: Web3Provider, networkProvider?: Web3Provider): HopProcess {
     const process = new this();
 
     process.direction = object.direction;
@@ -80,6 +81,7 @@ export class HopProcess implements HopStatus {
     process.destinationAddress = object.destinationAddress;
     process.errorMessage = object.errorMessage;
     process.provider = provider;
+    process.networkProvider = networkProvider || provider
 
     return process;
   }
@@ -87,6 +89,7 @@ export class HopProcess implements HopStatus {
   toObject(): HopProcess {
     const copy = {...this};
     delete copy.provider;
+    delete copy.networkProvider;
     return copy;
   }
 
@@ -217,14 +220,14 @@ export class HopInProcess extends HopProcess {
     const myAddrPad32 = hexZeroPad(this.destinationAddress, 32);
     const senderAddrPad32 = hexZeroPad(PoolAddrOnSmartBCH, 32);
     const hopAddr = CCTransAddress;
-    var filter = {address: hopAddr, topics: [Bridged, null, senderAddrPad32, myAddrPad32], toBlock: 0, fromBlock: 0};
+    const filter = {address: hopAddr, topics: [Bridged, null, senderAddrPad32, myAddrPad32], toBlock: 0, fromBlock: 0};
     filter.toBlock = 10000*10000 // a very large value
     filter.fromBlock = this.fromBlock;
-    var logs = await this.provider.getLogs(filter);
+    const logs = await this.networkProvider.getLogs(filter);
 
     const end = Math.max(0, logs.length-20) // at most 20 entries
     let amount;
-    for(var i=logs.length-1; i>=end; i--) {
+    for(let i=logs.length-1; i>=end; i--) {
       const h = logs[i].blockNumber
       amount = formatUnits(logs[i].data);
 
@@ -238,7 +241,6 @@ export class HopInProcess extends HopProcess {
 }
 
 export class HopOutProcess extends HopProcess {
-  provider: Web3Provider;
   recipientWallet: any;
   lastSeenBalance: any;
 
