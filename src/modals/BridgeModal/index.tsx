@@ -18,6 +18,7 @@ import { useTransactionGetter, useTransactionUpdater } from "../../state/bridgeT
 import { TransactionDetails } from "../../state/bridgeTransactions/reducer";
 import { ExternalLinkIcon } from "@heroicons/react/outline";
 import { useWeb3React } from "@web3-react/core";
+import { NetworkContextName } from "../../constants";
 
 const shorten = (text: string, size = 5) => {
   if (!text)
@@ -47,7 +48,8 @@ export default function BridgeModal({
   hash,
   onDismiss,
 }: BridgeModalProps) {
-  const { library: provider } = useWeb3React()
+  const { library: provider } = useWeb3React() // provider with signer
+  const { library: networkProvider } = useWeb3React(NetworkContextName) // provider without signer capabilities
 
   const transactionGetter = useTransactionGetter;
   const transactionUpdater = useTransactionUpdater();
@@ -75,8 +77,8 @@ export default function BridgeModal({
     const stateMachine = async () => {
       if (isOpen && transactionFound) {
         const hopProcess = bridgeTransaction.hopStatus?.direction === HopDirection.in ?
-          HopInProcess.fromObject({...bridgeTransaction.hopStatus}, provider) :
-          HopOutProcess.fromObject({...bridgeTransaction.hopStatus}, provider)
+          HopInProcess.fromObject({...bridgeTransaction.hopStatus}, provider, networkProvider) :
+          HopOutProcess.fromObject({...bridgeTransaction.hopStatus}, provider, networkProvider)
 
         const shiftProcess = bridgeTransaction.hopStatus?.direction === HopDirection.in ?
           ShiftInProcess.fromObject({...bridgeTransaction.shiftStatus}) :
@@ -198,20 +200,24 @@ export default function BridgeModal({
           }
 //#endregion hop.cash state machine
         } catch (error) {
-          bridgeTransaction = {...bridgeTransaction, ...{
-            beforeError: previousStep,
-            errorTrace: error.stack
-          }}
           console.log("Error bridging assets", bridgeTransaction)
           console.error(error)
-          shiftProcess.cancel(error.message)
-          hopProcess.cancel(error.message)
-          setErrorTrace(error.stack)
-          setErrorTrace("")
+          if (error.message?.includes("dust (code 64)")) {
+            // ignore
+          } else {
+            bridgeTransaction = {...bridgeTransaction, ...{
+              beforeError: previousStep,
+              errorTrace: error.stack
+            }}
+            shiftProcess.cancel(error.message)
+            hopProcess.cancel(error.message)
+            setErrorTrace(error.stack)
+            setErrorTrace("")
+          }
         }
 
         if (hopProcess.stage != HopStage.settled && hopProcess.stage != HopStage.cancelled ||
-           (shiftNeeded && shiftProcess.stage != ShiftStage.settled && shiftProcess.stage != ShiftStage.cancelled)) 
+           (shiftNeeded && shiftProcess.stage != ShiftStage.settled && shiftProcess.stage != ShiftStage.cancelled))
         {
           window.smTimeout = setTimeout(stateMachine, 1000)
         }
