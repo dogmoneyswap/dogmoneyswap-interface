@@ -13,7 +13,7 @@ import {
 
 import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId, WNATIVE, Token, WBCH, MASTERCHEF_ADDRESS } from '@mistswapdex/sdk'
-import { MIST, FLEXUSD } from '../../config/tokens'
+import { MIST, FLEXUSD, LAWUSD } from '../../config/tokens'
 import Container from '../../components/Container'
 import FarmList from '../../features/onsen/FarmList'
 import Head from 'next/head'
