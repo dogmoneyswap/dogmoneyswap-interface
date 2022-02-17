@@ -27,6 +27,8 @@ export interface TransactionDetails {
   initialAmount: string
   finalAmount?: string
   destinationAddress: string
+  beforeError?: TransactionDetails
+  errorTrace?: string
 }
 
 export interface TransactionState {
