@@ -487,9 +487,11 @@ export default function Farm(): JSX.Element {
           tvl = reserve / totalSupply * chefBalance * bchPriceUSD * 2;
         }
         farms[i].tvl = tvl;
+        farms[i].totalSupply = totalSupply;
         farms[i].chefBalance = chefBalance;
       } else {
         farms[i].tvl = "0";
+        farms[i].totalSupply = 0;
         farms[i].chefBalance = 0;
       }
     }
@@ -607,7 +609,7 @@ export default function Farm(): JSX.Element {
   })
 
   return (
-    <Container id="farm-page" className="lg:grid lg:grid-cols-4 h-full py-4 mx-auto md:py-8 lg:py-12 gap-9" maxWidth="7xl">
+    <Container id="farm-page" className="h-full py-4 mx-auto lg:grid lg:grid-cols-4 md:py-8 lg:py-12 gap-9" maxWidth="7xl">
       <Head>
         <title>Farm | Mist</title>
         <meta key="description" name="description" content="Farm MIST" />
@@ -630,7 +632,7 @@ export default function Farm(): JSX.Element {
           }}
         />
 
-        <div className="hidden md:block flex items-center text-lg font-bold text-high-emphesis whitespace-nowrap">
+        <div className="flex items-center hidden text-lg font-bold md:block text-high-emphesis whitespace-nowrap">
           Farms{' '}
           <div className="w-full h-0 ml-4 font-bold bg-transparent border border-b-0 border-transparent rounded text-high-emphesis md:border-gradient-r-blue-pink-dark-800 opacity-20"></div>
         </div>
