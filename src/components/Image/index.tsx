@@ -1,5 +1,4 @@
 import NextImage from 'next/image'
-import { cloudinaryLoader } from '../../functions/cloudinary'
 import { useTheme } from '../ThemeSwitch'
 
 // Cloudflare Loader
@@ -51,7 +50,7 @@ const Image = ({
     <div style={{ width, height }} className="overflow-hidden rounded">
       {useBlur ? (
         <NextImage
-          loader={loader}
+          loader={() => src}
           src={src}
           width={width}
           height={height}
@@ -62,7 +61,7 @@ const Image = ({
         />
       ) : (
         <NextImage
-          loader={loader}
+          loader={() => src}
           src={src}
           width={width}
           height={height}

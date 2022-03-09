@@ -5,7 +5,6 @@ import { isTransactionRecent, useAllTransactions } from '../../state/transaction
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import Image from 'next/image'
 import Loader from '../Loader'
-import { cloudinaryLoader } from '../../functions'
 import { NetworkContextName } from '../../constants'
 import { TransactionDetails } from '../../state/transactions/reducer'
 import WalletModal from '../../modals/WalletModal'
@@ -14,7 +13,6 @@ import { shortenAddress } from '../../functions/format'
 import styled from 'styled-components'
 import { t } from '@lingui/macro'
 import useENSName from '../../hooks/useENSName'
-import useENSText from '../../hooks/useENSText'
 import { useLingui } from '@lingui/react'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useWeb3React } from '@web3-react/core'
@@ -92,8 +90,6 @@ function Web3StatusInner() {
 
   const { ENSName } = useENSName(account ?? undefined)
 
-  const { ENSContent } = useENSText(ENSName ?? undefined, 'avatar');
-
   const allTransactions = useAllTransactions()
 
   const sortedRecentTransactions = useMemo(() => {
@@ -132,20 +128,9 @@ function Web3StatusInner() {
             <Loader />
           </div>
         ) : (
-          <div className="flex items-center gap-2">
-            <div>{ENSName || shortenAddress(account)}</div>
-            <Image
-              src={ENSContent || "/chef.svg"}
-              loader={ENSContent ? cloudinaryLoader : undefined}
-              alt="Chef"
-              width={20}
-              height={20}
-            />
-          </div>
+          <div className="mr-2">{ENSName || shortenAddress(account)}</div>
         )}
-        {/*
         {!hasPendingTransactions && connector && <StatusIcon connector={connector} />}
-        */}
       </div>
     )
   } else {

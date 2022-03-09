@@ -49,7 +49,6 @@ const nextConfig = {
       'raw.githubusercontent.com',
       'sideshift.ai',
       'assets.mistswap.fi',
-      'res.cloudinary.com',
     ],
   },
   reactStrictMode: true,
