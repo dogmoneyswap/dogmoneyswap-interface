@@ -50,6 +50,7 @@ export default function Bridge() {
   const bchPrice = useEthPrice()
   const transactionUpdater = useTransactionUpdater();
 
+  const maintenance = true;
   const [helpVisible, setHelpVisible] = useState<boolean>(false)
   const [chainFrom, setChainFrom] = useState<Chain | null>(DEFAULT_CHAIN_FROM)
   const [chainTo, setChainTo] = useState<Chain | null>(DEFAULT_CHAIN_TO)
@@ -311,6 +312,7 @@ export default function Bridge() {
   }
 
   const buttonDisabled =
+    maintenance ||
     !currency0 ||
     !sendAmount ||
     sendAmount == '' ||
@@ -319,6 +321,7 @@ export default function Bridge() {
     insufficientBalance()
 
   const buttonText =
+    maintenance ? i18n._(t`Bridge under temporary maintenance`) : 
     !shiftAllowed ? i18n._(t`Bridge forbidden (blocked country)`) :
     !currency0
       ? i18n._(t`Select a Token`)
