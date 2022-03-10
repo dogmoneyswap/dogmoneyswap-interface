@@ -18,11 +18,11 @@ export type LogoProps = {
  */
 const Logo: FC<LogoProps> = ({ srcs, width, height, style, alt = '', className, ...rest }) => {
   const [, refresh] = useState<number>(0)
-  const src = srcs.find((src) => !BAD_SRCS[src])
+  const src = srcs.find((src) => !BAD_SRCS[src]) || 'https://raw.githubusercontent.com/mistswapdex/icons/master/token/unknown.png'
   return (
     <div className="rounded" style={{ width, height, ...style }}>
       <Image
-        src={src || 'https://raw.githubusercontent.com/mistswapdex/icons/master/token/unknown.png'}
+        src={src}
         loader={() => src}
         onError={() => {
           if (src) BAD_SRCS[src] = true
