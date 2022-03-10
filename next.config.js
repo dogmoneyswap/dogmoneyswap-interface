@@ -49,6 +49,7 @@ const nextConfig = {
       'raw.githubusercontent.com',
       'sideshift.ai',
       'assets.mistswap.fi',
+      'metadata.bch.domains',
     ],
   },
   reactStrictMode: true,
