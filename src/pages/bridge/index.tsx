@@ -50,7 +50,7 @@ export default function Bridge() {
   const bchPrice = useEthPrice()
   const transactionUpdater = useTransactionUpdater();
 
-  const maintenance = true;
+  const maintenance = false;
   const [helpVisible, setHelpVisible] = useState<boolean>(false)
   const [chainFrom, setChainFrom] = useState<Chain | null>(DEFAULT_CHAIN_FROM)
   const [chainTo, setChainTo] = useState<Chain | null>(DEFAULT_CHAIN_TO)
