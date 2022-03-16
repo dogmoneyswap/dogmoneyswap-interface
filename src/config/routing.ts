@@ -1,5 +1,5 @@
 import {
-    MIST, XMIST, FLEXUSD
+    MIST, XMIST, FLEXUSD, LAWUSD, SBUSD, LAW
 } from '../config/tokens'
 // a list of tokens by chain
 import { ChainId, Currency, Token, WNATIVE } from '@mistswapdex/sdk'
@@ -23,7 +23,14 @@ const WRAPPED_NATIVE_ONLY: ChainTokenList = {
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WRAPPED_NATIVE_ONLY,
-  [ChainId.SMARTBCH]: [...WRAPPED_NATIVE_ONLY[ChainId.SMARTBCH], FLEXUSD],
+  [ChainId.SMARTBCH]: [
+    ...WRAPPED_NATIVE_ONLY[ChainId.SMARTBCH],
+    FLEXUSD,
+    LAWUSD,
+    SBUSD,
+    LAW,
+    MIST[ChainId.SMARTBCH]
+  ],
   [ChainId.SMARTBCH_AMBER]: [...WRAPPED_NATIVE_ONLY[ChainId.SMARTBCH_AMBER]],
 }
 
@@ -61,7 +68,14 @@ export const COMMON_BASES: ChainTokenList = {
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WRAPPED_NATIVE_ONLY,
-  [ChainId.SMARTBCH]: [...WRAPPED_NATIVE_ONLY[ChainId.SMARTBCH], FLEXUSD],
+  [ChainId.SMARTBCH]: [
+    ...WRAPPED_NATIVE_ONLY[ChainId.SMARTBCH],
+    FLEXUSD,
+    LAWUSD,
+    SBUSD,
+    LAW,
+    MIST[ChainId.SMARTBCH],
+  ],
   [ChainId.SMARTBCH_AMBER]: [...WRAPPED_NATIVE_ONLY[ChainId.SMARTBCH_AMBER]],
 }
 
