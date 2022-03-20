@@ -374,7 +374,7 @@ export default function Farm(): JSX.Element {
       },
       "0xcd4f24eD6d53d3CF342B6D7a1006ff209DdcC993": {
         farmId: 1,
-        allocPoint: 50000,
+        allocPoint: 500000,
         token0: new Token(ChainId.SMARTBCH_AMBER, '0x9E93b1e6B6f169b793aFC72BB5241a0388418E2A', 18, 'FOG', 'FOGToken'),
         token1: new Token(ChainId.SMARTBCH_AMBER, '0x19E75581Ce31219c78E7996aEa2714EE88e8f059', 18, 'TEST', 'TESTToken'),
       },
