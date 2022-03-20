@@ -36,12 +36,12 @@ export const AddressInput = React.memo(
           }}
           // universal input options
           inputMode="text"
-          title="Wallet Address or ENS name"
+          title="Wallet Address or LNS name"
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
           spellCheck="false"
-          placeholder="Wallet Address or ENS name"
+          placeholder="Wallet Address or LNS name"
           pattern="^(0x[a-fA-F0-9]{40})$"
           // text-specific options
           type="text"
