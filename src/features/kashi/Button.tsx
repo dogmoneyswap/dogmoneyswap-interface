@@ -32,7 +32,7 @@ export function KashiApproveButton({ content, color }: any): any {
 
       {showApprove && (
         <Button color={color} onClick={onApprove} className="mb-4">
-          {i18n._(t`Approve Kashi`)}
+          {i18n._(t`Approve Lend`)}
         </Button>
       )}
 

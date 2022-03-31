@@ -171,7 +171,7 @@ function Create() {
       const tx = await bentoBoxContract?.deploy(chainId && KASHI_ADDRESS[chainId], kashiData, true)
 
       addTransaction(tx, {
-        summary: `Add Kashi market ${currencies[Field.ASSET].symbol}/${currencies[Field.COLLATERAL].symbol} MistSwap TWAP0`,
+        summary: `Add Lend market ${currencies[Field.ASSET].symbol}/${currencies[Field.COLLATERAL].symbol} MistSwap TWAP0`,
       })
 
       router.push('/lend')
@@ -183,8 +183,8 @@ function Create() {
   return (
     <>
       <Head>
-        <title>Create Lending Pair | Kashi by Mist</title>
-        <meta key="description" name="description" content="Create Lending Pair on Kashi by Mist" />
+        <title>Create Lending Pair | Lend by Mist</title>
+        <meta key="description" name="description" content="Create Lending Pair on Lend by Mist" />
       </Head>
       <Card
         className="h-full bg-dark-900"
@@ -243,7 +243,7 @@ const CreateLayout = ({ children }) => {
         <Card
           className="h-full bg-dark-900"
           backgroundImage="/deposit-graphic.png"
-          title={i18n._(t`Create a new Kashi Market`)}
+          title={i18n._(t`Create a new Lend Market`)}
           description={i18n._(
             t`If you want to supply to a market that is not listed yet, you can use this tool to create a new pair.`
           )}

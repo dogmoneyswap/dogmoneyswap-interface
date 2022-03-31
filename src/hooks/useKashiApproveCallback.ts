@@ -128,7 +128,7 @@ function useKashiApproveCallback(): [
       }
     } else {
       const tx = await bentoBoxContract?.setMasterContractApproval(account, masterContract, true, 0, HashZero, HashZero)
-      dispatch(setKashiApprovalPending('Approve Kashi'))
+      dispatch(setKashiApprovalPending('Approve Lend'))
       await tx.wait()
       dispatch(setKashiApprovalPending(''))
     }
@@ -139,7 +139,7 @@ function useKashiApproveCallback(): [
     let summary
     if (approvalState === BentoApprovalState.NOT_APPROVED && kashiPermit) {
       cooker.approve(kashiPermit)
-      summary = 'Approve Kashi and ' + (await execute(cooker))
+      summary = 'Approve Lend and ' + (await execute(cooker))
     } else {
       summary = await execute(cooker)
     }

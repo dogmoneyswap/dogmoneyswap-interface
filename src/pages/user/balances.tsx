@@ -88,7 +88,7 @@ const BalancesLayout = ({ children }) => {
           backgroundImage="bento-illustration.png"
           title={i18n._(t`Deposit tokens into BentoBox for all the yields`)}
           description={i18n._(
-            t`BentoBox provides extra yield on deposits with flash lending, strategies, and fixed, low-gas transfers among integrated dapps, like Kashi markets`
+            t`BentoBox provides extra yield on deposits with flash lending, strategies, and fixed, low-gas transfers among integrated dapps, like Lend markets`
           )}
         />
       }
