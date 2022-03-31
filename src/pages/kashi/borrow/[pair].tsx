@@ -229,7 +229,7 @@ const PairLayout = ({ children }) => {
             </div>
 
             <div className="flex justify-between pt-3">
-              <div className="text-xl text-high-emphesis">{i18n._(t`BentoBox`)}</div>
+              <div className="text-xl text-high-emphesis">{i18n._(t`Mirror`)}</div>
             </div>
             <div className="flex justify-between">
               <div className="text-lg text-secondary">{i18n._(t`${pair?.collateral.tokenInfo.symbol} Strategy`)}</div>
@@ -237,7 +237,7 @@ const PairLayout = ({ children }) => {
                 {i18n._(t`None`)}
                 <QuestionHelper
                   text={i18n._(
-                    t`BentoBox strategies can create yield for your collateral tokens. This token does not yet have a strategy in the BentoBox.`
+                    t`Mirror strategies can create yield for your collateral tokens. This token does not yet have a strategy in the Mirror.`
                   )}
                 />
               </div>

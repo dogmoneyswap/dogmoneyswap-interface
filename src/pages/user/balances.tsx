@@ -50,7 +50,7 @@ function Balances() {
           <Card.Header className="flex items-center justify-between bg-dark-800">
             <div className="flex flex-col items-center justify-between w-full md:flex-row">
               <div className="flex items-baseline">
-                <div className="mr-4 text-3xl text-high-emphesis">{i18n._(t`BentoBox`)}</div>
+                <div className="mr-4 text-3xl text-high-emphesis">{i18n._(t`Mirror`)}</div>
               </div>
               <div className="flex justify-end w-2/3 py-4 md:py-0">
                 <Search
@@ -67,7 +67,7 @@ function Balances() {
           <div className="grid grid-cols-3 px-4 text-sm select-none text-secondary">
             <div>{i18n._(t`Token`)}</div>
             <div className="text-right">{i18n._(t`Wallet`)}</div>
-            <div className="text-right">{i18n._(t`BentoBox`)}</div>
+            <div className="text-right">{i18n._(t`Mirror`)}</div>
           </div>
           {items &&
             items.length > 0 &&
@@ -86,9 +86,9 @@ const BalancesLayout = ({ children }) => {
         <Card
           className="h-full bg-dark-900"
           backgroundImage="bento-illustration.png"
-          title={i18n._(t`Deposit tokens into BentoBox for all the yields`)}
+          title={i18n._(t`Deposit tokens into Mirror for all the yields`)}
           description={i18n._(
-            t`BentoBox provides extra yield on deposits with flash lending, strategies, and fixed, low-gas transfers among integrated dapps, like Lend markets`
+            t`Mirror provides extra yield on deposits with flash lending, strategies, and fixed, low-gas transfers among integrated dapps, like Lend markets`
           )}
         />
       }

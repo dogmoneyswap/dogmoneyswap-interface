@@ -28,7 +28,7 @@ export default function Pair() {
     <div id={`lend-${router.query.pair}-page`}>
       <Head>
         <title>Lend {pair.asset.tokenInfo.symbol} | Mist</title>
-        <meta key="description" name="description" content={`Lend ${pair.asset.tokenInfo.symbol} on Kashi`} />
+        <meta key="description" name="description" content={`Lend ${pair.asset.tokenInfo.symbol} on Lend`} />
       </Head>
       <Card
         className="h-full bg-dark-900"
@@ -203,7 +203,7 @@ const PairLayout = ({ children }) => {
             </div>
 
             <div className="flex justify-between pt-3">
-              <div className="text-xl text-high-emphesis">{i18n._(t`BentoBox`)}</div>
+              <div className="text-xl text-high-emphesis">{i18n._(t`Mirror`)}</div>
             </div>
             <div className="flex justify-between">
               <div className="text-lg text-secondary">{i18n._(t`${pair?.asset.tokenInfo.symbol} Strategy`)}</div>
@@ -211,7 +211,7 @@ const PairLayout = ({ children }) => {
                 {i18n._(t`None`)}
                 <QuestionHelper
                   text={i18n._(
-                    t`BentoBox strategies can create yield for your liquidity while it is not lent out. This token does not yet have a strategy in the BentoBox.`
+                    t`Mirror strategies can create yield for your liquidity while it is not lent out. This token does not yet have a strategy in the Mirror.`
                   )}
                 />
               </div>
