@@ -121,6 +121,30 @@ const nextConfig = {
         source: '/find',
         destination: '/exchange/find',
       },
+      {
+        source: '/lend',
+        destination: '/kashi/lend',
+      },
+      {
+        source: '/lend/:pair',
+        destination: '/kashi/lend/:pair',
+      },
+      {
+        source: '/borrow',
+        destination: '/kashi/borrow',
+      },
+      {
+        source: '/borrow/:pair',
+        destination: '/kashi/borrow/:pair',
+      },
+      {
+        source: '/create',
+        destination: '/kashi/create',
+      },
+      {
+        source: '/balances',
+        destination: '/user/balances',
+      },
     ]
   },
   i18n: {

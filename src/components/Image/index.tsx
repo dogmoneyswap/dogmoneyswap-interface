@@ -46,11 +46,14 @@ const Image = ({
 }) => {
   const useBlur = parseInt(String(height), 10) >= 40 && parseInt(String(width), 10) >= 40
   const { theme } = useTheme();
+  if (!loader) {
+    loader = typeof src === 'string' && src.includes('http') ? () => src : undefined
+  }
   return (
     <div style={{ width, height }} className="overflow-hidden rounded">
       {useBlur ? (
         <NextImage
-          loader={() => src}
+          loader={loader}
           src={src}
           width={width}
           height={height}
@@ -61,7 +64,7 @@ const Image = ({
         />
       ) : (
         <NextImage
-          loader={() => src}
+          loader={loader}
           src={src}
           width={width}
           height={height}

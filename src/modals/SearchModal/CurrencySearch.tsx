@@ -69,7 +69,7 @@ export function CurrencySearch({
 
   if (router.asPath.startsWith('/kashi/create')) {
     allTokens = Object.keys(allTokens).reduce((obj, key) => {
-      if (CHAINLINK_TOKENS[chainId].find((address) => address === key)) obj[key] = allTokens[key]
+      if (CHAINLINK_TOKENS[chainId] && CHAINLINK_TOKENS[chainId].find((address) => address === key)) obj[key] = allTokens[key]
       return obj
     }, {})
   }

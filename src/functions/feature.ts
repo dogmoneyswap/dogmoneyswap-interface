@@ -32,6 +32,8 @@ const features = {
     Feature.ANALYTICS,
     */
     Feature.STAKING,
+    Feature.BENTOBOX,
+    Feature.KASHI
   ],
 }
 

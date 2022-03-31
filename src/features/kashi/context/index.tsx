@@ -7,6 +7,7 @@ import {
   FLEXUSD_ADDRESS,
   WNATIVE,
   WNATIVE_ADDRESS,
+  WBCH,
 } from '@mistswapdex/sdk'
 import React, { createContext, useCallback, useContext, useEffect, useReducer } from 'react'
 import { ZERO, e10, maximum, minimum } from '../../../functions/math'
@@ -203,6 +204,19 @@ export function KashiProvider({ children }) {
   const bentoBoxContract = useBentoBoxContract()
 
   const tokens = useAllTokens()
+  tokens[WNATIVE_ADDRESS[chainId]] = WBCH[chainId]
+  Object.keys(tokens).forEach(address => {
+    if (!(tokens[address] as any).tokenInfo) {
+      (tokens[address] as any).tokenInfo = {
+        address: tokens[address].address,
+        chainId: chainId,
+        decimals: tokens[address].decimals,
+        name: tokens[address].name,
+        symbol: tokens[address].symbol,
+        logoURI: "https://raw.githubusercontent.com/mistswapdex/icons/master/token/unknown.png"
+      }
+    }
+  })
 
   // const info = useSingleCallResult(boringHelperContract, 'getUIInfo', [
   //   account,
@@ -214,11 +228,11 @@ export function KashiProvider({ children }) {
   // console.log({ info })
 
   const updatePairs = useCallback(async () => {
-    console.log('update pairs')
+    // console.log('update pairs')
     if (
       !account ||
       !chainId ||
-      ![/*ChainId.MAINNET, ChainId.KOVAN, ChainId.BSC, ChainId.MATIC, ChainId.XDAI, ChainId.ARBITRUM*/].includes(chainId)
+      ![ChainId.SMARTBCH_AMBER /*ChainId.MAINNET, ChainId.KOVAN, ChainId.BSC, ChainId.MATIC, ChainId.XDAI, ChainId.ARBITRUM*/].includes(chainId)
     ) {
       return
     }
@@ -234,6 +248,10 @@ export function KashiProvider({ children }) {
       // Filter all pairs by supported oracles and verify the oracle setup
 
       const invalidOracles = []
+      const whitelistedPairs = [
+        "0xeB506DfC36c4b56a6E76FD29C2654515327a643E",
+        "0x2E3566fe04f77b3eD6381b513eBB8516B2C80A8C"
+      ]
 
       const allPairAddresses = logPairs
         .filter((pair) => {
@@ -245,8 +263,10 @@ export function KashiProvider({ children }) {
           return oracle.valid
         })
         .map((pair) => pair.address)
+        .filter((pair) => whitelistedPairs.indexOf(pair) !== -1)
+      console.log('filtered pairs', allPairAddresses)
 
-      console.log('invalidOracles', invalidOracles)
+      // console.log('invalidOracles', invalidOracles)
 
       // Get full info on all the verified pairs
       const pairs = rpcToObj(await boringHelperContract.pollKashiPairs(account, allPairAddresses))
@@ -453,7 +473,7 @@ export function KashiProvider({ children }) {
         },
       })
     }
-  }, [account, chainId, boringHelperContract, bentoBoxContract, currency, tokens, wnative])
+  }, [account, chainId, boringHelperContract, bentoBoxContract, currency, tokens, wnative, blockNumber])
 
   const previousBlockNumber = usePrevious(blockNumber)
 

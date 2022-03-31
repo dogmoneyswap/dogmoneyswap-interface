@@ -35,7 +35,7 @@ String.prototype.toBigNumber = function (decimals: BigNumberish): BigNumber {
   try {
     return parseUnits(this as string, decimals)
   } catch (error) {
-    console.debug(`Failed to parse input amount: "${this}"`, error)
+    // console.debug(`Failed to parse input amount: "${this}"`, error)
   }
   return BigNumber.from(0)
 }

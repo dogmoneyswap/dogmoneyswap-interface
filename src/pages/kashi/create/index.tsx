@@ -1,4 +1,4 @@
-import { /* CHAINLINK_ORACLE_ADDRESS,*/ Currency, KASHI_ADDRESS } from '@mistswapdex/sdk'
+import { TWAP_0_ORACLE_ADDRESS, TWAP_1_ORACLE_ADDRESS, CHAINLINK_ORACLE_ADDRESS, Currency, KASHI_ADDRESS } from '@mistswapdex/sdk'
 import React, { useCallback } from 'react'
 import { useCreateActionHandlers, useCreateState, useDerivedCreateInfo } from '../../../state/create/hook'
 
@@ -15,7 +15,7 @@ import { defaultAbiCoder } from '@ethersproject/abi'
 import { e10 } from '../../../functions/math'
 import { t } from '@lingui/macro'
 import { useActiveWeb3React } from '../../../hooks/useActiveWeb3React'
-import { useBentoBoxContract } from '../../../hooks/useContract'
+import { useBentoBoxContract, useFactoryContract } from '../../../hooks/useContract'
 import { useLingui } from '@lingui/react'
 import { useRouter } from 'next/router'
 import { useTransactionAdder } from '../../../state/transactions/hooks'
@@ -35,6 +35,7 @@ function Create() {
   const addTransaction = useTransactionAdder()
 
   const router = useRouter()
+  const factory = useFactoryContract();
 
   // swap state
   const { independentField, typedValue } = useCreateState()
@@ -58,7 +59,7 @@ function Create() {
 
   const both = Boolean(currencies[Field.COLLATERAL] && currencies[Field.ASSET])
 
-  const getOracleData = useCallback(
+  const getChainlikOracleData = useCallback(
     async (asset: Currency, collateral: Currency) => {
       const oracleData = ''
 
@@ -112,18 +113,43 @@ function Create() {
     [chainId]
   )
 
+  const getTWAPOracleData = useCallback(
+    async (asset: Currency, collateral: Currency) => {
+      const pair = await factory.getPair(asset.wrapped.address, collateral.wrapped.address)
+
+      console.log(pair)
+      return defaultAbiCoder.encode(['address'], [pair])
+    },
+    [chainId]
+  )
+
   const handleCreate = async () => {
     try {
       if (!both) return
 
-      const oracleData = await getOracleData(currencies[Field.ASSET], currencies[Field.COLLATERAL])
+      enum OracleType {
+        ChainLink,
+        TWAP
+      }
+      const oracleType: OracleType = OracleType.TWAP as any
+      let oracleData;
+      let oracleAddress;
+      switch (oracleType) {
+        case OracleType.ChainLink:
+          oracleData = await getChainlikOracleData(currencies[Field.ASSET], currencies[Field.COLLATERAL])
+          oracleAddress = CHAINLINK_ORACLE_ADDRESS[chainId]
+          break
+        case OracleType.TWAP:
+          oracleData = await getTWAPOracleData(currencies[Field.ASSET], currencies[Field.COLLATERAL])
+          oracleAddress = TWAP_1_ORACLE_ADDRESS[chainId]
+          console.log('twap')
+          break
+      }
 
       if (!oracleData) {
         console.log('No path')
         return
       }
-
-      const oracleAddress = undefined // CHAINLINK_ORACLE_ADDRESS[chainId]
 
       const kashiData = defaultAbiCoder.encode(
         ['address', 'address', 'address', 'bytes'],
@@ -145,7 +171,7 @@ function Create() {
       const tx = await bentoBoxContract?.deploy(chainId && KASHI_ADDRESS[chainId], kashiData, true)
 
       addTransaction(tx, {
-        summary: `Add Kashi market ${currencies[Field.ASSET].symbol}/${currencies[Field.COLLATERAL].symbol} Chainlink`,
+        summary: `Add Kashi market ${currencies[Field.ASSET].symbol}/${currencies[Field.COLLATERAL].symbol} MistSwap TWAP0`,
       })
 
       router.push('/lend')

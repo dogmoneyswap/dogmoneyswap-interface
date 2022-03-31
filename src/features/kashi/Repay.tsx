@@ -238,8 +238,8 @@ export default function Repay({ pair }: RepayProps) {
   // Handlers
   async function onExecute(cooker: KashiCooker) {
     let summary = ''
+    const SUSHISWAP_MULTI_EXACT_SWAPPER_ADDRESS = {}
 
-    /*
     if (swap && trade) {
       const share = toShare(pair.collateral, pair.userCollateralAmount.value)
 
@@ -314,7 +314,6 @@ export default function Repay({ pair }: RepayProps) {
 
     resetRepayState()
 
-    */
     return summary
   }
 

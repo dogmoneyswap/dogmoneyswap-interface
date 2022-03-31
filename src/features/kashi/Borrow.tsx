@@ -241,8 +241,7 @@ export default function Borrow({ pair }: BorrowProps) {
   // Handlers
   async function onExecute(cooker: KashiCooker): Promise<string> {
     let summary = ''
-
-    /*
+    const SUSHISWAP_MULTISWAPPER_ADDRESS = {}
     if (borrowValueSet) {
       if (displayUpdateOracle) {
         cooker.updateExchangeRate(true, ZERO, ZERO)
@@ -313,7 +312,6 @@ export default function Borrow({ pair }: BorrowProps) {
     } else if (borrowValueSet) {
       summary = trade ? 'Borrow, swap and add as collateral' : 'Borrow'
     }
-    */
 
     return summary
   }
