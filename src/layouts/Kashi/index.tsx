@@ -23,10 +23,10 @@ export default function Layout({
 }: LayoutProps): JSX.Element {
   const router = useRouter()
   return (
-    <div className="z-0 flex flex-col items-start w-full h-screen">
+    <div className="z-0 flex flex-col items-center w-full pb-32 lg:pb-16">
       <Header />
       <Main>
-        <Container className="px-4 py-4 md:py-8 lg:py-12" maxWidth="7xl">
+        <Container className="px-4 py-4 md:py-8 lg:py-12 mb-8" maxWidth="7xl">
           <div className={`mb-2 grid grid-cols-12 gap-4`}>
             <div className="flex justify-center col-span-12 xl:col-span-3 lg:justify-start">
               <Link href="/borrow">

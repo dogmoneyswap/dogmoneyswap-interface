@@ -232,7 +232,7 @@ export function KashiProvider({ children }) {
     if (
       !account ||
       !chainId ||
-      ![ChainId.SMARTBCH_AMBER /*ChainId.MAINNET, ChainId.KOVAN, ChainId.BSC, ChainId.MATIC, ChainId.XDAI, ChainId.ARBITRUM*/].includes(chainId)
+      ![/*ChainId.SMARTBCH*/, ChainId.SMARTBCH_AMBER].includes(chainId)
     ) {
       return
     }
@@ -264,7 +264,7 @@ export function KashiProvider({ children }) {
         })
         .map((pair) => pair.address)
         .filter((pair) => whitelistedPairs.indexOf(pair) !== -1)
-      console.log('filtered pairs', allPairAddresses)
+      // console.log('filtered pairs', allPairAddresses)
 
       // console.log('invalidOracles', invalidOracles)
 

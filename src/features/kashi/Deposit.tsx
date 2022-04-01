@@ -33,7 +33,7 @@ export default function Deposit({ pair }: any): JSX.Element {
   const assetNative = WNATIVE[chainId || 1].address === pair.asset.address
   const balance = useBento ? pair.asset.bentoBalance : assetNative ? info?.ethBalance : pair.asset.balance
 
-  const max = useBento ? pair.asset.bentoBalance : assetNative ? info?.ethBalance : pair.asset.balance
+  const max = useBento ? pair.asset.bentoBalance : assetNative ? info?.ethBalance.sub(e10(16)) : pair.asset.balance
 
   const warnings = new Warnings()
 
