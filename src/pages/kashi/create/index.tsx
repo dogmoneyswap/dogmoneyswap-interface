@@ -54,7 +54,7 @@ function Create() {
 
   const { currencies, inputError } = useDerivedCreateInfo()
 
-  const [isChainlink, setIsChanlink] = useState<boolean>(false)
+  const [isChainlink, setIsChainlink] = useState<boolean>(false)
   const [pairState, pair] = useV2Pair(currencies[Field.ASSET], currencies[Field.COLLATERAL]) as [PairState, Pair]
   const twapType = pair?.token0.address === currencies[Field.ASSET].wrapped.address ? OracleType.TWAP0 : OracleType.TWAP1
   let error = pairState === PairState.EXISTS ? '' : 'Pair does not exist';
@@ -67,7 +67,7 @@ function Create() {
 
   const selectHandler = useCallback(
     (e, item) => {
-      setIsChanlink(item === OracleType.ChainLink)
+      setIsChainlink(item === OracleType.ChainLink)
       setOracleType(item)
     },
     [items]
