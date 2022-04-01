@@ -246,7 +246,7 @@ const PairLayout = ({ children }) => {
             {pair && (pair.oracle.name.indexOf('MistSwap TWAP') === 0) && (
               <>
                 <div className="flex justify-between pt-3">
-                  <div className="text-xl text-high-emphesis">{i18n._(t`SLP`)}</div>
+                  <div className="text-xl text-high-emphesis">{i18n._(t`MLP`)}</div>
                 </div>
                 {liquidityPair ? (
                   <>

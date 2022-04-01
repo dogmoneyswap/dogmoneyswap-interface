@@ -14,7 +14,7 @@ function TradeSummary() {
           <RowFixed>
             <div className="text-white">
               1.576 →&nbsp;
-              <span className="text-green">1.787 ETH/SUSHI SLP</span>
+              <span className="text-green">1.787 BCH/MIST MLP</span>
             </div>
           </RowFixed>
         </RowBetween>
