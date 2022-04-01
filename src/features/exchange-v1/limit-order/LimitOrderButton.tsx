@@ -137,7 +137,7 @@ const LimitOrderButton: FC<LimitOrderButtonProps> = ({ currency, color, ...rest 
   if (depositPending)
     button = (
       <Button disabled={disabled} color={disabled ? 'gray' : color} onClick={deposit} {...rest}>
-        <Dots>{i18n._(t`Depositing ${currency.symbol} into BentoBox`)}</Dots>
+        <Dots>{i18n._(t`Depositing ${currency.symbol} into Mirror`)}</Dots>
       </Button>
     )
   else if (!account)
@@ -178,7 +178,7 @@ const LimitOrderButton: FC<LimitOrderButtonProps> = ({ currency, color, ...rest 
   )
     button = (
       <Button disabled={disabled} color={disabled ? 'gray' : 'blue'} onClick={deposit} {...rest}>
-        {i18n._(t`Deposit ${currency.symbol} into BentoBox`)}
+        {i18n._(t`Deposit ${currency.symbol} into Mirror`)}
       </Button>
     )
 

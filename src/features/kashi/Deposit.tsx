@@ -40,7 +40,7 @@ export default function Deposit({ pair }: any): JSX.Element {
   warnings.add(
     balance?.lt(value.toBigNumber(pair.asset.tokenInfo.decimals)),
     i18n._(
-      t`Please make sure your ${useBento ? 'BentoBox' : 'wallet'} balance is sufficient to deposit and then try again.`
+      t`Please make sure your ${useBento ? 'Mirror' : 'wallet'} balance is sufficient to deposit and then try again.`
     ),
     true
   )
