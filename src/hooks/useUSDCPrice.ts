@@ -28,7 +28,7 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
     maxHops: 3,
   })
 
-  // return useMemo(() => {
+  return useMemo(() => {
     if (!currency || !stablecoin) {
       return undefined
     }
@@ -45,7 +45,7 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
     }
 
     return undefined
-  // }, [currency, stablecoin, v2USDCTrade])
+  }, [currency, stablecoin, v2USDCTrade])
 }
 
 export function useUSDCValue(currencyAmount: CurrencyAmount<Currency> | undefined | null) {
