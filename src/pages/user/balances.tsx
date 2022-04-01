@@ -255,7 +255,7 @@ function Withdraw({ token }: { token: BentoBalance & WrappedTokenInfo }): JSX.El
       {account && (
         <div className="pr-4 mb-2 text-sm text-right cursor-pointer text-secondary">
           {i18n._(
-            t`Bento Balance: ${formatNumber(
+            t`Mirror Balance: ${formatNumber(
               token.bentoBalance
                 ? token.bentoBalance.toFixed(token?.tokenInfo ? token.tokenInfo.decimals : token?.decimals)
                 : 0

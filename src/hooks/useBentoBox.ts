@@ -22,10 +22,10 @@ function useBentoBox() {
             const tx = await bentoBoxContract?.deposit(AddressZero, account, account, value, 0, {
               value,
             })
-            return addTransaction(tx, { summary: 'Deposit to Bentobox' })
+            return addTransaction(tx, { summary: 'Deposit to Mirror' })
           } else {
             const tx = await bentoBoxContract?.deposit(tokenAddressChecksum, account, account, value, 0)
-            return addTransaction(tx, { summary: 'Deposit to Bentobox' })
+            return addTransaction(tx, { summary: 'Deposit to Mirror' })
           }
         } catch (e) {
           console.error('bentobox deposit error:', e)
@@ -51,7 +51,7 @@ function useBentoBox() {
             value,
             0
           )
-          return addTransaction(tx, { summary: 'Withdraw from Bentobox' })
+          return addTransaction(tx, { summary: 'Withdraw from Mirror' })
         } catch (e) {
           console.error('bentobox withdraw error:', e)
           return e
