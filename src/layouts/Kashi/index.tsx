@@ -63,11 +63,11 @@ export default function Layout({
                     </a>
                   </NavLink>
 
-                  <NavLink href="/kashi/create">
+                  <NavLink href="/lend/create">
                     <a
                       className={
                         'px-2 sm:px-4 flex items-center font-medium ' +
-                        (router.pathname.startsWith('/kashi/create')
+                        (router.pathname.startsWith('/lend/create')
                           ? 'text-high-emphesis'
                           : 'text-secondary hover:text-primary')
                       }

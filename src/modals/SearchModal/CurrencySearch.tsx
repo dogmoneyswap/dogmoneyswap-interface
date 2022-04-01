@@ -67,7 +67,7 @@ export function CurrencySearch({
 
   const router = useRouter()
 
-  if (router.asPath.startsWith('/kashi/create')) {
+  if (router.asPath.startsWith('/lend/create')) {
     allTokens = Object.keys(allTokens).reduce((obj, key) => {
       if (CHAINLINK_TOKENS[chainId] && CHAINLINK_TOKENS[chainId].find((address) => address === key)) obj[key] = allTokens[key]
       return obj
