@@ -143,6 +143,6 @@ export function getOracle(pair, chainId: ChainId, tokens): Oracle {
       return new SushiSwapTWAP0Oracle(pair, chainId, tokens);
     else if (lowerEqual(pair.oracle, TWAP_1_ORACLE_ADDRESS[chainId]))
       return new SushiSwapTWAP1Oracle(pair, chainId, tokens);
-    else throw Error("Unsupported oracle", pair.oracle)
+    else throw Error(`Unsupported oracle: ${pair.oracle}`)
   }
 }
