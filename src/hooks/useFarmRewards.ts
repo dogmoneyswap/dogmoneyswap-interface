@@ -71,7 +71,7 @@ export default function useFarmRewards() {
 
       const defaultReward = {
         token: 'MIST',
-        icon: 'https://raw.githubusercontent.com/mistswapdex/icons/master/token/sushi.jpg',
+        icon: 'https://raw.githubusercontent.com/mistswapdex/icons/master/token/mist.jpg',
         rewardPerBlock,
         rewardPerDay: rewardPerBlock * blocksPerDay,
         rewardPrice: sushiPrice,

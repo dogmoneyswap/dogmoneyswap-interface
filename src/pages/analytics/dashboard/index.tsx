@@ -156,7 +156,7 @@ export default function Dashboard(): JSX.Element {
           <div>
             <div className="text-3xl font-bold text-high-emphesis">Mist Analytics</div>
             <div className="">
-              Dive deeper in the analytics of sushi bar,
+              Dive deeper in the analytics of mist bar,
               <br /> pools, pairs and tokens.
             </div>
           </div>
