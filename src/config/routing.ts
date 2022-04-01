@@ -1,8 +1,8 @@
 import {
-    MIST, XMIST, FLEXUSD, LAWUSD, SBUSD, LAW
+    MIST, XMIST, LAWUSD, SBUSD, LAW
 } from '../config/tokens'
 // a list of tokens by chain
-import { ChainId, Currency, Token, WNATIVE } from '@mistswapdex/sdk'
+import { ChainId, Currency, Token, WNATIVE, FLEXUSD } from '@mistswapdex/sdk'
 
 type ChainTokenList = {
   readonly [chainId: number]: Token[]
@@ -25,7 +25,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WRAPPED_NATIVE_ONLY,
   [ChainId.SMARTBCH]: [
     ...WRAPPED_NATIVE_ONLY[ChainId.SMARTBCH],
-    FLEXUSD,
+    FLEXUSD[ChainId.SMARTBCH],
     LAWUSD,
     SBUSD,
     LAW,
@@ -56,11 +56,12 @@ export const CUSTOM_BASES: {
 export const COMMON_BASES: ChainTokenList = {
   [ChainId.SMARTBCH]: [
     ...WRAPPED_NATIVE_ONLY[ChainId.SMARTBCH],
-    FLEXUSD,
+    FLEXUSD[ChainId.SMARTBCH],
     MIST[ChainId.SMARTBCH],
   ],
   [ChainId.SMARTBCH_AMBER]: [
     ...WRAPPED_NATIVE_ONLY[ChainId.SMARTBCH_AMBER],
+    FLEXUSD[ChainId.SMARTBCH_AMBER],
     MIST[ChainId.SMARTBCH_AMBER],
   ],
 }
@@ -70,7 +71,7 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WRAPPED_NATIVE_ONLY,
   [ChainId.SMARTBCH]: [
     ...WRAPPED_NATIVE_ONLY[ChainId.SMARTBCH],
-    FLEXUSD,
+    FLEXUSD[ChainId.SMARTBCH],
     LAWUSD,
     SBUSD,
     LAW,

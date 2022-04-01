@@ -37,7 +37,7 @@ export function SwapCheckbox({ title, color, swap, setSwap, help, trade }: any) 
   const allowedSlippage = useSwapSlippageTolerance(trade)
   return (
     <div className="flex items-center justify-between mb-4">
-      <div>
+      <div className="flex items-center">
         <Checkbox color={color} checked={swap} set={setSwap} />
         <span className="ml-2 mr-1 text-primary">{title}</span>
         <QuestionHelper text={help} />

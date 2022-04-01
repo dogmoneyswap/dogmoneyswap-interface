@@ -1,5 +1,5 @@
 import { TWAP_0_ORACLE_ADDRESS, TWAP_1_ORACLE_ADDRESS, CHAINLINK_ORACLE_ADDRESS, Currency, KASHI_ADDRESS } from '@mistswapdex/sdk'
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useCreateActionHandlers, useCreateState, useDerivedCreateInfo } from '../../../state/create/hook'
 
 import { AddressZero } from '@ethersproject/constants'
@@ -19,6 +19,9 @@ import { useBentoBoxContract, useFactoryContract } from '../../../hooks/useContr
 import { useLingui } from '@lingui/react'
 import { useRouter } from 'next/router'
 import { useTransactionAdder } from '../../../state/transactions/hooks'
+import { PairState, useV2Pair } from '../../../hooks/useV2Pairs'
+import { Pair } from '@mistswapdex/sdk'
+import NeonSelect, { NeonSelectItem } from '../../../components/Select'
 
 export type ChainlinkToken = {
   symbol: string
@@ -27,7 +30,15 @@ export type ChainlinkToken = {
   decimals: number
 }
 
+enum OracleType {
+  ChainLink,
+  TWAP0,
+  TWAP1,
+}
+
 function Create() {
+  const { i18n } = useLingui()
+
   const { chainId } = useActiveWeb3React()
 
   const bentoBoxContract = useBentoBoxContract()
@@ -42,6 +53,25 @@ function Create() {
   const { onSwitchTokens, onCurrencySelection, onUserInput } = useCreateActionHandlers()
 
   const { currencies, inputError } = useDerivedCreateInfo()
+
+  const [isChainlink, setIsChanlink] = useState<boolean>(false)
+  const [pairState, pair] = useV2Pair(currencies[Field.ASSET], currencies[Field.COLLATERAL]) as [PairState, Pair]
+  const twapType = pair?.token0.address === currencies[Field.ASSET].wrapped.address ? OracleType.TWAP0 : OracleType.TWAP1
+  let error = pairState === PairState.EXISTS ? '' : 'Pair does not exist';
+
+  const [oracleType, setOracleType] = useState<OracleType>(isChainlink ? OracleType.ChainLink : twapType)
+  const items = {
+    [OracleType.ChainLink]: i18n._(t`ChainLink price oracle`),
+    [OracleType.TWAP0]: i18n._(t`Time-weighted average price`),
+  }
+
+  const selectHandler = useCallback(
+    (e, item) => {
+      setIsChanlink(item === OracleType.ChainLink)
+      setOracleType(item)
+    },
+    [items]
+  )
 
   const handleCollateralSelect = useCallback(
     (collateralCurrency) => {
@@ -116,8 +146,6 @@ function Create() {
   const getTWAPOracleData = useCallback(
     async (asset: Currency, collateral: Currency) => {
       const pair = await factory.getPair(asset.wrapped.address, collateral.wrapped.address)
-
-      console.log(pair)
       return defaultAbiCoder.encode(['address'], [pair])
     },
     [chainId]
@@ -127,11 +155,6 @@ function Create() {
     try {
       if (!both) return
 
-      enum OracleType {
-        ChainLink,
-        TWAP
-      }
-      const oracleType: OracleType = OracleType.TWAP as any
       let oracleData;
       let oracleAddress;
       switch (oracleType) {
@@ -139,10 +162,13 @@ function Create() {
           oracleData = await getChainlikOracleData(currencies[Field.ASSET], currencies[Field.COLLATERAL])
           oracleAddress = CHAINLINK_ORACLE_ADDRESS[chainId]
           break
-        case OracleType.TWAP:
+        case OracleType.TWAP0:
+          oracleData = await getTWAPOracleData(currencies[Field.ASSET], currencies[Field.COLLATERAL])
+          oracleAddress = TWAP_0_ORACLE_ADDRESS[chainId]
+          break
+        case OracleType.TWAP1:
           oracleData = await getTWAPOracleData(currencies[Field.ASSET], currencies[Field.COLLATERAL])
           oracleAddress = TWAP_1_ORACLE_ADDRESS[chainId]
-          console.log('twap')
           break
       }
 
@@ -221,13 +247,26 @@ function Create() {
             />
           </div>
 
+          {false && <div className="flex justify-between items-center">
+            <span>
+              {i18n._(t`Select price oracle`)}
+            </span>
+            <NeonSelect value={items[oracleType]}>
+              {Object.entries(items).map(([k, v]) => (
+                <NeonSelectItem key={k} value={k} onClick={selectHandler}>
+                  {v}
+                </NeonSelectItem>
+              ))}
+            </NeonSelect>
+          </div>}
+
           <Button
             color="gradient"
             className="w-full px-4 py-3 text-base rounded text-high-emphesis"
             onClick={() => handleCreate()}
-            disabled={!both}
+            disabled={!both || !!error}
           >
-            {inputError || 'Create'}
+            {inputError || error || 'Create'}
           </Button>
         </Container>
       </Card>

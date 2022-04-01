@@ -373,6 +373,7 @@ export default function Borrow({ pair }: BorrowProps) {
         setUseBento={setUseBentoBorrow}
         maxTitle="Max"
         max={nextMaxBorrowPossible}
+        showMax={true}
       />
 
       {collateralValueSet && (

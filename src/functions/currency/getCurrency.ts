@@ -10,6 +10,10 @@ export const USD_CURRENCY: { [chainId in ChainId]?: Currency } = {
     address: FLEXUSD_ADDRESS[ChainId.SMARTBCH],
     decimals: 18,
   },
+  [ChainId.SMARTBCH_AMBER]: {
+    address: FLEXUSD_ADDRESS[ChainId.SMARTBCH_AMBER],
+    decimals: 18,
+  },
 }
 
 export function getCurrency(chainId: ChainId): Currency {

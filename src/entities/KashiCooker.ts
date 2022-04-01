@@ -354,7 +354,6 @@ export default class KashiCooker {
     )
 
     try {
-      console.log(this.actions, this.values, this.datas)
       return {
         success: true,
         tx: await kashiPairCloneContract.cook(this.actions, this.values, this.datas, {

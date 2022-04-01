@@ -11,12 +11,11 @@ const Footer = () => {
   const { i18n } = useLingui()
   return (
     // <footer className="absolute bottom-0 flex items-center justify-between w-screen h-20 p-4 mx-auto text-center text-low-emphesis">
-    // <footer className="absolute left-0 w-full bottom-16 lg:bottom-0">
-    //   <div className="flex items-center justify-between h-20 px-4">
-    //     <Polling />
-    //   </div>
-    // </footer>
-    <></>
+    <footer className="absolute left-0 bottom-16 lg:bottom-0">
+      <div className="flex items-center justify-between h-20 px-4">
+        <Polling />
+      </div>
+    </footer>
   )
 }
 
