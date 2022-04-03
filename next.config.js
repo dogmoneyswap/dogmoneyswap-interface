@@ -123,23 +123,23 @@ const nextConfig = {
       },
       {
         source: '/lend',
-        destination: '/lend/lend',
+        destination: '/mistlend/lend',
       },
       {
         source: '/lend/:pair',
-        destination: '/lend/lend/:pair',
+        destination: '/mistlend/lend/:pair',
       },
       {
         source: '/borrow',
-        destination: '/lend/borrow',
+        destination: '/mistlend/borrow',
       },
       {
         source: '/borrow/:pair',
-        destination: '/lend/borrow/:pair',
+        destination: '/mistlend/borrow/:pair',
       },
       {
         source: '/create',
-        destination: '/lend/create',
+        destination: '/mistlend/create',
       },
       {
         source: '/balances',
