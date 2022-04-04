@@ -10,7 +10,7 @@ import { FLEXUSD } from '@mistswapdex/sdk'
 // Stablecoin amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
 const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> } = {
-  [ChainId.SMARTBCH]: CurrencyAmount.fromRawAmount(FLEXUSD[ChainId.SMARTBCH], 100_000e6),
+  // [ChainId.SMARTBCH]: CurrencyAmount.fromRawAmount(FLEXUSD[ChainId.SMARTBCH], 100_000e6),
   [ChainId.SMARTBCH_AMBER]: CurrencyAmount.fromRawAmount(FLEXUSD[ChainId.SMARTBCH_AMBER], 100_000e6),
 }
 
