@@ -56,7 +56,7 @@ function Create() {
 
   const [isChainlink, setIsChainlink] = useState<boolean>(false)
   const [pairState, pair] = useV2Pair(currencies[Field.ASSET], currencies[Field.COLLATERAL]) as [PairState, Pair]
-  const twapType = pair?.token0.address === currencies[Field.ASSET].wrapped.address ? OracleType.TWAP0 : OracleType.TWAP1
+  const twapType = pair?.token0.address === currencies[Field.ASSET]?.wrapped.address ? OracleType.TWAP0 : OracleType.TWAP1
   let error = pairState === PairState.EXISTS ? '' : 'Pair does not exist';
 
   const [oracleType, setOracleType] = useState<OracleType>(isChainlink ? OracleType.ChainLink : twapType)

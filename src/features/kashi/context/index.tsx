@@ -247,10 +247,12 @@ export function KashiProvider({ children }) {
 
       // Filter all pairs by supported oracles and verify the oracle setup
 
+      console.error(info, logPairs)
+
       const invalidOracles = []
       const whitelistedPairs = [
-        "0xeB506DfC36c4b56a6E76FD29C2654515327a643E",
-        "0x2E3566fe04f77b3eD6381b513eBB8516B2C80A8C"
+        "0x474b1A45eE106a44d69F9622A30e45CcEfE30a89",
+        "0xe50DB30e0bD0086BB0db235A542A6bd730aB47dd"
       ]
 
       const allPairAddresses = logPairs
