@@ -39,18 +39,23 @@ export const walletconnect = new WalletConnectConnector({
   rpc: RPC,
   bridge: 'https://bridge.walletconnect.org',
   qrcode: true,
+  supportedChainIds: [
+    ChainId.SMARTBCH,
+    ChainId.SMARTBCH_AMBER,
+  ],
+  chainId: network.provider.chainId
 })
 
 // mainnet only
 export const fortmatic = new FortmaticConnector({
   apiKey: process.env.NEXT_PUBLIC_FORTMATIC_API_KEY ?? '',
-  chainId: 1,
+  chainId: ChainId.SMARTBCH,
 })
 
 // mainnet only
 export const portis = new PortisConnector({
   dAppId: process.env.NEXT_PUBLIC_PORTIS_ID ?? '',
-  networks: [1],
+  networks: [ChainId.SMARTBCH],
 })
 
 // mainnet only
@@ -62,7 +67,7 @@ export const walletlink = new WalletLinkConnector({
 
 // mainnet only
 export const torus = new TorusConnector({
-  chainId: 1,
+  chainId: ChainId.SMARTBCH,
 })
 
 // binance only
