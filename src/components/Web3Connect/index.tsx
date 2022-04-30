@@ -18,11 +18,6 @@ export default function Web3Connect({ color = 'gray', size = 'sm', className = '
   const { isInstructionModalOpen, setInstructionModalOpen, onInstructionModalDismiss } = useInstructionModal()
 
   const handleConnectBtnClick = useCallback(() => {
-    if (!window.ethereum) {
-      setInstructionModalOpen(true)
-      return
-    }
-
     toggleWalletModal()
   }, [setInstructionModalOpen, toggleWalletModal])
 

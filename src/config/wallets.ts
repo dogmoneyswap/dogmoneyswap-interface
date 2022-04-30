@@ -56,6 +56,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
           ChainId.SMARTBCH,
           ChainId.SMARTBCH_AMBER,
         ],
+        chainId: network.provider.chainId
       })
     },
     name: 'WalletConnect',
