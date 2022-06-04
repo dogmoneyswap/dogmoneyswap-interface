@@ -34,7 +34,7 @@ export const SUPPORTED_NETWORKS: {
       decimals: 18,
     },
     rpcUrls: ['https://smartbch.fountainhead.cash/mainnet'],
-    blockExplorerUrls: ['https://smartscan.cash'],
+    blockExplorerUrls: ['https://sonar.cash'],
   },
   [ChainId.SMARTBCH_AMBER]: {
     chainId: '0x2711',
@@ -45,7 +45,7 @@ export const SUPPORTED_NETWORKS: {
       decimals: 18,
     },
     rpcUrls: ['http://35.220.203.194:8545'],
-    blockExplorerUrls: ['https://smartscan.cash'],
+    blockExplorerUrls: ['https://testnet.sonar.cash'],
   },
 }
 

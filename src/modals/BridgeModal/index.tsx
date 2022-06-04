@@ -328,7 +328,7 @@ export default function BridgeModal({
 
           {sbchTransactionId && (<div>
             <div className="flex items-center justify-center">
-              <a href={`https://www.smartscan.cash/transaction/${sbchTransactionId}`} target="_blank"
+              <a href={`https://www.sonar.cash/tx/${sbchTransactionId}`} target="_blank"
                 className="flex flex-row items-center gap-1 font-bold text-baseline text-primary"
               >
                 {i18n._(t`SmartBCH cross-chain tx ${shorten(sbchTransactionId)}`)} <ExternalLinkIcon width={20} height={20} />
