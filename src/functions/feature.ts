@@ -21,7 +21,7 @@ const features = {
     // Feature.MIGRATE,
     Feature.ANALYTICS,
     Feature.STAKING,
-    Feature.BRIDGE,
+    // Feature.BRIDGE,
     Feature.GOVERNANCE,
   ],
   [ChainId.SMARTBCH_AMBER]: [
