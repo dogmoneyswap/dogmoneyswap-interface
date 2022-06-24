@@ -77,6 +77,11 @@ const nextConfig = {
         destination: '/analytics/portfolio',
         permanent: true,
       },
+      {
+        source: '/bridge',
+        destination: '/',
+        permanent: false,
+      },
     ]
   },
   async rewrites() {
