@@ -72,7 +72,7 @@ export default function Farm(): JSX.Element {
       },
       "0x24f011f12Ea45AfaDb1D4245bA15dCAB38B43D13": {
         farmId: 1,
-        allocPoint: 482836948,
+        allocPoint: 0,
         token0: FLEXUSD,
         token1: WBCH[ChainId.SMARTBCH],
       },
@@ -405,6 +405,18 @@ export default function Farm(): JSX.Element {
         allocPoint: 1843591,
         token0: WBCH[ChainId.SMARTBCH],
         token1: new Token(ChainId.SMARTBCH, '0x49F9ECF126B6dDF51C731614755508A4674bA7eD', 18, 'RMZ', 'Xolos'),
+      },
+      "0x27580618797a2CE02FDFBbee948388a50a823611": {
+        farmId: 59,
+        allocPoint: 241418474,
+        token0: WBCH[ChainId.SMARTBCH],
+        token1: new Token(ChainId.SMARTBCH, '0xBc9bD8DDe6C5a8e1CBE293356E02f5984693b195', 18, 'bcBCH', 'BlockNG-Peg BCH Token'),
+      },
+      "0xde5D57B31cB67d5Aed93c26940394796953961cb": {
+        farmId: 60,
+        allocPoint: 241418474,
+        token0: WBCH[ChainId.SMARTBCH],
+        token1: new Token(ChainId.SMARTBCH, '0xBc2F884680c95A02cea099dA2F524b366d9028Ba', 18, 'bcUSDT', 'BlockNG-Peg USDT Token'),
       },
     },
     [ChainId.SMARTBCH_AMBER]: {
