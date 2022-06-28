@@ -410,13 +410,13 @@ export default function Farm(): JSX.Element {
         farmId: 59,
         allocPoint: 241418474,
         token0: WBCH[ChainId.SMARTBCH],
-        token1: new Token(ChainId.SMARTBCH, '0xBc9bD8DDe6C5a8e1CBE293356E02f5984693b195', 18, 'bcBCH', 'BlockNG-Peg BCH Token'),
+        token1: new Token(ChainId.SMARTBCH, '0xBc2F884680c95A02cea099dA2F524b366d9028Ba', 18, 'bcUSDT', 'BlockNG-Peg USDT Token'),
       },
       "0xde5D57B31cB67d5Aed93c26940394796953961cb": {
         farmId: 60,
         allocPoint: 241418474,
         token0: WBCH[ChainId.SMARTBCH],
-        token1: new Token(ChainId.SMARTBCH, '0xBc2F884680c95A02cea099dA2F524b366d9028Ba', 18, 'bcUSDT', 'BlockNG-Peg USDT Token'),
+        token1: new Token(ChainId.SMARTBCH, '0xBc9bD8DDe6C5a8e1CBE293356E02f5984693b195', 18, 'bcBCH', 'BlockNG-Peg BCH Token'),
       },
     },
     [ChainId.SMARTBCH_AMBER]: {
