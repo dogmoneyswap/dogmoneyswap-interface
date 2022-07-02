@@ -67,7 +67,7 @@ const FarmListItem = ({ farm }) => {
   const { deposit, withdraw, harvest } = useMasterChef(farm.chef)
 
   const poolFraction = (Number.parseFloat(amount?.toFixed()) / farm.chefBalance) || 0
-  const chefPart = farm.chefBalance / farm.totalSupply;
+  const chefPart = (farm.chefBalance / farm.totalSupply) || 0;
   const token0Reserve = farm.pool.reserves ? (farm.pool.reserves.reserve0 as BigNumber).toString() : 0
   const token0Amount = CurrencyAmount.fromRawAmount(farm.pair.token0, JSBI.BigInt(token0Reserve)).multiply(Math.round(poolFraction * chefPart * 1e10)).divide(1e10)
   const token1Reserve = farm.pool.reserves ? (farm.pool.reserves.reserve1 as BigNumber).toString() : 0
