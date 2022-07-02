@@ -486,20 +486,27 @@ export default function Farm(): JSX.Element {
 
   farms = farms.sort((a, b) => b.allocPoint - a.allocPoint);
 
-  let bchPriceUSD = 0;
-  let mistPriceUSD = 0;
+  let bchPriceUSD = 100;
+  let mistPriceUSD = 0.001;
   if (chainId === 10000) {
-    const flexUSDMistPool = farms.find((v) => v.pair === '0x437E444365aD9ed788e8f255c908bceAd5AEA645').pool;
-    const bchFlexUSDPool = farms.find((v) => v.pair === '0x24f011f12Ea45AfaDb1D4245bA15dCAB38B43D13').pool;
-    if (bchFlexUSDPool.reserves) {
-      bchPriceUSD = Number.parseFloat(bchFlexUSDPool.reserves[1].toFixed()) / Number.parseFloat(bchFlexUSDPool.reserves[0].toFixed());
+    let bchPriceFlexUSD = 100;
+    const mistflexusdPool = farms.find((v) => v.pair === '0x437E444365aD9ed788e8f255c908bceAd5AEA645').pool;
+    const bchusdtPool = farms.find((v) => v.pair === '0x27580618797a2CE02FDFBbee948388a50a823611').pool;
+    const bchflexusdPool = farms.find((v) => v.pair === '0x24f011f12Ea45AfaDb1D4245bA15dCAB38B43D13').pool;
+    if (bchusdtPool.reserves) {
+      bchPriceUSD = Number.parseFloat(bchusdtPool.reserves[1].toFixed()) / Number.parseFloat(bchusdtPool.reserves[0].toFixed());
     }
-    if (flexUSDMistPool.reserves) {
-      mistPriceUSD = 1. / ( Number.parseFloat(flexUSDMistPool.reserves[0].toFixed()) / Number.parseFloat(flexUSDMistPool.reserves[1].toFixed()))
+    if (bchflexusdPool.reserves) {
+      bchPriceFlexUSD = Number.parseFloat(bchflexusdPool.reserves[1].toFixed()) / Number.parseFloat(bchflexusdPool.reserves[0].toFixed());
+    }
+    if (mistflexusdPool.reserves && bchusdtPool.reserves && bchflexusdPool.reserves) {
+      mistPriceUSD = 1. / ( Number.parseFloat(mistflexusdPool.reserves[0].toFixed()) / Number.parseFloat(mistflexusdPool.reserves[1].toFixed()))
+      mistPriceUSD /= (bchPriceFlexUSD / bchPriceUSD);
     }
   } else {
-    bchPriceUSD = 300;
-    mistPriceUSD = 0.01;
+    // TODO add detection of this for amber in future
+    bchPriceUSD = 100;
+    mistPriceUSD = 0.001;
   }
 
   const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
