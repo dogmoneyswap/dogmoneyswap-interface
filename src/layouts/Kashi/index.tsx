@@ -63,7 +63,7 @@ export default function Layout({
                     </a>
                   </NavLink>
 
-                  <NavLink href="/mistlend/create">
+                  {/* <NavLink href="/mistlend/create">
                     <a
                       className={
                         'px-2 sm:px-4 flex items-center font-medium ' +
@@ -74,7 +74,7 @@ export default function Layout({
                     >
                       <div className="text-base whitespace-nowrap">Create</div>
                     </a>
-                  </NavLink>
+                  </NavLink> */}
                 </div>
                 <div className="flex pr-2 sm:pr-4">
                   <NavLink href="/balances">
