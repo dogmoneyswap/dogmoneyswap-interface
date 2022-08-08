@@ -20,7 +20,7 @@ export async function signMasterContractApproval(
   approved: boolean,
   chainId: ChainId | undefined
 ): Promise<string> {
-  const warning = approved ? 'Give FULL access to funds in (and approved to) BentoBox?' : 'Revoke access to BentoBox?'
+  const warning = approved ? 'Give FULL access to funds in (and approved to) Mirror?' : 'Revoke access to Mirror?'
   const nonce = await bentoBoxContract?.nonces(user)
   const message = {
     warning,
@@ -42,7 +42,7 @@ export async function signMasterContractApproval(
     },
     primaryType: 'SetMasterContractApproval',
     domain: {
-      name: 'BentoBox V1',
+      name: 'Mirror V1',
       chainId: chainId,
       verifyingContract: bentoBoxContract?.address,
     },

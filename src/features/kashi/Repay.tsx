@@ -2,10 +2,8 @@ import { ExchangeRateCheckBox, SwapCheckbox } from './Checkbox'
 import { KashiApproveButton, TokenApproveButton } from './Button'
 import {
   Percent,
-  /*
   SUSHISWAP_MULTISWAPPER_ADDRESS,
   SUSHISWAP_MULTI_EXACT_SWAPPER_ADDRESS,
-  */
   WNATIVE,
 } from '@mistswapdex/sdk'
 import React, { useContext, useMemo, useState } from 'react'
@@ -238,7 +236,6 @@ export default function Repay({ pair }: RepayProps) {
   // Handlers
   async function onExecute(cooker: KashiCooker) {
     let summary = ''
-    const SUSHISWAP_MULTI_EXACT_SWAPPER_ADDRESS = {}
 
     if (swap && trade) {
       const share = toShare(pair.collateral, pair.userCollateralAmount.value)
