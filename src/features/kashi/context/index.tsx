@@ -249,8 +249,10 @@ export function KashiProvider({ children }) {
 
       const invalidOracles = []
       const whitelistedPairs = [
-        "0xeB506DfC36c4b56a6E76FD29C2654515327a643E",
-        "0x2E3566fe04f77b3eD6381b513eBB8516B2C80A8C"
+        "0x474b1A45eE106a44d69F9622A30e45CcEfE30a89", // WBCH-MIST
+        "0xe50DB30e0bD0086BB0db235A542A6bd730aB47dd", // MIST-WBCH
+        "0x8DfEEf5C7D0A99C6bb7c4f65bC2290AB2B4b3106", // bcUSDT-WBCH
+        "0x4C3576baD4D5C743848693a533671631bbE71CFf", // bcUSDT-MIST
       ]
 
       const allPairAddresses = logPairs
