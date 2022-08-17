@@ -1,17 +1,14 @@
 import { AddressZero } from '@ethersproject/constants'
-import { ChainId, FLEXUSD_ADDRESS } from '@dogmoneyswap/sdk'
+import { ChainId } from '@dogmoneyswap/sdk'
+import { DAI } from '../../config/tokens';
 
 type Currency = { address: string; decimals: number }
 
 // Pricing currency
 export const USD_CURRENCY: { [chainId in ChainId]?: Currency } = {
-  [ChainId.SMARTBCH]: {
-    address: FLEXUSD_ADDRESS[ChainId.SMARTBCH],
-    decimals: 18,
-  },
-  [ChainId.SMARTBCH_AMBER]: {
-    address: FLEXUSD_ADDRESS[ChainId.SMARTBCH_AMBER],
-    decimals: 18,
+  [ChainId.DOGECHAIN]: {
+    address: DAI.address,
+    decimals: 6,
   },
 }
 

@@ -52,12 +52,10 @@ export const BLOCKED_ADDRESSES: string[] = [
 ]
 
 export const ANALYTICS_URL: { [chainId in ChainId]?: string } = {
-  [ChainId.SMARTBCH]: 'https://analytics.mistswap.fi',
+  [ChainId.DOGECHAIN]: 'https://analytics.dogmoney.money',
 }
 
 export const LNS_METADATA_URL: { [chainId in ChainId]?: string } = {
-  [ChainId.SMARTBCH]: 'https://metadata.bch.domains/smartbch',
-  [ChainId.SMARTBCH_AMBER]: 'https://metadata.bch.domains/smartbch-amber',
   [ChainId.DOGECHAIN]: 'https://metadata.bch.domains/smartbch',
 }
 

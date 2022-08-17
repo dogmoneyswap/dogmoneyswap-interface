@@ -18,7 +18,6 @@ export default function Web3ReactManager({ children }: { children: JSX.Element }
   const { i18n } = useLingui()
   const { active } = useWeb3React()
   const { active: networkActive, error: networkError, activate: activateNetwork } = useWeb3React(NetworkContextName)
-
   // try to eagerly connect to an injected provider, if it exists and has granted access already
   const triedEager = useEagerConnect()
 
@@ -48,6 +47,9 @@ export default function Web3ReactManager({ children }: { children: JSX.Element }
   if (!triedEager) {
     return null
   }
+
+  console.log('Web3ReactManager', networkError)
+
 
   // if the account context isn't active, and there's an error on the network context, it's an irrecoverable error
   if (!active && networkError) {

@@ -6,8 +6,6 @@ import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import useHttpLocations from '../../hooks/useHttpLocations'
 
 const BLOCKCHAIN = {
-  [ChainId.SMARTBCH]: 'smartbch',
-  [ChainId.SMARTBCH_AMBER]: 'amber',
   [ChainId.DOGECHAIN]: 'dogechain',
 }
 
@@ -38,12 +36,9 @@ export function getCurrencyLogoUrls(currency) {
   return urls
 }
 
-const BitcoinCashLogo = 'https://raw.githubusercontent.com/mistswapdex/icons/master/token/bch.jpg'
 const DogeChainLogo = 'https://raw.githubusercontent.com/dogmoneyswap/icons/master/network/dogechain.jpg'
 
 const LOGO: { readonly [chainId in ChainId]?: string } = {
-  [ChainId.SMARTBCH]: BitcoinCashLogo,
-  [ChainId.SMARTBCH_AMBER]: BitcoinCashLogo,
   [ChainId.DOGECHAIN]: DogeChainLogo,
 }
 

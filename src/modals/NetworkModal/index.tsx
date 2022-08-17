@@ -55,7 +55,7 @@ export default function NetworkModal(): JSX.Element | null {
       </div>
 
       <div className="grid grid-flow-row-dense grid-cols-1 gap-5 overflow-y-auto md:grid-cols-2">
-        {[ChainId.SMARTBCH].map((key: ChainId, i: number) => {
+        {[ChainId.DOGECHAIN].map((key: ChainId, i: number) => {
           return (
             <button
               key={i}
@@ -63,7 +63,7 @@ export default function NetworkModal(): JSX.Element | null {
                 toggleNetworkModal()
                 const params = SUPPORTED_NETWORKS[key]
                 cookie.set('chainId', key)
-                if (key === ChainId.SMARTBCH) {
+                if (key === ChainId.DOGECHAIN) {
                   library?.send('wallet_switchEthereumChain', [{ chainId: params.chainId }, account])
                 } else {
                   library?.send('wallet_addEthereumChain', [params, account])

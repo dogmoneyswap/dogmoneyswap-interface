@@ -13,7 +13,7 @@ import {
 
 import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId, WNATIVE, Token, WBCH, MASTERCHEF_ADDRESS } from '@dogmoneyswap/sdk'
-import { MIST, FLEXUSD, LAWUSD, BCUSDT, BCBCH } from '../../config/tokens'
+import { MIST } from '../../config/tokens'
 import Container from '../../components/Container'
 import FarmList from '../../features/onsen/FarmList'
 import Head from 'next/head'
@@ -156,6 +156,7 @@ export default function Farm(): JSX.Element {
           const reserve = Number.parseFloat(farms[i].pool.reserves[1].toFixed());
           tvl = reserve / totalSupply * chefBalance * mistPriceUSD * 2;
         }
+        /*
         else if (farms[i].pool.token0 === FLEXUSD.address) {
           const reserve = Number.parseFloat(farms[i].pool.reserves[0].toFixed());
           tvl = reserve / totalSupply * chefBalance * 2;
@@ -164,35 +165,12 @@ export default function Farm(): JSX.Element {
           const reserve = Number.parseFloat(farms[i].pool.reserves[1].toFixed());
           tvl = reserve / totalSupply * chefBalance * 2;
         }
-        else if (farms[i].pool.token0 === LAWUSD.address) {
-          const reserve = Number.parseFloat(farms[i].pool.reserves[0].toFixed());
-          tvl = reserve / totalSupply * chefBalance * 2;
-        }
-        else if (farms[i].pool.token1 === LAWUSD.address) {
-          const reserve = Number.parseFloat(farms[i].pool.reserves[1].toFixed());
-          tvl = reserve / totalSupply * chefBalance * 2;
-        }
-        else if (farms[i].pool.token0 === BCUSDT.address) {
-          const reserve = Number.parseFloat(farms[i].pool.reserves[0].toFixed());
-          tvl = reserve / totalSupply * chefBalance * 2;
-        }
-        else if (farms[i].pool.token1 === BCUSDT.address) {
-          const reserve = Number.parseFloat(farms[i].pool.reserves[1].toFixed());
-          tvl = reserve / totalSupply * chefBalance * 2;
-        }
+        */
         else if (farms[i].pool.token0 === WBCH[chainId].address) {
           const reserve = Number.parseFloat(farms[i].pool.reserves[0].toFixed());
           tvl = reserve / totalSupply * chefBalance * bchPriceUSD * 2;
         }
         else if (farms[i].pool.token1 === WBCH[chainId].address) {
-          const reserve = Number.parseFloat(farms[i].pool.reserves[1].toFixed());
-          tvl = reserve / totalSupply * chefBalance * bchPriceUSD * 2;
-        }
-        else if (farms[i].pool.token0 === BCBCH) {
-          const reserve = Number.parseFloat(farms[i].pool.reserves[0].toFixed());
-          tvl = reserve / totalSupply * chefBalance * bchPriceUSD * 2;
-        }
-        else if (farms[i].pool.token1 === BCBCH) {
           const reserve = Number.parseFloat(farms[i].pool.reserves[1].toFixed());
           tvl = reserve / totalSupply * chefBalance * bchPriceUSD * 2;
         }
