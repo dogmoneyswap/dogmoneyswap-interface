@@ -66,22 +66,23 @@ export default function Farm(): JSX.Element {
   let farms = []
 
   for (const [pairAddress, pair] of Object.entries(hardcodedPairs[chainId])) {
+    const p: any = pair;
     swapPairs.push({
       id: pairAddress,
       reserveUSD: "100000",
       totalSupply: "1000",
       timestamp: "1599830986",
       token0: {
-        id: pair.token0.address,
-        name: pair.token0.name,
-        symbol: pair.token0.symbol,
-        decimals: pair.token0.decimals
+        id: p.token0.address,
+        name: p.token0.name,
+        symbol: p.token0.symbol,
+        decimals: p.token0.decimals
       },
       token1: {
-        id: pair.token1.address,
-        name: pair.token1.name,
-        symbol: pair.token1.symbol,
-        decimals: pair.token1.decimals
+        id: p.token1.address,
+        name: p.token1.name,
+        symbol: p.token1.symbol,
+        decimals: p.token1.decimals
       },
     })
 
@@ -90,10 +91,10 @@ export default function Farm(): JSX.Element {
       symbol: `${hardcodedPairs[chainId][pairAddress].token0.symbol}-${hardcodedPairs[chainId][pairAddress].token1.symbol}`,
       // eslint-disable-next-line react-hooks/rules-of-hooks
       pool: usePool(pairAddress),
-      allocPoint: pair.allocPoint,
+      allocPoint: p.allocPoint,
       balance: "1000000000000000000",
       chef: 0,
-      id: pair.farmId,
+      id: p.farmId,
       pendingSushi: undefined,
       pending: 0,
       owner: {
