@@ -74,7 +74,7 @@ export default function Proposal() {
   return (
     <Container id="vote-page" className="py-4 space-y-6 md:py-8 lg:py-12" maxWidth="2xl">
       <Head>
-        <title key="title">Vote | Mist</title>
+        <title key="title">Vote | DOGMONEY</title>
         <meta
           key="description"
           name="description"

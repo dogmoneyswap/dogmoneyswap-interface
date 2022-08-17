@@ -246,7 +246,7 @@ export function useERC20Permit(
 
 const REMOVE_V2_LIQUIDITY_PERMIT_INFO: PermitInfo = {
   version: '1',
-  name: 'MISTswap LP Token',
+  name: 'DOGMONEY LP Token',
   type: PermitType.AMOUNT,
 }
 

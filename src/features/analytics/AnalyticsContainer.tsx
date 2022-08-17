@@ -6,8 +6,8 @@ export default function AnalyticsContainer({ children }): JSX.Element {
   return (
     <>
       <Head>
-        <title>MISTswap Liquidity Pair (MLP) Analytics | Mist</title>
-        <meta name="description" content="MISTswap Liquidity Pair (MLP) Analytics by Mist" />
+        <title>DOGMONEY Liquidity Pair (MLP) Analytics | DOGMONEY</title>
+        <meta name="description" content="DOGMONEY Liquidity Pair (MLP) Analytics by DOGMONEY" />
       </Head>
 
       <Container id="analytics" maxWidth="full" className="grid h-full grid-flow-col grid-cols-10 px-4 mx-auto gap-9">

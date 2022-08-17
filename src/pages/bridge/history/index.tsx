@@ -180,7 +180,7 @@ export default function Bridge() {
         onDismiss={() => setShowBridgeModal(false)} />)}
 
       <Head>
-        <title>{i18n._(t`Bridge`)} | MISTswap</title>
+        <title>{i18n._(t`Bridge`)} | DOGMONEY</title>
         <meta key="description" name="description" content="Bridge" />
       </Head>
 

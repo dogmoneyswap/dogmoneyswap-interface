@@ -5,7 +5,7 @@ export default function Vaults() {
   return (
     <Container id="settings-page" className="py-4 md:py-8 lg:py-12" maxWidth="2xl">
       <Head>
-        <title>Vaults | Mist</title>
+        <title>Vaults | DOGMONEY</title>
         <meta key="description" name="description" content="Mist vaults..." />
       </Head>
     </Container>
