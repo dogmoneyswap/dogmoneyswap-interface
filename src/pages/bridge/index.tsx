@@ -405,7 +405,7 @@ export default function Bridge() {
             <div className="flex justify-center p-4 text-center">
               <div className="flex items-center gap-1">
                 <Typography component="h3" variant="base">
-                  {i18n._(t`Bridge tokens to and from the SmartBCH Network`)}
+                  {i18n._(t`Bridge tokens to and from the DogeChain Network`)}
                 </Typography>
                 <QuestionMarkCircleIcon
                   className="cursor-pointer"
@@ -416,12 +416,12 @@ export default function Bridge() {
             </div>
 
             {helpVisible && (<div className="p-3 mx-5 rounded bg-dark-800">
-              <p>{i18n._(t`This service helps you to try out the SmartBCH network by converting your assets to BCH and bridging it to our network`)}</p>
+              <p>{i18n._(t`This service helps you to try out the DogeChain network by converting your assets to Doge and bridging it to our network`)}</p>
               <p>{i18n._(t`Our bridge utilizes a two-step process:`)}</p>
-              <p className="pl-4">{i18n._(t`1) asset coversion from anything to BCH with`)} <a className="font-bold" target="_blank" rel="noreferrer" href="https://sideshift.ai">SideShift.ai</a>.</p>
-              <p className="pl-4">{i18n._(t`2) bridging the BCH to SmartBCH with `)} <a className="font-bold" target="_blank" rel="noreferrer" href="https://hop.cash">hop.cash</a></p>
+              <p className="pl-4">{i18n._(t`1) asset coversion from anything to Doge with`)} <a className="font-bold" target="_blank" rel="noreferrer" href="https://sideshift.ai">SideShift.ai</a>.</p>
+              <p className="pl-4">{i18n._(t`2) bridging the Doge to DogeChain with `)} <a className="font-bold" target="_blank" rel="noreferrer" href="https://hop.cash">hop.cash</a></p>
               <p>{i18n._(t`If you experience any issues with SideShift conversion, note the order id, visit their website and ask for support there or in their telegram group: `)} <a className="font-bold" target="_blank" rel="noreferrer" href="https://t.me/sideshift">https://t.me/sideshift</a>.</p>
-              <p>{i18n._(t`For issues related to hop cash, note the BCH and SBCH transaction ids and ask for support here:`)} <a className="font-bold" target="_blank" rel="noreferrer" href="https://t.me/hopcash">https://t.me/hopcash</a>.</p>
+              <p>{i18n._(t`For issues related to hop cash, note the Doge and DogeChain transaction ids and ask for support here:`)} <a className="font-bold" target="_blank" rel="noreferrer" href="https://t.me/hopcash">https://t.me/hopcash</a>.</p>
             </div>)}
 
             <div className="flex flex-row items-center justify-between text-center">

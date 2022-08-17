@@ -321,7 +321,7 @@ export default function BridgeModal({
               <a href={`https://blockchair.com/bitcoin-cash/transaction/${bchTransactionId}`} target="_blank"
                 className="flex flex-row items-center gap-1 font-bold text-baseline text-primary"
               >
-                {i18n._(t`BCH cross-chain tx ${shorten(bchTransactionId)}`)} <ExternalLinkIcon width={20} height={20} />
+                {i18n._(t`Doge cross-chain tx ${shorten(bchTransactionId)}`)} <ExternalLinkIcon width={20} height={20} />
               </a>
             </div>
           </div>)}
@@ -331,7 +331,7 @@ export default function BridgeModal({
               <a href={`https://www.sonar.cash/tx/${sbchTransactionId}`} target="_blank"
                 className="flex flex-row items-center gap-1 font-bold text-baseline text-primary"
               >
-                {i18n._(t`SmartBCH cross-chain tx ${shorten(sbchTransactionId)}`)} <ExternalLinkIcon width={20} height={20} />
+                {i18n._(t`DogeChain cross-chain tx ${shorten(sbchTransactionId)}`)} <ExternalLinkIcon width={20} height={20} />
               </a>
             </div>
           </div>)}

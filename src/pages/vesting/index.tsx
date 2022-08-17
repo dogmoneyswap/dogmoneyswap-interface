@@ -179,7 +179,7 @@ export default function Vesting() {
                 {pendingTreasurySignature ? (
                   <Dots>{i18n._(t`Pending Treasury Transfer`)}</Dots>
                 ) : (
-                  <> {claimConfirmed ? i18n._(t`Claimed`) : i18n._(t`Claim MIST`)}</>
+                  <> {claimConfirmed ? i18n._(t`Claimed`) : i18n._(t`Claim DOGMONEY`)}</>
                 )}
 
                 {attempting && (
