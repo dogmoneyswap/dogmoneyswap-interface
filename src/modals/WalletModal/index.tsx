@@ -156,8 +156,8 @@ export default function WalletModal({
 
   const switchToSmartBch = async () => {
     // `library` context here is invalid, we use the direct communiaction with Metamask via window.ethereum
-    const params = SUPPORTED_NETWORKS[ChainId.SMARTBCH]
-    cookie.set('chainId', ChainId.SMARTBCH)
+    const params = SUPPORTED_NETWORKS[ChainId.DOGECHAIN]
+    cookie.set('chainId', ChainId.DOGECHAIN)
 
     const ethereum = window.ethereum as any;
     try {
@@ -282,13 +282,13 @@ export default function WalletModal({
           </HeaderRow>
           <div>
             {error instanceof UnsupportedChainIdError ? (
-              <h5>{i18n._(t`Please connect to the appropriate SmartBCH network.`)}</h5>
+              <h5>{i18n._(t`Please connect to the appropriate DogeChain network.`)}</h5>
             ) : (
               i18n._(t`Error connecting. Try refreshing the page.`)
             )}
             <div style={{ marginTop: '1rem' }} />
             <ButtonConfirmed size="sm" onClick={switchToSmartBch}>
-              {i18n._(t`Switch to SmartBch Network`)}
+              {i18n._(t`Switch to DogeChain Network`)}
             </ButtonConfirmed>
 
             <div style={{ marginTop: '1rem' }} />
@@ -327,7 +327,7 @@ export default function WalletModal({
           )}
           {walletView !== WALLET_VIEWS.PENDING && (
             <div className="flex flex-col text-center">
-              <div className="text-secondary">{i18n._(t`New to SmartBCH?`)}</div>
+              <div className="text-secondary">{i18n._(t`New to DogeChain?`)}</div>
               <ExternalLink href="https://ethereum.org/wallets/" color="blue">
                 {i18n._(t`Learn more about wallets`)}
               </ExternalLink>

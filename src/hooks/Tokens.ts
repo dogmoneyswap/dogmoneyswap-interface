@@ -185,7 +185,7 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
 export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
   const { chainId } = useActiveWeb3React()
 
-  const useNative = currencyId?.toUpperCase() === 'BCH'
+  const useNative = currencyId?.toUpperCase() === 'DOGE'
 
   if (useNative) {
     currencyId = WNATIVE_ADDRESS[chainId]

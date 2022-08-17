@@ -70,8 +70,8 @@ export default function useFarmRewards() {
       const rewardPerBlock = (pool.allocPoint / pool.owner.totalAllocPoint) * sushiPerBlock
 
       const defaultReward = {
-        token: 'MIST',
-        icon: 'https://raw.githubusercontent.com/mistswapdex/icons/master/token/mist.jpg',
+        token: 'DOGMONEY',
+        icon: 'https://raw.githubusercontent.com/dogmoneyswap/icons/master/token/dogmoney.jpg',
         rewardPerBlock,
         rewardPerDay: rewardPerBlock * blocksPerDay,
         rewardPrice: sushiPrice,

@@ -4,7 +4,6 @@ import { ChainId, FLEXUSD_ADDRESS } from '@dogmoneyswap/sdk'
 type Currency = { address: string; decimals: number }
 
 // Pricing currency
-// TODO: Check decimals and finish table
 export const USD_CURRENCY: { [chainId in ChainId]?: Currency } = {
   [ChainId.SMARTBCH]: {
     address: FLEXUSD_ADDRESS[ChainId.SMARTBCH],

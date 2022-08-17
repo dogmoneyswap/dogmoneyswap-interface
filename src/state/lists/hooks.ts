@@ -53,6 +53,7 @@ function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddress
   return {
     [ChainId.SMARTBCH]: { ...map1[ChainId.SMARTBCH], ...map2[ChainId.SMARTBCH] },
     [ChainId.SMARTBCH_AMBER]: { ...map1[ChainId.SMARTBCH_AMBER], ...map2[ChainId.SMARTBCH_AMBER] },
+    [ChainId.DOGECHAIN]: { ...map1[ChainId.DOGECHAIN], ...map2[ChainId.DOGECHAIN] },
   }
 }
 

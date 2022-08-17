@@ -25,27 +25,16 @@ export const SUPPORTED_NETWORKS: {
     blockExplorerUrls: string[]
   }
 } = {
-  [ChainId.SMARTBCH]: {
-    chainId: '0x2710',
-    chainName: 'SmartBCH',
+  [ChainId.DOGECHAIN]: {
+    chainId: '0x7d0',
+    chainName: 'DogeChain',
     nativeCurrency: {
-      name: 'Bitcoin Cash',
-      symbol: 'BCH',
+      name: 'Doge',
+      symbol: 'DOGE',
       decimals: 18,
     },
-    rpcUrls: ['https://smartbch.fountainhead.cash/mainnet'],
-    blockExplorerUrls: ['https://sonar.cash'],
-  },
-  [ChainId.SMARTBCH_AMBER]: {
-    chainId: '0x2711',
-    chainName: 'Amber Testnet',
-    nativeCurrency: {
-      name: 'Bitcoin Cash',
-      symbol: 'BCH',
-      decimals: 18,
-    },
-    rpcUrls: ['http://35.220.203.194:8545'],
-    blockExplorerUrls: ['https://testnet.sonar.cash'],
+    rpcUrls: ['https://rpc03-sg.dogechain.dog'],
+    blockExplorerUrls: ['https://explorer.dogechain.dog'],
   },
 }
 

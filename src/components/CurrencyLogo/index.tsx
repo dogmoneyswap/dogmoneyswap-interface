@@ -8,11 +8,12 @@ import useHttpLocations from '../../hooks/useHttpLocations'
 const BLOCKCHAIN = {
   [ChainId.SMARTBCH]: 'smartbch',
   [ChainId.SMARTBCH_AMBER]: 'amber',
+  [ChainId.DOGECHAIN]: 'dogechain',
 }
 
 function getCurrencySymbol(currency) {
-  if (currency.symbol === 'WBCH') {
-    return 'bch'
+  if (currency.symbol === 'DOGE') {
+    return 'doge'
   }
   return currency.symbol.toLowerCase()
 }
@@ -42,6 +43,7 @@ const BitcoinCashLogo = 'https://raw.githubusercontent.com/mistswapdex/icons/mas
 const LOGO: { readonly [chainId in ChainId]?: string } = {
   [ChainId.SMARTBCH]: BitcoinCashLogo,
   [ChainId.SMARTBCH_AMBER]: BitcoinCashLogo,
+  [ChainId.DOGECHAIN]: BitcoinCashLogo,
 }
 
 interface CurrencyLogoProps {

@@ -5,7 +5,7 @@ import { NetworkConnector } from '../entities/NetworkConnector'
 import RPC from './rpc'
 
 export const network = new NetworkConnector({
-  defaultChainId: ChainId.SMARTBCH,
+  defaultChainId: ChainId.DOGECHAIN,
   urls: RPC,
 })
 
@@ -55,6 +55,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
         supportedChainIds: [
           ChainId.SMARTBCH,
           ChainId.SMARTBCH_AMBER,
+          ChainId.DOGECHAIN,
         ],
         chainId: network.provider.chainId
       })

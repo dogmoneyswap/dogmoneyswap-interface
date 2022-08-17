@@ -69,7 +69,7 @@ export function useSwapActionHandlers(): {
       dispatch(
         selectCurrency({
           field,
-          currencyId: currency.isToken ? currency.address : 'BCH',
+          currencyId: currency.isToken ? currency.address : 'DOGE',
         })
       )
     },
@@ -111,6 +111,10 @@ const BAD_RECIPIENT_ADDRESSES: { [chainId: string]: { [address: string]: true } 
   [ChainId.SMARTBCH_AMBER]: {
     [FACTORY_ADDRESS[ChainId.SMARTBCH_AMBER]]: true,
     [ROUTER_ADDRESS[ChainId.SMARTBCH_AMBER]]: true,
+  },
+  [ChainId.DOGECHAIN]: {
+    [FACTORY_ADDRESS[ChainId.DOGECHAIN]]: true,
+    [ROUTER_ADDRESS[ChainId.DOGECHAIN]]: true,
   },
 }
 
@@ -320,7 +324,7 @@ function parseCurrencyFromURLParameter(urlParam: any): string {
   if (typeof urlParam === 'string') {
     const valid = isAddress(urlParam)
     if (valid) return valid
-    if (urlParam.toUpperCase() === 'BCH') return 'BCH'
+    if (urlParam.toUpperCase() === 'DOGE') return 'DOGE'
   }
   return ''
 }
@@ -351,7 +355,7 @@ export function defaultSwapState(): SwapState {
 export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId = ChainId.SMARTBCH): SwapState {
   let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency)
   let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency)
-  const eth = 'BCH'
+  const eth = 'DOGE'
   const sushi = MIST_ADDRESS[chainId]
   if (inputCurrency === '' && outputCurrency === '') {
     inputCurrency = eth

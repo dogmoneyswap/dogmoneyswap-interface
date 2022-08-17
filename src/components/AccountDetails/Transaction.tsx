@@ -107,7 +107,7 @@ const Transaction: FC<{ hash: string }> = ({ hash }) => {
           {`#${archer.nonce} - Tip ${CurrencyAmount.fromRawAmount(
             SmartBCH.onChain(ChainId.SMARTBCH),
             archer.ethTip
-          ).toSignificant(6)} BCH`}
+          ).toSignificant(6)} DOGE`}
           {pending ? (
             <>
               {secondsUntilDeadline >= 60 ? (

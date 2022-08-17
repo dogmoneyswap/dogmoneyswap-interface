@@ -58,6 +58,7 @@ export const ANALYTICS_URL: { [chainId in ChainId]?: string } = {
 export const LNS_METADATA_URL: { [chainId in ChainId]?: string } = {
   [ChainId.SMARTBCH]: 'https://metadata.bch.domains/smartbch',
   [ChainId.SMARTBCH_AMBER]: 'https://metadata.bch.domains/smartbch-amber',
+  [ChainId.DOGECHAIN]: 'https://metadata.bch.domains/smartbch',
 }
 
 export const EIP_1559_ACTIVATION_BLOCK: { [chainId in ChainId]?: number } = {}

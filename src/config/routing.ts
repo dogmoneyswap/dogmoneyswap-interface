@@ -18,6 +18,7 @@ const MIRROR_ADDITIONAL_BASES: { [tokenAddress: string]: Token[] } = {
 const WRAPPED_NATIVE_ONLY: ChainTokenList = {
   [ChainId.SMARTBCH]: [WNATIVE[ChainId.SMARTBCH]],
   [ChainId.SMARTBCH_AMBER]: [WNATIVE[ChainId.SMARTBCH_AMBER]],
+  [ChainId.DOGECHAIN]: [WNATIVE[ChainId.DOGECHAIN]],
 }
 
 // used to construct intermediary pairs for trading
@@ -35,12 +36,19 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     MIST[ChainId.SMARTBCH]
   ],
   [ChainId.SMARTBCH_AMBER]: [...WRAPPED_NATIVE_ONLY[ChainId.SMARTBCH_AMBER]],
+  [ChainId.DOGECHAIN]: [
+    ...WRAPPED_NATIVE_ONLY[ChainId.DOGECHAIN],
+    MIST[ChainId.DOGECHAIN],
+  ],
 }
 
 export const ADDITIONAL_BASES: {
   [chainId: number]: { [tokenAddress: string]: Token[] }
 } = {
   [ChainId.SMARTBCH]: {
+    ...MIRROR_ADDITIONAL_BASES,
+  },
+  [ChainId.DOGECHAIN]: {
     ...MIRROR_ADDITIONAL_BASES,
   },
 }
@@ -69,6 +77,10 @@ export const COMMON_BASES: ChainTokenList = {
     MIST[ChainId.SMARTBCH_AMBER],
     FLEXUSD[ChainId.SMARTBCH_AMBER],
   ],
+  [ChainId.DOGECHAIN]: [
+    ...WRAPPED_NATIVE_ONLY[ChainId.DOGECHAIN],
+    MIST[ChainId.DOGECHAIN],
+  ],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
@@ -85,6 +97,10 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
     LAW,
   ],
   [ChainId.SMARTBCH_AMBER]: [...WRAPPED_NATIVE_ONLY[ChainId.SMARTBCH_AMBER]],
+  [ChainId.DOGECHAIN]: [
+    ...WRAPPED_NATIVE_ONLY[ChainId.DOGECHAIN],
+    MIST[ChainId.DOGECHAIN],
+  ],
 }
 
 export const PINNED_PAIRS: {
@@ -95,5 +111,8 @@ export const PINNED_PAIRS: {
   ],
   [ChainId.SMARTBCH_AMBER]: [
       [MIST[ChainId.SMARTBCH_AMBER], WNATIVE[ChainId.SMARTBCH_AMBER]]
+  ],
+  [ChainId.DOGECHAIN]: [
+      [MIST[ChainId.DOGECHAIN], WNATIVE[ChainId.DOGECHAIN]],
   ],
 }

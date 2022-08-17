@@ -456,6 +456,8 @@ export default function Farm(): JSX.Element {
         token0: new Token(ChainId.SMARTBCH_AMBER, '0x9E93b1e6B6f169b793aFC72BB5241a0388418E2A', 18, 'FOG', 'FOGToken'),
         token1: new Token(ChainId.SMARTBCH_AMBER, '0x19E75581Ce31219c78E7996aEa2714EE88e8f059', 18, 'TEST', 'TESTToken'),
       },
+    },
+    [ChainId.DOGECHAIN]: {
     }
   };
 

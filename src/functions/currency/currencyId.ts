@@ -1,7 +1,7 @@
 import { ChainId, Currency } from '@dogmoneyswap/sdk'
 
 export function currencyId(currency: Currency): string {
-  if (currency.isNative) return 'BCH'
+  if (currency.isNative) return 'DOGE'
 
   if (currency.isToken) return currency.address
   throw new Error('invalid currency')

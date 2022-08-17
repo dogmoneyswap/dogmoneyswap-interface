@@ -18,7 +18,7 @@ export function getNetwork(defaultChainId, urls = RPC) {
 }
 
 export const network = new NetworkConnector({
-  defaultChainId: ChainId.SMARTBCH,
+  defaultChainId: ChainId.DOGECHAIN,
   urls: RPC,
 })
 
@@ -61,7 +61,7 @@ export const portis = new PortisConnector({
 // mainnet only
 export const walletlink = new WalletLinkConnector({
   url: RPC[ChainId.SMARTBCH],
-  appName: 'MistSwap',
+  appName: 'DogMoneySwap',
   appLogoUrl: 'https://raw.githubusercontent.com/mistswapdex/art/master/mist/logo-256x256.png',
 })
 

@@ -29,6 +29,15 @@ const builders = {
         return `${prefix}/${type}/${data}`
     }
   },
+  dogechain: (chainName: string, data: string, type: 'transaction' | 'token' | 'address' | 'block') => {
+    const prefix = `https://explorer.dogechain.dog`
+    switch (type) {
+      case 'transaction':
+        return `${prefix}/tx/${data}`
+      default:
+        return `${prefix}/${type}/${data}`
+    }
+  },
 }
 
 interface ChainObject {
@@ -46,6 +55,10 @@ const chains: ChainObject = {
   [ChainId.SMARTBCH_AMBER]: {
     chainName: 'amber',
     builder: builders.sonaramber,
+  },
+  [ChainId.DOGECHAIN]: {
+    chainName: 'dogechain',
+    builder: builders.dogechain,
   },
 }
 

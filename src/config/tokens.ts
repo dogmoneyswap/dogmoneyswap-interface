@@ -11,6 +11,7 @@ export const BCBCH = new Token(ChainId.SMARTBCH, '0xBc9bD8DDe6C5a8e1CBE293356E02
 export const XMIST: ChainTokenMap = {
     [ChainId.SMARTBCH]: new Token(ChainId.SMARTBCH, BAR_ADDRESS[ChainId.SMARTBCH], 18, 'xMIST', 'MistBar'),
     [ChainId.SMARTBCH_AMBER]: new Token(ChainId.SMARTBCH_AMBER, BAR_ADDRESS[ChainId.SMARTBCH_AMBER], 18, 'xMIST', 'MistBar'),
+    [ChainId.DOGECHAIN]: new Token(ChainId.DOGECHAIN, BAR_ADDRESS[ChainId.DOGECHAIN], 18, 'xDOGMONEY', 'Staked Dog Money'),
 }
 
 type ChainTokenMap = {
@@ -20,6 +21,7 @@ type ChainTokenMap = {
 export const MIST: ChainTokenMap = {
   [ChainId.SMARTBCH]: new Token(ChainId.SMARTBCH, MIST_ADDRESS[ChainId.SMARTBCH], 18, 'MIST', 'MistToken'),
   [ChainId.SMARTBCH_AMBER]: new Token(ChainId.SMARTBCH_AMBER, MIST_ADDRESS[ChainId.SMARTBCH_AMBER], 18, 'MIST', 'MistToken'),
+  [ChainId.DOGECHAIN]: new Token(ChainId.DOGECHAIN, MIST_ADDRESS[ChainId.DOGECHAIN], 18, 'DOGMONEY', 'Dog Money'),
 }
 
 export const WBCH_EXTENDED: { [chainId: number]: Token } = {

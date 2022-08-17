@@ -147,8 +147,8 @@ function AppBar(): JSX.Element {
                     {chainId && [ChainId.SMARTBCH].includes(chainId) && library && library.provider.isMetaMask && (
                       <>
                         <AddToken
-                          imageProps={{src: "/images/tokens/xmist-square.jpg", alt: "xMIST"}}
-                          text={i18n._(t`Add xMIST to your MetaMask wallet`)}
+                          imageProps={{src: "/images/tokens/xmist-square.jpg", alt: "xDOGMONEY"}}
+                          text={i18n._(t`Add xDOGMONEY to your MetaMask wallet`)}
                           metamaskProps={{
                             address: '0xC41C680c60309d4646379eD62020c534eB67b6f4',
                             symbol: 'xMIST',
@@ -161,11 +161,11 @@ function AppBar(): JSX.Element {
                     {chainId && chainId in MIST_ADDRESS && library && library.provider.isMetaMask && (
                       <>
                         <AddToken
-                          imageProps={{src: "/images/tokens/mist-square.jpg", alt: "MIST"}}
-                          text={i18n._(t`Add MIST to your MetaMask wallet`)}
+                          imageProps={{src: "/images/tokens/mist-square.jpg", alt: "DOGMONEY"}}
+                          text={i18n._(t`Add DOGMONEY to your MetaMask wallet`)}
                           metamaskProps={{
                             address: MIST_ADDRESS[chainId],
-                            symbol: 'MIST',
+                            symbol: 'DOGMONEY',
                             decimals: 18,
                             image: 'https://assets.mistswap.fi/blockchains/smartbch/assets/0x5fA664f69c2A4A3ec94FaC3cBf7049BD9CA73129/logo.png',
                           }} />
