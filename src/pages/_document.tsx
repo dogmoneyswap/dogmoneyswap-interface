@@ -88,7 +88,7 @@ export default class MyDocument extends Document {
                 (function() {
                   var u="//matomo.mistswap.fi/";
                   _paq.push(['setTrackerUrl', u+'matomo.php']);
-                  _paq.push(['setSiteId', '1']);
+                  _paq.push(['setSiteId', '8']);
                   var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
                   g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
                 })();
