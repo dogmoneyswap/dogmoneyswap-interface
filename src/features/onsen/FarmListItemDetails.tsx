@@ -56,6 +56,7 @@ const FarmListItem = ({ farm }) => {
     [Chef.MASTERCHEF]: {
       [ChainId.SMARTBCH]: MASTERCHEF_ADDRESS[ChainId.SMARTBCH],
       [ChainId.SMARTBCH_AMBER]: MASTERCHEF_ADDRESS[ChainId.SMARTBCH_AMBER],
+      [ChainId.DOGECHAIN]: MASTERCHEF_ADDRESS[ChainId.DOGECHAIN],
     },
   }
 

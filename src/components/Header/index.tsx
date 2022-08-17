@@ -1,4 +1,4 @@
-import { ChainId, Currency, NATIVE, MIST_ADDRESS } from '@dogmoneyswap/sdk'
+import { ChainId, Currency, NATIVE, MIST_ADDRESS, BAR_ADDRESS } from '@dogmoneyswap/sdk'
 import { Feature, featureEnabled } from '../../functions/feature'
 import React, { useEffect, useState } from 'react'
 
