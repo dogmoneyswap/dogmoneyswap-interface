@@ -35,6 +35,15 @@ const features = {
     Feature.BENTOBOX,
     Feature.KASHI
   ],
+  [ChainId.DOGECHAIN]: [
+    Feature.AMM,
+    Feature.LIQUIDITY_MINING,
+    // Feature.MIGRATE,
+    // Feature.ANALYTICS,
+    Feature.STAKING,
+    // Feature.BRIDGE,
+    // Feature.GOVERNANCE,
+  ],
 }
 
 export function featureEnabled(feature: Feature, chainId: ChainId): boolean {
