@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Token } from '@mistswapdex/sdk'
+import { Currency, CurrencyAmount, Token } from '@dogmoneyswap/sdk'
 
 import { useAllTokenBalances } from '../../state/wallet/hooks'
 import { useMemo } from 'react'

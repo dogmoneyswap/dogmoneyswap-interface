@@ -1,6 +1,6 @@
 import { classNames, formatNumber, formatPercent } from '../../functions'
 
-import { ZERO } from '@mistswapdex/sdk'
+import { ZERO } from '@dogmoneyswap/sdk'
 import { Disclosure } from '@headlessui/react'
 import ProposalListItemDetails from './ProposalListItemDetails'
 import Image from '../../components/Image'

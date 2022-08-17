@@ -1,4 +1,4 @@
-import { ChainId, JSBI } from '@mistswapdex/sdk'
+import { ChainId, JSBI } from '@dogmoneyswap/sdk'
 
 import { BigNumber } from '@ethersproject/bignumber'
 

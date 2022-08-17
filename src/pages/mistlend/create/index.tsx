@@ -1,4 +1,4 @@
-import { TWAP_0_ORACLE_ADDRESS, TWAP_1_ORACLE_ADDRESS, CHAINLINK_ORACLE_ADDRESS, Currency, KASHI_ADDRESS } from '@mistswapdex/sdk'
+import { TWAP_0_ORACLE_ADDRESS, TWAP_1_ORACLE_ADDRESS, CHAINLINK_ORACLE_ADDRESS, Currency, KASHI_ADDRESS } from '@dogmoneyswap/sdk'
 import React, { useCallback, useState } from 'react'
 import { useCreateActionHandlers, useCreateState, useDerivedCreateInfo } from '../../../state/create/hook'
 
@@ -20,7 +20,7 @@ import { useLingui } from '@lingui/react'
 import { useRouter } from 'next/router'
 import { useTransactionAdder } from '../../../state/transactions/hooks'
 import { PairState, useV2Pair } from '../../../hooks/useV2Pairs'
-import { Pair } from '@mistswapdex/sdk'
+import { Pair } from '@dogmoneyswap/sdk'
 import NeonSelect, { NeonSelectItem } from '../../../components/Select'
 
 export type ChainlinkToken = {

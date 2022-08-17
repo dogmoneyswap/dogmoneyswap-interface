@@ -2,7 +2,7 @@ import {
   ChainId,
   Currency,
   Token,
-} from '@mistswapdex/sdk'
+} from '@dogmoneyswap/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import { AutoRow } from '../../components/Row'
 import Container from '../../components/Container'

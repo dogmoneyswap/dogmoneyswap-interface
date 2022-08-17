@@ -1,12 +1,12 @@
-import { ChainId, Token } from '@mistswapdex/sdk'
+import { ChainId, Token } from '@dogmoneyswap/sdk'
 
 import { AddressZero } from '@ethersproject/constants'
 import { CHAINLINK_PRICE_FEED_MAP } from '../config/oracles/chainlink'
 import { defaultAbiCoder } from '@ethersproject/abi'
 import { e10 } from '../functions/math'
 import { isAddress } from '../functions'
-import { TWAP_0_ORACLE_ADDRESS } from '@mistswapdex/sdk'
-import { TWAP_1_ORACLE_ADDRESS } from '@mistswapdex/sdk'
+import { TWAP_0_ORACLE_ADDRESS } from '@dogmoneyswap/sdk'
+import { TWAP_1_ORACLE_ADDRESS } from '@dogmoneyswap/sdk'
 
 export interface Oracle {
   address: string

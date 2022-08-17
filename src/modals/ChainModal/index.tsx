@@ -1,6 +1,6 @@
 import {
   ChainId,
-} from '@mistswapdex/sdk'
+} from '@dogmoneyswap/sdk'
 import Image from 'next/image'
 import Modal from '../../components/Modal'
 import ModalHeader from '../../components/ModalHeader'

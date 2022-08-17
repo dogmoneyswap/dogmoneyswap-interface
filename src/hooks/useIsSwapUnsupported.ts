@@ -1,4 +1,4 @@
-import { Currency, Token } from '@mistswapdex/sdk'
+import { Currency, Token } from '@dogmoneyswap/sdk'
 
 import { useMemo } from 'react'
 import { useUnsupportedTokens } from './Tokens'

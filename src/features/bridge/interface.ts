@@ -1,4 +1,4 @@
-import { ChainId } from "@mistswapdex/sdk"
+import { ChainId } from "@dogmoneyswap/sdk"
 import { default as bridge } from './bridge.json';
 
 export type Chain = {

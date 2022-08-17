@@ -15,7 +15,7 @@ import {
   MIST_ADDRESS,
   MISTROLL_ADDRESS,
   WNATIVE_ADDRESS,
-} from '@mistswapdex/sdk'
+} from '@dogmoneyswap/sdk'
 import {
   ARGENT_WALLET_DETECTOR_ABI,
   ARGENT_WALLET_DETECTOR_MAINNET_ADDRESS,

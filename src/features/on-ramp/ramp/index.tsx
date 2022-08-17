@@ -1,4 +1,4 @@
-import { ChainId } from '@mistswapdex/sdk'
+import { ChainId } from '@dogmoneyswap/sdk'
 import { RampInstantSDK } from '@ramp-network/ramp-instant-sdk'
 import { t } from '@lingui/macro'
 import { useActiveWeb3React } from '../../../hooks'

@@ -1,4 +1,4 @@
-import { ChainId, MIST_ADDRESS, BAR_ADDRESS, Token, WBCH} from '@mistswapdex/sdk'
+import { ChainId, MIST_ADDRESS, BAR_ADDRESS, Token, WBCH} from '@dogmoneyswap/sdk'
 
 export const FLEXUSD = new Token(ChainId.SMARTBCH, '0x7b2B3C5308ab5b2a1d9a94d20D35CCDf61e05b72', 18, 'flexUSD', 'flexUSD')
 export const LAWUSD = new Token(ChainId.SMARTBCH, '0xE1E655BE6F50344e6dd708c27BD8D66492d6ecAf', 18, 'lawUSD', 'LAW US Dollar')

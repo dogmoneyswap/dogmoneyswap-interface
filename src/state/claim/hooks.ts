@@ -1,4 +1,4 @@
-import { ChainId, Currency, CurrencyAmount, JSBI, Token } from '@mistswapdex/sdk'
+import { ChainId, Currency, CurrencyAmount, JSBI, Token } from '@dogmoneyswap/sdk'
 import { getAddress, isAddress } from '@ethersproject/address'
 import { useEffect, useState } from 'react'
 

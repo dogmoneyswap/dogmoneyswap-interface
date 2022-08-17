@@ -2,7 +2,7 @@ import {
     MIST, XMIST, LAWUSD, SBUSD, LAW, GOB, BCUSDT, BCBCH
 } from '../config/tokens'
 // a list of tokens by chain
-import { ChainId, Currency, Token, WNATIVE, FLEXUSD } from '@mistswapdex/sdk'
+import { ChainId, Currency, Token, WNATIVE, FLEXUSD } from '@dogmoneyswap/sdk'
 
 type ChainTokenList = {
   readonly [chainId: number]: Token[]

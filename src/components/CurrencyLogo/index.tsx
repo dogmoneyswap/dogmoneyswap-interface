@@ -1,4 +1,4 @@
-import { ChainId, Currency, WNATIVE } from '@mistswapdex/sdk'
+import { ChainId, Currency, WNATIVE } from '@dogmoneyswap/sdk'
 import React, { FunctionComponent, useMemo } from 'react'
 
 import Logo from '../Logo'

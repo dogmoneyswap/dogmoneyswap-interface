@@ -1,4 +1,4 @@
-import { ChainId } from '@mistswapdex/sdk'
+import { ChainId } from '@dogmoneyswap/sdk'
 
 // CLASS A
 

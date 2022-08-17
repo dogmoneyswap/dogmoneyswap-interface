@@ -1,5 +1,5 @@
 import { AppState } from '..'
-import { ChainId } from '@mistswapdex/sdk'
+import { ChainId } from '@dogmoneyswap/sdk'
 import DEFAULT_TOKEN_LIST from '@mistswapdex/default-token-list'
 import { TokenList } from '@uniswap/token-lists'
 import { UNSUPPORTED_LIST_URLS } from '../../config/token-lists'

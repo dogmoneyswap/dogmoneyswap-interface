@@ -1,4 +1,4 @@
-import { ChainId } from '@mistswapdex/sdk'
+import { ChainId } from '@dogmoneyswap/sdk'
 import { GRAPH_HOST } from '../constants'
 import { request } from 'graphql-request'
 

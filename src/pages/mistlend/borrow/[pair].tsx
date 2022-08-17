@@ -21,7 +21,7 @@ import { useToken } from '../../../hooks/Tokens'
 import { useTransactionAdder } from '../../../state/transactions/hooks'
 import { useUSDCPrice } from '../../../hooks'
 import { useV2Pair } from '../../../hooks/useV2Pairs'
-import { CurrencyAmount } from '@mistswapdex/sdk'
+import { CurrencyAmount } from '@dogmoneyswap/sdk'
 
 function Pair() {
   const router = useRouter()

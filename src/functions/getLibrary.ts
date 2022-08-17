@@ -1,6 +1,6 @@
 import { ExternalProvider, JsonRpcFetchFunc, Web3Provider } from '@ethersproject/providers'
 
-import { ChainId } from '@mistswapdex/sdk'
+import { ChainId } from '@dogmoneyswap/sdk'
 
 const NETWORK_POLLING_INTERVALS: { [chainId: number]: number } = {
 }

@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Token } from '@mistswapdex/sdk'
+import { Currency, CurrencyAmount, Token } from '@dogmoneyswap/sdk'
 
 import { BigNumber } from '@ethersproject/bignumber'
 import { useSingleCallResult } from '../state/multicall/hooks'

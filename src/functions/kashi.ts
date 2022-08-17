@@ -10,7 +10,7 @@ import {
   PROTOCOL_FEE as _PROTOCOL_FEE,
   PROTOCOL_FEE_DIVISOR as _PROTOCOL_FEE_DIVISOR,
   STARTING_INTEREST_PER_YEAR as _STARTING_INTEREST_PER_YEAR,
-} from '@mistswapdex/sdk'
+} from '@dogmoneyswap/sdk'
 import { ZERO, e10 } from './math'
 
 const FACTOR_PRECISION = BigNumber.from(_FACTOR_PRECISION)

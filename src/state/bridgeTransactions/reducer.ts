@@ -7,7 +7,7 @@ import {
 import { createReducer } from '@reduxjs/toolkit'
 import { ShiftStatus } from '../../services/sideshift.ai'
 import { HopStatus } from '../../services/hop.cash'
-import { Currency } from '@mistswapdex/sdk'
+import { Currency } from '@dogmoneyswap/sdk'
 
 const now = () => new Date().getTime()
 

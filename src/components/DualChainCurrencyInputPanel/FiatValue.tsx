@@ -1,4 +1,4 @@
-import { CurrencyAmount, Currency, Percent } from '@mistswapdex/sdk'
+import { CurrencyAmount, Currency, Percent } from '@dogmoneyswap/sdk'
 import React, { useMemo } from 'react'
 
 import { warningSeverity } from '../../functions/prices'

@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 import { Provider } from '@ethersproject/abstract-provider'
 import { namehash } from '@ethersproject/hash'
-import { ENS_REGISTRAR_ADDRESS } from '@mistswapdex/sdk'
+import { ENS_REGISTRAR_ADDRESS } from '@dogmoneyswap/sdk'
 
 const REGISTRAR_ABI = [
   {
