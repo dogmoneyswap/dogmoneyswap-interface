@@ -63,27 +63,27 @@ export default function Vote() {
   return (
     <Container id="vote-page" className="py-4 md:py-8 lg:py-12" maxWidth="full">
       <Head>
-        <title key="title">Vote | Mist</title>
+        <title key="title">Vote | DOGMONEY</title>
         <meta
           key="description"
           name="description"
-          content="Vote using xMIST on community created proposals."
+          content="Vote using xDOGMONEY on community created proposals."
         />
-        <meta key="twitter:url" name="twitter:url" content="https://app.mistswap.fi/vote" />
-        <meta key="twitter:title" name="twitter:title" content="VOTE WITH XMIST" />
+        <meta key="twitter:url" name="twitter:url" content="https://app.dogmoney.money/vote" />
+        <meta key="twitter:title" name="twitter:title" content="VOTE WITH xDOGMONEY" />
         <meta
           key="twitter:description"
           name="twitter:description"
-          content="Vote using xMIST on community created proposals."
+          content="Vote using xDOGMONEY on community created proposals."
         />
-        <meta key="twitter:image" name="twitter:image" content="https://app.mistswap.fi/xmist-governance.png" />
-        <meta key="og:title" property="og:title" content="VOTE WITH XMIST" />
-        <meta key="og:url" property="og:url" content="https://app.mistswap.fi/vote" />
-        <meta key="og:image" property="og:image" content="https://app.mistswap.fi/xmist-governance.png" />
+        <meta key="twitter:image" name="twitter:image" content="https://app.dogmoney.money/xdogmoney-governance.png" />
+        <meta key="og:title" property="og:title" content="VOTE WITH xDOGMONEY" />
+        <meta key="og:url" property="og:url" content="https://app.dogmoney.money/vote" />
+        <meta key="og:image" property="og:image" content="https://app.dogmoney.money/xdogmoney-governance.png" />
         <meta
           key="og:description"
           property="og:description"
-          content="Vote using xMIST on community created proposals."
+          content="Vote using xDOGMONEY on community created proposals."
         />
       </Head>
       <div className="flex flex-col w-full min-h-full">
@@ -91,15 +91,15 @@ export default function Vote() {
           <div className="flex flex-col w-full max-w-xl mt-auto mb-2">
             <div className="flex max-w-lg">
               <div className="self-end mb-3 text-lg font-bold md:text-2xl text-high-emphesis md:mb-7">
-                {i18n._(t`Vote using xMIST on community created proposals.`)}
+                {i18n._(t`Vote using xDOGMONEY on community created proposals.`)}
               </div>
             </div>
             <div className="max-w-lg pr-3 mb-2 text-sm leading-5 text-gray-500 md:text-base md:mb-4 md:pr-0">
-              {i18n._(t`View proposals and vote on them using your xMIST. The amount of xMIST you hold at the snapshot block determines your vote weight. You may only vote once per proposal.`)}
+              {i18n._(t`View proposals and vote on them using your xDOGMONEY. The amount of xDOGMONEY you hold at the snapshot block determines your vote weight. You may only vote once per proposal.`)}
             </div>
           </div>
           <div className="hidden px-8 ml-6 md:block w-72">
-            <Image src="/xmist-governance.png" alt="xMIST Governance" width="100%" height="100%" layout="responsive" />
+            <Image src="/xmist-governance.png" alt="xDOGMONEY Governance" width="100%" height="100%" layout="responsive" />
           </div>
         </div>
         <div className="flex justify-center mb-6">
