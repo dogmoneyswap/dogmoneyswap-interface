@@ -36,6 +36,9 @@ const PERMITTABLE_TOKENS: {
   [ChainId.SMARTBCH_AMBER]: {
     [MIST[ChainId.SMARTBCH_AMBER].address]: { type: PermitType.AMOUNT, name: 'MistToken' },
   },
+  [ChainId.DOGECHAIN]: {
+    [MIST[ChainId.DOGECHAIN].address]: { type: PermitType.AMOUNT, name: 'Dog Money' },
+  },
 }
 
 export enum UseERC20PermitState {

@@ -132,7 +132,7 @@ function AppBar(): JSX.Element {
                       {chainId && featureEnabled(Feature.ANALYTICS, chainId) && (
                         <ExternalLink
                           id={`analytics-nav-link`}
-                          href={ANALYTICS_URL[chainId] || 'https://analytics.mistswap.fi'}
+                          href={ANALYTICS_URL[chainId] || 'https://analytics.dogmoney.money'}
                           className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                         >
                           {i18n._(t`Analytics`)}
@@ -147,13 +147,13 @@ function AppBar(): JSX.Element {
                     {chainId && [ChainId.SMARTBCH].includes(chainId) && library && library.provider.isMetaMask && (
                       <>
                         <AddToken
-                          imageProps={{src: "/images/tokens/xmist-square.jpg", alt: "xDOGMONEY"}}
+                          imageProps={{src: "/images/tokens/xdogmoney-square.jpg", alt: "xDOGMONEY"}}
                           text={i18n._(t`Add xDOGMONEY to your MetaMask wallet`)}
                           metamaskProps={{
-                            address: '0xC41C680c60309d4646379eD62020c534eB67b6f4',
-                            symbol: 'xMIST',
+                            address: BAR_ADDRESS[chainId],
+                            symbol: 'xDOGMONEY',
                             decimals: 18,
-                            image: 'https://assets.mistswap.fi/blockchains/smartbch/assets/0xC41C680c60309d4646379eD62020c534eB67b6f4/logo.png',
+                            image: 'https://assets.dogmoney.money/blockchains/dogechain/assets/0x5108E68a50CFA3306c643Af1BC8b105597c823d9/logo.png',
                           }} />
                       </>
                     )}
@@ -161,13 +161,13 @@ function AppBar(): JSX.Element {
                     {chainId && chainId in MIST_ADDRESS && library && library.provider.isMetaMask && (
                       <>
                         <AddToken
-                          imageProps={{src: "/images/tokens/mist-square.jpg", alt: "DOGMONEY"}}
+                          imageProps={{src: "/images/tokens/dogmoney-square.jpg", alt: "DOGMONEY"}}
                           text={i18n._(t`Add DOGMONEY to your MetaMask wallet`)}
                           metamaskProps={{
                             address: MIST_ADDRESS[chainId],
                             symbol: 'DOGMONEY',
                             decimals: 18,
-                            image: 'https://assets.mistswap.fi/blockchains/smartbch/assets/0x5fA664f69c2A4A3ec94FaC3cBf7049BD9CA73129/logo.png',
+                            image: 'https://assets.dogmoney.money/blockchains/dogechain/assets/0x95d366dC75eE657A977683d84546163B4E905a15/logo.png',
                           }} />
                       </>
                     )}
@@ -340,7 +340,7 @@ function AppBar(): JSX.Element {
                 {chainId && featureEnabled(Feature.ANALYTICS, chainId) && (
                   <ExternalLink
                     id={`analytics-nav-link`}
-                    href={ANALYTICS_URL[chainId] || 'https://analytics.mistswap.fi'}
+                    href={ANALYTICS_URL[chainId] || 'https://analytics.dogmoney.money'}
                     className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
                   >
                     {i18n._(t`Analytics`)}

@@ -26,7 +26,7 @@ export default function useAddTokenToMetaMask(currencyToAdd: Currency | undefine
               address: token.address,
               symbol: token.symbol,
               decimals: token.decimals,
-              image: `https://assets.mistswap.fi/blockchains/smartbch/assets/${token.address}/logo.png`,
+              image: `https://assets.dogmoney.money/blockchains/dogechain/assets/${token.address}/logo.png`,
             },
           },
         })

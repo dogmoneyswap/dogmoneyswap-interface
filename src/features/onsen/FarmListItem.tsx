@@ -78,18 +78,18 @@ const FarmListItem = ({ farm, ...rest }) => {
                   <div className="hidden md:flex items-center space-x-2">
                     <div key="0" className="flex items-center">
                       <Image
-                        src="https://assets.mistswap.fi/blockchains/smartbch/assets/0x5fA664f69c2A4A3ec94FaC3cBf7049BD9CA73129/logo.png"
+                        src="https://assets.dogmoney.money/blockchains/dogechain/assets/0x95d366dC75eE657A977683d84546163B4E905a15/logo.png"
                         width="30px"
                         height="30px"
                         className="rounded-md"
                         layout="fixed"
-                        alt="MIST"
+                        alt="DOGMONEY"
                       />
                     </div>
                   </div>
                   <div className="flex flex-col space-y-1">
                     <div key="0" className="text-xs md:text-sm">
-                      {formatNumber(pendingSushi.toFixed(18))} MIST
+                      {formatNumber(pendingSushi.toFixed(18))} DOGMONEY
                     </div>
                   </div>
               </div>
