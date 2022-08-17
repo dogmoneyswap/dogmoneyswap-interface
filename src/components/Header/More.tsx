@@ -12,14 +12,14 @@ import NavLink from '../NavLink'
 const items = (i18n: I18n) => [
   {
     name: i18n._(t`Docs`),
-    description: i18n._(t`Documentation for users of MIST.`),
-    href: 'https://docs.mistswap.fi',
+    description: i18n._(t`Documentation for users of DOGMONEY.`),
+    href: 'https://docs.dogmoney.money',
     external: true,
   },
   {
     name: i18n._(t`Open Source`),
-    description: i18n._(t`MIST is a supporter of Open Source.`),
-    href: 'https://github.com/mistswapdex',
+    description: i18n._(t`DOGMONEY is a supporter of Open Source.`),
+    href: 'https://github.com/dogmoneyswap',
     external: true,
   },
   {

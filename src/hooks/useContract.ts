@@ -42,7 +42,7 @@ import MASTERCHEF_V2_ABI from '../constants/abis/masterchef-v2.json'
 import MULTICALL2_ABI from '../constants/abis/multicall2.json'
 import ROUTER_ABI from '../constants/abis/router.json'
 import SUSHI_ABI from '../constants/abis/sushi.json'
-import SUSHIROLL_ABI from "@mistswapdex/core/abi/SushiRoll.json";
+import SUSHIROLL_ABI from "@dogmoneyswap/core/abi/SushiRoll.json";
 import WBCH_ABI from '../constants/abis/weth.json'
 import ZENKO_ABI from '../constants/abis/zenko.json'
 import { getContract } from '../functions/contract'

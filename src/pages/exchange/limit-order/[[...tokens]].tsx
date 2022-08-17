@@ -214,10 +214,10 @@ function LimitOrder() {
   return (
     <Container id="limit-order-page" className="py-4 space-y-6 md:py-8 lg:py-12" maxWidth="2xl">
       <Head>
-        <title>{i18n._(t`Limit order`)} | Mist</title>
+        <title>{i18n._(t`Limit order`)} | DOGMONEY</title>
         <meta
           name="description"
-          content="MISTswap allows for swapping of SEP20 compatible tokens"
+          content="DOGMONEY allows for swapping of ERC-20 compatible tokens"
         />
       </Head>
       <TokenWarningModal

@@ -427,11 +427,11 @@ export default function Swap() {
   return (
     <Container id="swap-page" className="py-4 md:py-8 lg:py-12">
       <Head>
-        <title>{GetRateText({price: trade?.executionPrice, showInverted}) || i18n._(t`MISTswap`)} | MISTswap</title>
+        <title>{GetRateText({price: trade?.executionPrice, showInverted}) || ''} DOGMONEY | DOGMONEY </title>
         <meta
           key="description"
           name="description"
-          content="MISTswap allows for swapping of SEP20 compatible tokens"
+          content="DOGMONEY allows for swapping of ERC-20 compatible tokens"
         />
       </Head>
       <TokenWarningModal

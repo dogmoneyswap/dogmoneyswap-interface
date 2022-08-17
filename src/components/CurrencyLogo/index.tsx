@@ -21,10 +21,10 @@ function getCurrencySymbol(currency) {
 export function getCurrencyLogoUrls(currency) {
   const urls = []
 
-  urls.push(`https://raw.githubusercontent.com/mistswapdex/icons/master/token/${getCurrencySymbol(currency)}.jpg`)
+  urls.push(`https://raw.githubusercontent.com/dogmoneyswap/icons/master/token/${getCurrencySymbol(currency)}.jpg`)
   if (currency.chainId in BLOCKCHAIN) {
     urls.push(
-      `https://assets.mistswap.fi/blockchains/smartbch/assets/${
+      `https://assets.dogmoney.money/blockchains/smartbch/assets/${
         currency.address
       }/logo.png`
     )
@@ -39,11 +39,12 @@ export function getCurrencyLogoUrls(currency) {
 }
 
 const BitcoinCashLogo = 'https://raw.githubusercontent.com/mistswapdex/icons/master/token/bch.jpg'
+const DogeChainLogo = 'https://raw.githubusercontent.com/dogmoneyswap/icons/master/network/dogechain.jpg'
 
 const LOGO: { readonly [chainId in ChainId]?: string } = {
   [ChainId.SMARTBCH]: BitcoinCashLogo,
   [ChainId.SMARTBCH_AMBER]: BitcoinCashLogo,
-  [ChainId.DOGECHAIN]: BitcoinCashLogo,
+  [ChainId.DOGECHAIN]: DogeChainLogo,
 }
 
 interface CurrencyLogoProps {
@@ -54,7 +55,7 @@ interface CurrencyLogoProps {
   squared?: boolean
 }
 
-const unknown = 'https://raw.githubusercontent.com/mistswapdex/icons/master/token/unknown.png'
+const unknown = 'https://raw.githubusercontent.com/dogmoneyswap/icons/master/token/unknown.png'
 
 const CurrencyLogo: FunctionComponent<CurrencyLogoProps> = ({
   currency,

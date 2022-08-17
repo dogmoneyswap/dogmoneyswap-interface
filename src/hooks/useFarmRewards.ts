@@ -84,8 +84,8 @@ export default function useFarmRewards() {
         pool.owner.totalAllocPoint = masterChefV1TotalAllocPoint
 
         const icon = ['0', '3', '4', '8'].includes(pool.id)
-          ? `https://raw.githubusercontent.com/mistswapdex/icons/master/token/${pool.rewardToken.symbol.toLowerCase()}.jpg`
-          : `https://assets.mistswap.fi/blockchains/smartbch/assets/${getAddress(
+          ? `https://raw.githubusercontent.com/dogmoneyswap/icons/master/token/${pool.rewardToken.symbol.toLowerCase()}.jpg`
+          : `https://assets.dogmoney.money/blockchains/dogechain/assets/${getAddress(
               pool.rewarder.rewardToken
             )}/logo.png`
 

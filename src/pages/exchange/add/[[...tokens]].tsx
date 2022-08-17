@@ -312,11 +312,11 @@ export default function Add() {
   return (
     <>
       <Head>
-        <title>Add Liquidity | Mist</title>
+        <title>Add Liquidity | DOGMONEY</title>
         <meta
           key="description"
           name="description"
-          content="Add liquidity to the MISTswap AMM to enable gas optimised and low slippage trades across countless networks"
+          content="Add liquidity to the DOGMONEY AMM to enable gas optimised and low slippage trades"
         />
       </Head>
 

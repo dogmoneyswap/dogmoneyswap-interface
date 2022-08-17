@@ -1240,6 +1240,34 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
+"@dogmoneyswap/core@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@dogmoneyswap/core/-/core-0.0.1.tgz#6943bc2e18565d7057562eeeb0a1643e696dbba8"
+  integrity sha512-z4d2BwIZ2GMxO5h/d01O3LnjLMZNikrZGOr29v2342wlOdlnG4lnHxvyEYI909VWKNMEso3PUd8HLZG/5VZYQQ==
+  dependencies:
+    eip-712 "^0.4.3"
+
+"@dogmoneyswap/default-token-list@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@dogmoneyswap/default-token-list/-/default-token-list-0.0.1.tgz#d50609cb09934d210b699c78b22ac905911ebb65"
+  integrity sha512-fPoUZvRHqqx8Ac262S1hkFnZySF9XiJQND7eAYI+tHEDksyKx76uBYB6ciz22QfueLHKcv4Rys/l5McgsrWy5g==
+  dependencies:
+    commitlint "^13.1.0"
+    lint-staged "^11.1.2"
+
+"@dogmoneyswap/sdk@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@dogmoneyswap/sdk/-/sdk-0.0.1.tgz#e0fd8dbd97f1991c3aa04dfdf6a255a1779de836"
+  integrity sha512-4o/9D2JBewn+YQjQrFZyv9k1blyhMuYegpvmy1LTW+zSx3D2xDsq0C6ZtWhFH0kg9d3K2HvdtE8kQznisWVWRw==
+  dependencies:
+    big.js "^6.1.0"
+    decimal.js-light "^2.5.0"
+    isomorphic-unfetch "^3.1.0"
+    jsbi "^3.1.0"
+    tiny-invariant "^1.1.0"
+    tiny-warning "^1.0.3"
+    toformat "^2.0.0"
+
 "@emotion/is-prop-valid@^0.8.8":
   version "0.8.8"
   resolved "https://registry.yarnpkg.com/@emotion/is-prop-valid/-/is-prop-valid-0.8.8.tgz#db28b1c4368a259b60a97311d6a952d4fd01ac1a"
@@ -2218,36 +2246,6 @@
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@metamask/safe-event-emitter/-/safe-event-emitter-2.0.0.tgz#af577b477c683fad17c619a78208cede06f9605c"
   integrity sha512-/kSXhY692qiV1MXu6EeOZvg5nECLclxNXcKCxJ3cXQgYuRymRHpdx/t7JXfsK+JLjwA1e1c1/SBrlQYpusC29Q==
-
-"@mistswapdex/core@0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@mistswapdex/core/-/core-0.0.3.tgz#147ed00265e64ba7df0697bcdbf4bde281a764ee"
-  integrity sha512-oKCoQ55YkdVMMR3CoYaYHct4XJ9pE81d3kZuNjXO9S/38XO4U0CryaXGAtYLfYrRJpGjflIWCDTPyPQ3z4uRzQ==
-  dependencies:
-    eip-712 "^0.4.3"
-    patch-package "^6.4.7"
-    postinstall-postinstall "^2.1.0"
-
-"@mistswapdex/default-token-list@0.0.53":
-  version "0.0.53"
-  resolved "https://registry.yarnpkg.com/@mistswapdex/default-token-list/-/default-token-list-0.0.53.tgz#369a322fd4bda570756da2486b20f9f8b3420b3a"
-  integrity sha512-AFO4pR7zmTGCVhLk+R9SWrCLeZxevHqSV05VFBIMULns0LoZhc6WKwYxXndCaEZ/rqJdy4mAr26LVZTcPYOb0Q==
-  dependencies:
-    commitlint "^13.1.0"
-    lint-staged "^11.1.2"
-
-"@mistswapdex/sdk@^0.0.19":
-  version "0.0.19"
-  resolved "https://registry.yarnpkg.com/@mistswapdex/sdk/-/sdk-0.0.19.tgz#a1859eb39dc74d2e3640c79f12d8cce79d13273a"
-  integrity sha512-KtTR+54vFWDWBsnRhcxmJ/YsNmFwK765RIkUvbgH8DF/1cu873Sbt7z4cdGqtefbv4cFbikcbIjrF7eQ3ECf4A==
-  dependencies:
-    big.js "^6.1.0"
-    decimal.js-light "^2.5.0"
-    isomorphic-unfetch "^3.1.0"
-    jsbi "^3.1.0"
-    tiny-invariant "^1.1.0"
-    tiny-warning "^1.0.3"
-    toformat "^2.0.0"
 
 "@mistswapdex/xmist-governance@^0.0.1":
   version "0.0.1"

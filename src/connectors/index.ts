@@ -62,7 +62,7 @@ export const portis = new PortisConnector({
 export const walletlink = new WalletLinkConnector({
   url: RPC[ChainId.SMARTBCH],
   appName: 'DogMoneySwap',
-  appLogoUrl: 'https://raw.githubusercontent.com/mistswapdex/art/master/mist/logo-256x256.png',
+  appLogoUrl: 'https://raw.githubusercontent.com/dogmoneyswap/art/master/dogmoney/logo-256x256.png',
 })
 
 // mainnet only
