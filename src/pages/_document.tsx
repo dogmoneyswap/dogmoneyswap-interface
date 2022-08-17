@@ -74,6 +74,11 @@ export default class MyDocument extends Document {
           <link rel="shortcut icon" href="/favicon.ico" />
 
           <link rel="manifest" href="/manifest.json" />
+
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
+          <link href="https://fonts.googleapis.com/css2?family=Coming+Soon&display=swap" rel="stylesheet" />
+
           <script
             dangerouslySetInnerHTML={{
               __html: `

@@ -34,6 +34,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--bg-primary);
   color: var(--text-primary);
+  background: url(https://cdn.wallpapersafari.com/94/94/JbModX.jpg);
+  background-size: cover;
+  background-position: center top;
 }
 
 body {
