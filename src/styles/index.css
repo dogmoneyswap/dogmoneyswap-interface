@@ -34,7 +34,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  background: url(/dogewallpaper.webp);
+  background: url(/dogewallpaper.jpg);
 
   background-size: cover;
   background-position: center top;
