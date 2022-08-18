@@ -195,7 +195,7 @@ export default function Stake() {
                                 <img src={XSushiSignSmall} alt="xmist sign" />
                             </div> */}
             </div>
-            <div className="max-w-lg pr-3 mb-2 text-sm leading-5 text-gray-500 md:text-base md:mb-4 md:pr-0">
+            <div className="max-w-lg pr-3 mb-2 text-sm leading-5 text-gray-500 md:text-base md:mb-4 md:pr-0" style={{ background: '#3c3cff', color: '#ffffff', lineHeight: '2rem' }}>
               {i18n._(t`For every swap on the exchange on every chain, 0.05% of the swap fees are distributed as DOGMONEY
                                 proportional to your share of the DOGMONEYBowl. When your DOGMONEY is staked into the DOGMONEYBowl, you receive
                                 xDOGMONEY in return.
