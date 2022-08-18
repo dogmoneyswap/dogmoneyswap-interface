@@ -6,10 +6,10 @@ const Back = () => {
   const { i18n } = useLingui()
   const router = useRouter()
   return (
-    <div>
+    <div style={{ background: '#ffbaee', padding: '0.2rem', width: 'fit-content' }}>
       <a
         onClick={router.back}
-        className="flex items-center space-x-2 text-base text-center cursor-pointer font text-secondary hover:text-high-emphesis"
+        className="flex items-center space-x-2 text-base text-center cursor-pointer font text-secondary"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
