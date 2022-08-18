@@ -323,7 +323,7 @@ export default function Add() {
       <Container id="add-liquidity-page" className="py-4 space-y-6 md:py-8 lg:py-12" maxWidth="2xl">
         <div className="flex items-center justify-between px-4 mb-5">
           <NavLink href="/pool">
-            <a className="flex items-center space-x-2 text-base font-medium text-center cursor-pointer text-secondary hover:text-high-emphesis">
+            <a className="flex items-center space-x-2 text-base font-medium text-center cursor-pointer text-secondary" style={{ background: 'aliceblue', padding: '0.5rem' }}>
               <span>{i18n._(t`View Liquidity Positions`)}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
