@@ -1,6 +1,6 @@
 import { ChainId, MIST_ADDRESS, BAR_ADDRESS, Token, WBCH} from '@dogmoneyswap/sdk'
 
-export const DAI = new Token(ChainId.DOGECHAIN, '0x639A647fbe20b6c8ac19E48E2de44ea792c62c5C', 6, 'DAI', 'Dai Stablecoin')
+export const DAI = new Token(ChainId.DOGECHAIN, '0x639A647fbe20b6c8ac19E48E2de44ea792c62c5C', 18, 'DAI', 'Dai Stablecoin')
 export const USDT = new Token(ChainId.DOGECHAIN, '0xE3F5a90F9cb311505cd691a46596599aA1A0AD7D', 6, 'USDT', 'Tether USD')
 export const USDC = new Token(ChainId.DOGECHAIN, '0x765277EebeCA2e31912C9946eAe1021199B39C61', 6, 'USDC', 'USD Coin')
 
