@@ -191,7 +191,7 @@ function AppBar(): JSX.Element {
                     <div className="hidden md:block sm:block">
                       <LanguageSwitch />
                     </div>
-                    <ThemeSwitch/>
+                    {/*<ThemeSwitch/>*/}
                     <More />
                   </div>
                 </div>
