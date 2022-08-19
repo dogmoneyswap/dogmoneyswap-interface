@@ -1,4 +1,5 @@
 import { ChainId, Currency, NATIVE, MIST_ADDRESS, BAR_ADDRESS } from '@dogmoneyswap/sdk'
+import { MIST } from '../../config/tokens'
 import { Feature, featureEnabled } from '../../functions/feature'
 import React, { useEffect, useState } from 'react'
 
@@ -167,7 +168,7 @@ function AppBar(): JSX.Element {
                             address: MIST_ADDRESS[chainId],
                             symbol: 'DOGMONEY',
                             decimals: 18,
-                            image: 'https://assets.dogmoney.money/blockchains/dogechain/assets/0x95d366dC75eE657A977683d84546163B4E905a15/logo.png',
+                            image: "https://assets.dogmoney.money/blockchains/dogechain/assets/{MIST[ChainId.DOGECHAIN].address}/logo.png",
                           }} />
                       </>
                     )}

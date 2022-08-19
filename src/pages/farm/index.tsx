@@ -13,7 +13,7 @@ import {
 
 import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId, WNATIVE, Token, WBCH, MASTERCHEF_ADDRESS } from '@dogmoneyswap/sdk'
-import { MIST } from '../../config/tokens'
+import { MIST, DAI, USDT, USDC } from '../../config/tokens'
 import Container from '../../components/Container'
 import FarmList from '../../features/onsen/FarmList'
 import Head from 'next/head'
@@ -224,7 +224,7 @@ export default function Farm(): JSX.Element {
 
       const defaultReward = {
         token: 'DOGMONEY',
-        icon: 'https://assets.dogmoney.money/blockchains/dogechain/assets/0x95d366dC75eE657A977683d84546163B4E905a15/logo.png',
+        icon: `https://assets.dogmoney.money/blockchains/dogechain/assets/${MIST[ChainId.DOGECHAIN].address}/logo.png`,
         rewardPerBlock,
         rewardPerDay: rewardPerBlock * blocksPerDay,
         rewardPrice: +mistPriceUSD,
