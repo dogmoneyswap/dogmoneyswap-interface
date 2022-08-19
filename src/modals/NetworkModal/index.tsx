@@ -33,7 +33,7 @@ export const SUPPORTED_NETWORKS: {
       symbol: 'DOGE',
       decimals: 18,
     },
-    rpcUrls: ['https://rpc03-sg.dogechain.dog'],
+    rpcUrls: ['https://rpc.dogechain.dog'],
     blockExplorerUrls: ['https://explorer.dogechain.dog'],
   },
 }
