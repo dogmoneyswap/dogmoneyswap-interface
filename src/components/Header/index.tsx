@@ -111,13 +111,13 @@ function AppBar(): JSX.Element {
                         </NavLink>
                       )}
                       {chainId && featureEnabled(Feature.BRIDGE, chainId) && (
-                        <NavLink href={'/bridge'}>
-                          <a
-                            className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
-                          >
-                            {i18n._(t`Bridge`)} <sup>BETA</sup>
-                            </a>
-                        </NavLink>
+                        <ExternalLink
+                          id={`bridge-nav-link`}
+                          className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                          href={'https://app.multichain.org/#/router'}
+                        >
+                          {i18n._(t`Bridge`)}
+                        </ExternalLink>
                       )}
                       {chainId && featureEnabled(Feature.GOVERNANCE, chainId) && (
                         <NavLink href={'/vote'}>
@@ -318,13 +318,13 @@ function AppBar(): JSX.Element {
                 )}
 
                 {chainId && featureEnabled(Feature.BRIDGE, chainId) && (
-                  <Link href={'/bridge'}>
-                    <a
-                      className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
-                    >
-                      {i18n._(t`Bridge`)} <sup>BETA</sup>
-                    </a>
-                  </Link>
+                  <ExternalLink
+                    id={`bridge-nav-link`}
+                    href={'https://app.multichain.org/#/router'}
+                    className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                  >
+                    {i18n._(t`Bridge`)}
+                  </ExternalLink>
                 )}
 
                 {chainId && featureEnabled(Feature.GOVERNANCE, chainId) && (
