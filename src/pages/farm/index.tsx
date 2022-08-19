@@ -423,7 +423,7 @@ export default function Farm(): JSX.Element {
         <meta key="description" name="description" content="Farm DOGMONEY" />
       </Head>
       <div className={classNames('px-3 md:px-0 lg:block md:col-span-1')}>
-        <Menu positionsLength={positions.length} />
+        <Menu positionsLength={positions.length} farms={farms} />
         <div className="relative hidden h-80 lg:block">
           <Image layout="fill" objectFit="contain" objectPosition="bottom" src="/mist-machine.png" alt="" />
         </div>
