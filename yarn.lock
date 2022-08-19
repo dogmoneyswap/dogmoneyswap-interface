@@ -1240,25 +1240,25 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
-"@dogmoneyswap/core@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@dogmoneyswap/core/-/core-0.0.1.tgz#6943bc2e18565d7057562eeeb0a1643e696dbba8"
-  integrity sha512-z4d2BwIZ2GMxO5h/d01O3LnjLMZNikrZGOr29v2342wlOdlnG4lnHxvyEYI909VWKNMEso3PUd8HLZG/5VZYQQ==
+"@dogmoneyswap/core@0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@dogmoneyswap/core/-/core-0.0.2.tgz#bbc602a61eff16c7c79620845d7718684f836f7c"
+  integrity sha512-kVGGvrwtjdwdTVV8n6H9yWK4z8wc1YHO3j3rS6cU6YQE4D70ygEq8U++F5/YKIsvdEWYVAvhTMVeqVu5AOuqmA==
   dependencies:
     eip-712 "^0.4.3"
 
-"@dogmoneyswap/default-token-list@0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@dogmoneyswap/default-token-list/-/default-token-list-0.0.3.tgz#f61f12a4cea929a13fa67b3298d28a1d51ec58d1"
-  integrity sha512-uQ+44+6YFmC1fTHJUSGtTfERAV9LyQVzqfzs5a/rUvpBA7Q5196EaX7F4GwRZ8H3PCnuw29RicZCL1KWEs4VSQ==
+"@dogmoneyswap/default-token-list@0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@dogmoneyswap/default-token-list/-/default-token-list-0.0.5.tgz#9ede08bc427b279485b9fc476ac96565a4743e6a"
+  integrity sha512-8VFoh69GZmzilRv3YdfLj/O2Rf/ybOaOq0ronFfky3Qrowu3AC2KPjMa78pFWE42nfDX3hT1SwQhwCnh1eQ2XQ==
   dependencies:
     commitlint "^13.1.0"
     lint-staged "^11.1.2"
 
-"@dogmoneyswap/sdk@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@dogmoneyswap/sdk/-/sdk-0.0.1.tgz#e0fd8dbd97f1991c3aa04dfdf6a255a1779de836"
-  integrity sha512-4o/9D2JBewn+YQjQrFZyv9k1blyhMuYegpvmy1LTW+zSx3D2xDsq0C6ZtWhFH0kg9d3K2HvdtE8kQznisWVWRw==
+"@dogmoneyswap/sdk@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@dogmoneyswap/sdk/-/sdk-0.0.2.tgz#1fb8999a64e2c6900e3e4fbdd74e408b4db01381"
+  integrity sha512-gkrajqWn1jWUJAvXOTK6ZYFABAuwrClishIiOsp1QsN+7dF3RBWhG39E31wOytUbd8MOhEE6WzTk+62cI4kEcQ==
   dependencies:
     big.js "^6.1.0"
     decimal.js-light "^2.5.0"
