@@ -143,32 +143,30 @@ export default function Farm(): JSX.Element {
       },
 
       // dogmoney pairs
-      /*
-      "0x2Cb4771d7fe5A387476e68765e8883B6933AD0a4": {
+      "0x9Ab710Cd0BfbeE60E14115D19c76213C4D4b1687": {
         farmId: 14,
         allocPoint: 300000000,
         token0: MIST[ChainId.DOGECHAIN],
         token1: WBCH[ChainId.DOGECHAIN],
       },
-      "0x2Cb4771d7fe5A387476e68765e8883B6933AD0a4": {
+      "0x90104885C69b980cB3C9D351671F0F06E016aB48": {
         farmId: 15,
         allocPoint: 50000000,
         token0: MIST[ChainId.DOGECHAIN],
         token1: USDC,
       },
-      "0x2Cb4771d7fe5A387476e68765e8883B6933AD0a4": {
+      "0x766113199c121C9c754Edc456B11cA980AF79Ac4": {
         farmId: 16,
         allocPoint: 50000000,
         token0: MIST[ChainId.DOGECHAIN],
         token1: USDT,
       },
-      "0x2Cb4771d7fe5A387476e68765e8883B6933AD0a4": {
+      "0x639A647fbe20b6c8ac19E48E2de44ea792c62c5C": {
         farmId: 17,
         allocPoint: 50000000,
         token0: MIST[ChainId.DOGECHAIN],
         token1: DAI,
       },
-      */
     },
   };
 
