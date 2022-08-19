@@ -145,7 +145,7 @@ function AppBar(): JSX.Element {
 
                 <div className="fixed bottom-0 left-0 z-10 flex flex-row items-center justify-center w-full p-4 lg:w-auto bg-dark-1000 lg:relative lg:p-0 lg:bg-transparent">
                   <div className="flex items-center justify-between w-full space-x-2 sm:justify-end">
-                    {chainId && [ChainId.SMARTBCH].includes(chainId) && library && library.provider.isMetaMask && (
+                    {chainId && [ChainId.DOGECHAIN].includes(chainId) && library && library.provider.isMetaMask && (
                       <>
                         <AddToken
                           imageProps={{src: "/images/tokens/xdogmoney-square.jpg", alt: "xDOGMONEY"}}
@@ -154,7 +154,7 @@ function AppBar(): JSX.Element {
                             address: BAR_ADDRESS[chainId],
                             symbol: 'xDOGMONEY',
                             decimals: 18,
-                            image: 'https://assets.dogmoney.money/blockchains/dogechain/assets/0x5108E68a50CFA3306c643Af1BC8b105597c823d9/logo.png',
+                            image: 'https://assets.dogmoney.money/blockchains/dogechain/assets/0xC5c70fA7A518bE9229eB0Dc84e70a91683694562/logo.png',
                           }} />
                       </>
                     )}
