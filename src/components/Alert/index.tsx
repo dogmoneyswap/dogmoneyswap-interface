@@ -77,13 +77,13 @@ export default function Alert({
   className = '',
   showIcon = false,
   dismissable = true,
-  style = '',
+  style = {},
 }: AlertProps & React.HTMLAttributes<HTMLDivElement>): JSX.Element | null {
   // TODO: Persist this...
   const [show, setShow] = useState(true)
   const { color, icon } = TYPE[type]
   return message && show ? (
-    <div className={classNames('block relative w-full rounded text-sm p-4', show && 'pr-10', color, className)} style={style || {background: 'limegreen'} }>
+    <div className={classNames('block relative w-full rounded text-sm p-4', show && 'pr-10', color, className)} style={style}>
       {title && <div className="mb-1 text-2xl font-medium">{title}</div>}
       <div className="flex items-center">
         {showIcon && <div className="flex-shrink-0">{icon}</div>}
