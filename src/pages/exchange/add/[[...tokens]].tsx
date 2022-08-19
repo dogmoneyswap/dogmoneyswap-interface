@@ -350,6 +350,7 @@ export default function Add() {
         </div>
 
         <Alert
+          style={{ background: 'limegreen', padding: '1rem' }}
           message={
             noLiquidity ? (
               i18n._(
