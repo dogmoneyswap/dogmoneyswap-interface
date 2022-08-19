@@ -222,12 +222,12 @@ export default function Farm(): JSX.Element {
 
   farms = farms.sort((a, b) => b.allocPoint - a.allocPoint);
 
-  let bchPriceUSD = 0.08;
+  let bchPriceUSD = 0.069;
   let mistPriceUSD = 0.1;
   if (chainId === 2000) {
     const dogeUSDCPool = farms.find((v) => v.pair === '0xd26745d973005bbdA64dB020B75B1720C4Ee7b23').pool;
     if (dogeUSDCPool.reserves) {
-      // bchPriceUSD = Number.parseFloat(dogeUSDCPool.reserves[1].toFixed()) / Number.parseFloat(dogeUSDCPool.reserves[0].toFixed());
+      // bchPriceUSD = Number.parseFloat(dogeUSDCPool.reserves[1].toFixed(USDT.decimals, 18)) / Number.parseFloat(dogeUSDCPool.reserves[0].toFixed(USDT.decimals, 18));
     }
 
     const dogmoneyUSDCPool = farms.find((v) => v.pair === '0x9Ab710Cd0BfbeE60E14115D19c76213C4D4b1687').pool;
