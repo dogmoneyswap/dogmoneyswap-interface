@@ -80,7 +80,7 @@ const FarmListItem = ({ farm, ...rest }) => {
                   <div className="hidden md:flex items-center space-x-2">
                     <div key="0" className="flex items-center">
                       <Image
-                        src="https://assets.dogmoney.money/blockchains/dogechain/assets/{MIST[ChainId.DOGECHAIN].address}/logo.png"
+                        src="https://assets.dogmoney.money/blockchains/dogechain/assets/0x93C8a00416dD8AB9701fa15CA120160172039851/logo.png"
                         width="30px"
                         height="30px"
                         className="rounded-md"

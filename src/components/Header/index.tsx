@@ -168,7 +168,7 @@ function AppBar(): JSX.Element {
                             address: MIST_ADDRESS[chainId],
                             symbol: 'DOGMONEY',
                             decimals: 18,
-                            image: "https://assets.dogmoney.money/blockchains/dogechain/assets/{MIST[ChainId.DOGECHAIN].address}/logo.png",
+                            image: "https://assets.dogmoney.money/blockchains/dogechain/assets/0x93C8a00416dD8AB9701fa15CA120160172039851/logo.png",
                           }} />
                       </>
                     )}

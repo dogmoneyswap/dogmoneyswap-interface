@@ -249,6 +249,7 @@ export default function Farm(): JSX.Element {
   )
 
   if (! fetchingV2PairBalances) {
+    console.log('v2PairsBalances', v2PairsBalances)
     for (let i=0; i<farms.length; ++i) {
       if (v2PairsBalances.hasOwnProperty(farms[i].pair) && farms[i].pool.totalSupply) {
         const totalSupply = Number.parseFloat(farms[i].pool.totalSupply.toFixed());
@@ -347,7 +348,7 @@ export default function Farm(): JSX.Element {
 
       const defaultReward = {
         token: 'DOGMONEY',
-        icon: `https://assets.dogmoney.money/blockchains/dogechain/assets/${MIST[ChainId.DOGECHAIN].address}/logo.png`,
+        icon: 'https://assets.dogmoney.money/blockchains/dogechain/assets/0x93C8a00416dD8AB9701fa15CA120160172039851/logo.png',
         rewardPerBlock,
         rewardPerDay: rewardPerBlock * blocksPerDay,
         rewardPrice: +mistPriceUSD,
