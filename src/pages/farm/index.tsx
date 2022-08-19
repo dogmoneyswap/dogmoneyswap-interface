@@ -224,20 +224,15 @@ export default function Farm(): JSX.Element {
 
   let bchPriceUSD = 0.08;
   let mistPriceUSD = 0.1;
-  if (chainId === 10000) {
-    let bchPriceFlexUSD = 100;
-    const mistflexusdPool = farms.find((v) => v.pair === '0x437E444365aD9ed788e8f255c908bceAd5AEA645').pool;
-    const bchusdtPool = farms.find((v) => v.pair === '0x27580618797a2CE02FDFBbee948388a50a823611').pool;
-    const bchflexusdPool = farms.find((v) => v.pair === '0x24f011f12Ea45AfaDb1D4245bA15dCAB38B43D13').pool;
-    if (bchusdtPool.reserves) {
-      bchPriceUSD = Number.parseFloat(bchusdtPool.reserves[1].toFixed()) / Number.parseFloat(bchusdtPool.reserves[0].toFixed());
+  if (chainId === 2000) {
+    const dogeUSDCPool = farms.find((v) => v.pair === '0xd26745d973005bbdA64dB020B75B1720C4Ee7b23').pool;
+    if (dogeUSDCPool.reserves) {
+      // bchPriceUSD = Number.parseFloat(dogeUSDCPool.reserves[1].toFixed()) / Number.parseFloat(dogeUSDCPool.reserves[0].toFixed());
     }
-    if (bchflexusdPool.reserves) {
-      bchPriceFlexUSD = Number.parseFloat(bchflexusdPool.reserves[1].toFixed()) / Number.parseFloat(bchflexusdPool.reserves[0].toFixed());
-    }
-    if (mistflexusdPool.reserves && bchusdtPool.reserves && bchflexusdPool.reserves) {
-      mistPriceUSD = 1. / ( Number.parseFloat(mistflexusdPool.reserves[0].toFixed()) / Number.parseFloat(mistflexusdPool.reserves[1].toFixed()))
-      mistPriceUSD /= (bchPriceFlexUSD / bchPriceUSD);
+
+    const dogmoneyUSDCPool = farms.find((v) => v.pair === '0x9Ab710Cd0BfbeE60E14115D19c76213C4D4b1687').pool;
+    if (dogmoneyUSDCPool.reserves) {
+      mistPriceUSD = Number.parseFloat(dogmoneyUSDCPool.reserves[1].toFixed()) / Number.parseFloat(dogmoneyUSDCPool.reserves[0].toFixed());
     }
   }
 
@@ -247,7 +242,6 @@ export default function Farm(): JSX.Element {
   )
 
   if (! fetchingV2PairBalances) {
-    console.log('v2PairsBalances', v2PairsBalances)
     for (let i=0; i<farms.length; ++i) {
       if (v2PairsBalances.hasOwnProperty(farms[i].pair) && farms[i].pool.totalSupply) {
         const totalSupply = Number.parseFloat(farms[i].pool.totalSupply.toFixed());
@@ -297,8 +291,6 @@ export default function Farm(): JSX.Element {
         farms[i].tvl = tvl;
         farms[i].totalSupply = totalSupply;
         farms[i].chefBalance = chefBalance;
-
-        console.log(farms[i].pair, farms[i].tvl, farms[i].totalSupply, farms[i].chefBalance)
       } else {
         farms[i].tvl = "0";
         farms[i].totalSupply = 0;
