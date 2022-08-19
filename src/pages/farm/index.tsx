@@ -52,12 +52,123 @@ export default function Farm(): JSX.Element {
 
   const hardcodedPairs = {
     [ChainId.DOGECHAIN]: {
-      "0x2Cb4771d7fe5A387476e68765e8883B6933AD0a4": {
+      // wdoge/stables
+      "0xd26745d973005bbdA64dB020B75B1720C4Ee7b23": {
         farmId: 0,
-        allocPoint: 10000,
+        allocPoint: 100000000,
         token0: WBCH[ChainId.DOGECHAIN],
-        token1: new Token(ChainId.DOGECHAIN, '0xe3fca919883950c5cd468156392a6477ff5d18de', 18, 'OMNOM', 'Doge Eat Doge'),
+        token1: USDC,
       },
+      "0x09C973cc157b2d99AdA183097c89EacFA73B0F59": {
+        farmId: 1,
+        allocPoint: 50000000,
+        token0: WBCH[ChainId.DOGECHAIN],
+        token1: USDT,
+      },
+      "0xbD66c80177032252D44EF12142d8Db580595ffba": {
+        farmId: 2,
+        allocPoint: 100000000,
+        token0: WBCH[ChainId.DOGECHAIN],
+        token1: DAI,
+      },
+
+      // wdoge/token
+      "0x803f8D6017cEaE18152fc06c901184D7be7380BD": {
+        farmId: 3,
+        allocPoint: 25000000,
+        token0: WBCH[ChainId.DOGECHAIN],
+        token1: new Token(ChainId.DOGECHAIN, '0x0755FA2F4AA6311E1D7C19990416c86F17D16F86', 6, 'DOGEP', 'Doge Print')
+      },
+      "0xfDc909b3D9b1b13eC1F73d2c35C8E5EF919D188e": {
+        farmId: 4,
+        allocPoint: 25000000,
+        token0: WBCH[ChainId.DOGECHAIN],
+        token1: new Token(ChainId.DOGECHAIN, '0xe3fcA919883950c5cD468156392a6477Ff5d18de', 18, 'OMNOM', 'Doge Eat Doge'),
+      },
+      "0x8A02de3B3A03510802e685DC5E73E6a3c6A57714": {
+        farmId: 5,
+        allocPoint: 25000000,
+        token0: WBCH[ChainId.DOGECHAIN],
+        token1: new Token(ChainId.DOGECHAIN, '0x8a764cF73438dE795c98707B07034e577Af54825', 18, 'DINU', 'Doge Inu'),
+      },
+      "0x1c5778BcE35219f8D60EFf82CD88a6Bd1CF352E5": {
+        farmId: 6,
+        allocPoint: 25000000,
+        token0: WBCH[ChainId.DOGECHAIN],
+        token1: new Token(ChainId.DOGECHAIN, '0xA1D56fE00ca784c4F3414324d1Da6b3Df9A2aCF9', 18, 'Wiener', 'WienerDoge'),
+      },
+      "0xa163232cf831EaD2949abda9a537B98bD31cE4cC": {
+        farmId: 7,
+        allocPoint: 25000000,
+        token0: WBCH[ChainId.DOGECHAIN],
+        token1: new Token(ChainId.DOGECHAIN, '0x87b6bd987915b24361cf086490cB9F7e847e533d', 9, 'ASTRO', 'AstroDoge'),
+      },
+      "0x617Df613968284E280C88f455d7B1FD08aCC486a": {
+        farmId: 8,
+        allocPoint: 25000000,
+        token0: WBCH[ChainId.DOGECHAIN],
+        token1: new Token(ChainId.DOGECHAIN, '0x1df5c9B7789BD1416d005C15A42762481C95eDC2', 18, 'DTools', 'DogeTools'),
+      },
+      "0xf8407Ac942047A77aaCb73aB30dD47E02B07e69c": {
+        farmId: 9,
+        allocPoint: 25000000,
+        token0: WBCH[ChainId.DOGECHAIN],
+        token1: new Token(ChainId.DOGECHAIN, '0x44aA2dfe660439E9a93483EC665Bf20dE62CEc2B', 18, 'BOURBON', 'Bourbon'),
+      },
+
+      // stable/stable stable/othercoin
+      "0xE770d97159303E5d4C934270579ad22715b37a08": {
+        farmId: 10,
+        allocPoint: 50000000,
+        token0: USDC,
+        token1: USDT,
+      },
+      "0xAF2501Ba965a0DefF1ECB1BdD6ab76A9EEcca0F5": {
+        farmId: 11,
+        allocPoint: 25000000,
+        token0: USDC,
+        token1: DAI,
+      },
+      "0x78D6c73A1a6ED79554f921cfD9138Ec8B4863ED6": {
+        farmId: 12,
+        allocPoint: 25000000,
+        token0: USDC,
+        token1: new Token(ChainId.DOGECHAIN, '0xfA9343C3897324496A05fC75abeD6bAC29f8A40f', 8, 'WBTC', 'Wrapped BTC'),
+      },
+      "0x62Ad058Feb31cc6C896bD71c49eF3A98cb800EC5": {
+        farmId: 13,
+        allocPoint: 25000000,
+        token0: USDC,
+        token1: new Token(ChainId.DOGECHAIN, '0xB44a9B6905aF7c801311e8F4E76932ee959c663C', 18, 'ETH', 'Ethereum'),
+      },
+
+      // dogmoney pairs
+      /*
+      "0x2Cb4771d7fe5A387476e68765e8883B6933AD0a4": {
+        farmId: 14,
+        allocPoint: 300000000,
+        token0: MIST[ChainId.DOGECHAIN],
+        token1: WBCH[ChainId.DOGECHAIN],
+      },
+      "0x2Cb4771d7fe5A387476e68765e8883B6933AD0a4": {
+        farmId: 15,
+        allocPoint: 50000000,
+        token0: MIST[ChainId.DOGECHAIN],
+        token1: USDC,
+      },
+      "0x2Cb4771d7fe5A387476e68765e8883B6933AD0a4": {
+        farmId: 16,
+        allocPoint: 50000000,
+        token0: MIST[ChainId.DOGECHAIN],
+        token1: USDT,
+      },
+      "0x2Cb4771d7fe5A387476e68765e8883B6933AD0a4": {
+        farmId: 17,
+        allocPoint: 50000000,
+        token0: MIST[ChainId.DOGECHAIN],
+        token1: DAI,
+      },
+      */
     },
   };
 
@@ -113,8 +224,8 @@ export default function Farm(): JSX.Element {
 
   farms = farms.sort((a, b) => b.allocPoint - a.allocPoint);
 
-  let bchPriceUSD = 100;
-  let mistPriceUSD = 0.001;
+  let bchPriceUSD = 0.08;
+  let mistPriceUSD = 0.1;
   if (chainId === 10000) {
     let bchPriceFlexUSD = 100;
     const mistflexusdPool = farms.find((v) => v.pair === '0x437E444365aD9ed788e8f255c908bceAd5AEA645').pool;
@@ -130,10 +241,6 @@ export default function Farm(): JSX.Element {
       mistPriceUSD = 1. / ( Number.parseFloat(mistflexusdPool.reserves[0].toFixed()) / Number.parseFloat(mistflexusdPool.reserves[1].toFixed()))
       mistPriceUSD /= (bchPriceFlexUSD / bchPriceUSD);
     }
-  } else {
-    // TODO add detection of this for amber in future
-    bchPriceUSD = 100;
-    mistPriceUSD = 0.001;
   }
 
   const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
@@ -156,16 +263,30 @@ export default function Farm(): JSX.Element {
           const reserve = Number.parseFloat(farms[i].pool.reserves[1].toFixed());
           tvl = reserve / totalSupply * chefBalance * mistPriceUSD * 2;
         }
-        /*
-        else if (farms[i].pool.token0 === FLEXUSD.address) {
+        else if (farms[i].pool.token0 === USDC.address) {
           const reserve = Number.parseFloat(farms[i].pool.reserves[0].toFixed());
           tvl = reserve / totalSupply * chefBalance * 2;
         }
-        else if (farms[i].pool.token1 === FLEXUSD.address) {
+        else if (farms[i].pool.token1 === USDC.address) {
           const reserve = Number.parseFloat(farms[i].pool.reserves[1].toFixed());
           tvl = reserve / totalSupply * chefBalance * 2;
         }
-        */
+        else if (farms[i].pool.token0 === USDT.address) {
+          const reserve = Number.parseFloat(farms[i].pool.reserves[0].toFixed());
+          tvl = reserve / totalSupply * chefBalance * 2;
+        }
+        else if (farms[i].pool.token1 === USDT.address) {
+          const reserve = Number.parseFloat(farms[i].pool.reserves[1].toFixed());
+          tvl = reserve / totalSupply * chefBalance * 2;
+        }
+        else if (farms[i].pool.token0 === DAI.address) {
+          const reserve = Number.parseFloat(farms[i].pool.reserves[0].toFixed());
+          tvl = reserve / totalSupply * chefBalance * 2;
+        }
+        else if (farms[i].pool.token1 === DAI.address) {
+          const reserve = Number.parseFloat(farms[i].pool.reserves[1].toFixed());
+          tvl = reserve / totalSupply * chefBalance * 2;
+        }
         else if (farms[i].pool.token0 === WBCH[chainId].address) {
           const reserve = Number.parseFloat(farms[i].pool.reserves[0].toFixed());
           tvl = reserve / totalSupply * chefBalance * bchPriceUSD * 2;
@@ -177,6 +298,8 @@ export default function Farm(): JSX.Element {
         farms[i].tvl = tvl;
         farms[i].totalSupply = totalSupply;
         farms[i].chefBalance = chefBalance;
+
+        console.log(farms[i].pair, farms[i].tvl, farms[i].totalSupply, farms[i].chefBalance)
       } else {
         farms[i].tvl = "0";
         farms[i].totalSupply = 0;
