@@ -248,15 +248,7 @@ export default function Farm(): JSX.Element {
         const chefBalance = Number.parseFloat(v2PairsBalances[farms[i].pair].toFixed(18));
 
         let tvl = 0;
-        if (farms[i].pool.token0 === MIST[chainId].address) {
-          const reserve = Number.parseFloat(farms[i].pool.reserves[0].toFixed());
-          tvl = reserve / totalSupply * chefBalance * mistPriceUSD * 2;
-        }
-        else if (farms[i].pool.token1 === MIST[chainId].address) {
-          const reserve = Number.parseFloat(farms[i].pool.reserves[1].toFixed());
-          tvl = reserve / totalSupply * chefBalance * mistPriceUSD * 2;
-        }
-        else if (farms[i].pool.token0 === USDC.address) {
+        if (farms[i].pool.token0 === USDC.address) {
           const reserve = Number.parseFloat(farms[i].pool.reserves[0].toFixed(USDC.decimals, 18));
           tvl = reserve / totalSupply * chefBalance * 2;
         }
@@ -295,6 +287,14 @@ export default function Farm(): JSX.Element {
         else if (farms[i].pool.token1 === WBTC.address) {
           const reserve = Number.parseFloat(farms[i].pool.reserves[1].toFixed(18,18));
           tvl = reserve / totalSupply * chefBalance * 2;
+        }
+        else if (farms[i].pool.token0 === MIST[chainId].address) {
+          const reserve = Number.parseFloat(farms[i].pool.reserves[0].toFixed());
+          tvl = reserve / totalSupply * chefBalance * mistPriceUSD * 2;
+        }
+        else if (farms[i].pool.token1 === MIST[chainId].address) {
+          const reserve = Number.parseFloat(farms[i].pool.reserves[1].toFixed());
+          tvl = reserve / totalSupply * chefBalance * mistPriceUSD * 2;
         }
         farms[i].tvl = tvl;
         farms[i].totalSupply = totalSupply;
