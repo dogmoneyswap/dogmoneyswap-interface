@@ -22,7 +22,7 @@ export function getCurrencyLogoUrls(currency) {
   urls.push(`https://raw.githubusercontent.com/dogmoneyswap/icons/master/token/${getCurrencySymbol(currency)}.jpg`)
   if (currency.chainId in BLOCKCHAIN) {
     urls.push(
-      `https://assets.dogmoney.money/blockchains/smartbch/assets/${
+      `https://assets.dogmoney.money/blockchains/dogechain/assets/${
         currency.address
       }/logo.png`
     )
