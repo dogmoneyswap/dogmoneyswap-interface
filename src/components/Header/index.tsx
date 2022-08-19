@@ -40,7 +40,7 @@ function AppBar(): JSX.Element {
             <div className="px-4 py-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <Image src="/logo.png" alt="DOGMONEY" width="32px" height="32px" />
+                  <Image src="/logo.png" alt="DOGMONEY" width="42" height="42px" />
                   <div className="hidden sm:block sm:ml-4">
                     <div className="flex space-x-2">
                       {/* <Buy /> */}
