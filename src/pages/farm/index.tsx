@@ -161,8 +161,8 @@ export default function Farm(): JSX.Element {
         token0: MIST[ChainId.DOGECHAIN],
         token1: USDT,
       },
-      "0x639A647fbe20b6c8ac19E48E2de44ea792c62c5C": {
-        farmId: 17,
+      "0x988664dd22883F493184e509266fdC457367076E": {
+        farmId: 18,
         allocPoint: 50000000,
         token0: MIST[ChainId.DOGECHAIN],
         token1: DAI,
