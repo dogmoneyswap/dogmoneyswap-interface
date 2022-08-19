@@ -222,7 +222,7 @@ export default function Stake() {
         <div className="flex flex-col justify-center md:flex-row">
           <div className="flex flex-col w-full max-w-xl mx-auto mb-4 md:m-0">
             <div className="mb-4">
-              {
+              {/*
                 <div className="flex items-center justify-between w-full h-24 max-w-xl p-4 rounded md:pl-5 md:pr-7 bg-light-yellow bg-opacity-40">
                   <div className="flex flex-col">
                     <div className="flex items-center justify-center mb-4 flex-nowrap md:mb-2">
@@ -253,7 +253,7 @@ export default function Stake() {
                     </p>
                   </div>
                 </div>
-              }
+              */}
             </div>
             <div>
               <TransactionFailedModal isOpen={modalOpen} onDismiss={() => setModalOpen(false)} />
@@ -287,9 +287,11 @@ export default function Stake() {
                   <p className="font-bold text-large md:text-2xl text-high-emphesis">
                     {activeTab === 0 ? i18n._(t`Stake DOGMONEY`) : i18n._(t`Unstake`)}
                   </p>
+                  {/*
                   <div className="border-gradient-r-pink-red-light-brown-dark-pink-red border-transparent border-solid border rounded-3xl px-4 md:px-3.5 py-1.5 md:py-0.5 text-high-emphesis text-xs font-medium md:text-base md:font-normal">
                     {`1 xDOGMONEY = ${xSushiPerSushi.toFixed(4)} DOGMONEY`}
                   </div>
+                  */}
                 </div>
 
                 <StyledNumericalInput
