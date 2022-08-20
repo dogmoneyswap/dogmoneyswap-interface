@@ -18,6 +18,7 @@ const Menu = ({ positionsLength, farms }) => {
   const zero = CurrencyAmount.fromRawAmount(MIST[chainId], 0);
   const userFarms = [...(farms || [])].filter(farm => farm.pending);
   const total = userFarms ? userFarms.reduce((sum, farm) => farm.pendingSushi.add(sum), zero) : zero;
+  const totalLockedUsd = userFarms ? userFarms.reduce((sum, farm) => (farm.positionUsd || 0) + sum, 0) : 0;
 
   return (
     <div className="space-y-4">
@@ -65,6 +66,14 @@ const Menu = ({ positionsLength, farms }) => {
           onClick={async () => await harvestAll(userFarms)}
         >
           {i18n._(t`Harvest All (${total.toFixed(2)} DogMoney)`)}
+        </a>
+      )}
+
+      {totalLockedUsd > 0 && (
+        <a className="flex items-center justify-between px-4 py-6 text-base font-bold border border-transparent rounded cursor-pointer bg-dark-900 hover:bg-dark-800"
+          onClick={async () => {}}
+        >
+          {i18n._(t`Funds locked $${Number(totalLockedUsd).toFixed(2)}`)}
         </a>
       )}
 
