@@ -58,8 +58,8 @@ export default function Farm(): JSX.Element {
       "0xd26745d973005bbdA64dB020B75B1720C4Ee7b23": {
         farmId: 0,
         allocPoint: 100000000,
-        token0: WBCH[ChainId.DOGECHAIN],
-        token1: USDC,
+        token0: USDC,
+        token1: WBCH[ChainId.DOGECHAIN],
       },
       "0x09C973cc157b2d99AdA183097c89EacFA73B0F59": {
         farmId: 1,
@@ -78,8 +78,8 @@ export default function Farm(): JSX.Element {
       "0x803f8D6017cEaE18152fc06c901184D7be7380BD": {
         farmId: 3,
         allocPoint: 25000000,
-        token0: WBCH[ChainId.DOGECHAIN],
-        token1: new Token(ChainId.DOGECHAIN, '0x0755FA2F4AA6311E1D7C19990416c86F17D16F86', 6, 'DOGEP', 'Doge Print')
+        token0: new Token(ChainId.DOGECHAIN, '0x0755FA2F4AA6311E1D7C19990416c86F17D16F86', 6, 'DOGEP', 'Doge Print'),
+        token1: WBCH[ChainId.DOGECHAIN],
       },
       "0xfDc909b3D9b1b13eC1F73d2c35C8E5EF919D188e": {
         farmId: 4,
@@ -102,8 +102,8 @@ export default function Farm(): JSX.Element {
       "0xa163232cf831EaD2949abda9a537B98bD31cE4cC": {
         farmId: 7,
         allocPoint: 25000000,
-        token0: WBCH[ChainId.DOGECHAIN],
-        token1: new Token(ChainId.DOGECHAIN, '0x87b6bd987915b24361cf086490cB9F7e847e533d', 9, 'ASTRO', 'AstroDoge'),
+        token0: new Token(ChainId.DOGECHAIN, '0x87b6bd987915b24361cf086490cB9F7e847e533d', 9, 'ASTRO', 'AstroDoge'),
+        token1: WBCH[ChainId.DOGECHAIN],
       },
       "0x617Df613968284E280C88f455d7B1FD08aCC486a": {
         farmId: 8,
@@ -122,14 +122,14 @@ export default function Farm(): JSX.Element {
       "0xE770d97159303E5d4C934270579ad22715b37a08": {
         farmId: 10,
         allocPoint: 50000000,
-        token0: USDC,
-        token1: USDT,
+        token0: USDT,
+        token1: USDC,
       },
       "0xAF2501Ba965a0DefF1ECB1BdD6ab76A9EEcca0F5": {
         farmId: 11,
         allocPoint: 25000000,
-        token0: USDC,
-        token1: DAI,
+        token0: DAI,
+        token1: USDC,
       },
       "0x78D6c73A1a6ED79554f921cfD9138Ec8B4863ED6": {
         farmId: 12,
@@ -154,8 +154,8 @@ export default function Farm(): JSX.Element {
       "0x90104885C69b980cB3C9D351671F0F06E016aB48": {
         farmId: 15,
         allocPoint: 50000000,
-        token0: MIST[ChainId.DOGECHAIN],
-        token1: USDC,
+        token0: USDC,
+        token1: MIST[ChainId.DOGECHAIN],
       },
       "0x766113199c121C9c754Edc456B11cA980AF79Ac4": {
         farmId: 16,
