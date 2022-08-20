@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, JSBI } from '@dogmoneyswap/sdk'
 
-const MIN_NATIVE_CURRENCY_FOR_GAS: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
+const MIN_NATIVE_CURRENCY_FOR_GAS: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18)) // 1 WDOGE
 
 /**
  * Given some token amount, return the max that can be spent of it
