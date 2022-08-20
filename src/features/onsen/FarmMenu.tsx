@@ -1,15 +1,24 @@
-import { ChainId } from '@dogmoneyswap/sdk'
+import { ChainId, CurrencyAmount } from '@dogmoneyswap/sdk'
 import NavLink from '../../components/NavLink'
 import React from 'react'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { useActiveWeb3React } from '../../hooks'
 import { useWalletModalToggle } from '../../state/application/hooks'
+import { Chef } from './enum'
+import useMasterChef from './useMasterChef'
+import { MIST } from '../../config/tokens'
 
-const Menu = ({ positionsLength }) => {
+const Menu = ({ positionsLength, farms }) => {
   const { account, chainId } = useActiveWeb3React()
   const { i18n } = useLingui()
   const toggleWalletModal = useWalletModalToggle()
+
+  const { harvestAll } = useMasterChef(Chef.MASTERCHEF)
+  const zero = CurrencyAmount.fromRawAmount(MIST[chainId], 0);
+  const userFarms = [...(farms || [])].filter(farm => farm.pending);
+  const total = userFarms ? userFarms.reduce((sum, farm) => farm.pendingSushi.add(sum), zero) : zero;
+  const totalLockedUsd = userFarms ? userFarms.reduce((sum, farm) => (farm.positionUsd || 0) + sum, 0) : 0;
 
   return (
     <div className="space-y-4">
@@ -51,6 +60,22 @@ const Menu = ({ positionsLength }) => {
           {i18n._(t`Past Farms`)}
         </a>
       </NavLink>
+
+      {total.greaterThan(0) && (
+        <a className="flex items-center justify-between px-4 py-6 text-base font-bold border border-transparent rounded cursor-pointer bg-dark-900 hover:bg-dark-800"
+          onClick={async () => await harvestAll(userFarms)}
+        >
+          {i18n._(t`Harvest all: ${total.toFixed(2)} DogMoney`)}
+        </a>
+      )}
+
+      {totalLockedUsd > 0 && (
+        <a className="flex items-center justify-between px-4 py-6 text-base font-bold border border-transparent rounded cursor-pointer bg-dark-900 hover:bg-dark-800"
+          onClick={async () => {}}
+        >
+          {i18n._(t`In farms: $${Number(totalLockedUsd).toFixed(2)}`)}
+        </a>
+      )}
 
       {/*chainId === ChainId.MAINNET && (
         <>

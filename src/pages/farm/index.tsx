@@ -12,7 +12,7 @@ import {
 } from '../../services/graph'
 
 import { BigNumber } from '@ethersproject/bignumber'
-import { ChainId, WNATIVE, Token, WBCH, MASTERCHEF_ADDRESS } from '@dogmoneyswap/sdk'
+import { ChainId, WNATIVE, Token, WBCH, MASTERCHEF_ADDRESS, CurrencyAmount } from '@dogmoneyswap/sdk'
 import { MIST, DAI, USDT, USDC, WBTC } from '../../config/tokens'
 import Container from '../../components/Container'
 import FarmList from '../../features/onsen/FarmList'
@@ -33,11 +33,13 @@ import { updateUserFarmFilter } from '../../state/user/actions'
 import { getFarmFilter, useUpdateFarmFilter } from '../../state/user/hooks'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
+import { AddressZero } from '@ethersproject/constants'
 
 export default function Farm(): JSX.Element {
   const { i18n } = useLingui()
   const { chainId } = useActiveWeb3React()
   const router = useRouter()
+  const positions = usePositions(chainId)
 
   const type = router.query.filter as string
 
@@ -301,15 +303,22 @@ export default function Farm(): JSX.Element {
         farms[i].tvl = tvl;
         farms[i].totalSupply = totalSupply;
         farms[i].chefBalance = chefBalance;
+        const position = positions.find(val => val.id == farms[i].id)
+        if (position) {
+          const token = new Token(chainId, AddressZero, 18, "", "")
+          const amount = CurrencyAmount.fromRawAmount(token, position.amount);
+          const totalSupply = CurrencyAmount.fromRawAmount(token, farms[i].pool.totalSupply);
+          const poolFraction = parseFloat(amount.toFixed()) / parseFloat(totalSupply.toFixed())
+          farms[i].positionUsd = farms[i].tvl * poolFraction;
+        }
       } else {
         farms[i].tvl = "0";
         farms[i].totalSupply = 0;
         farms[i].chefBalance = 0;
+        farms[i].positionUsd = 0;
       }
     }
   }
-
-  const positions = usePositions(chainId)
 
   // const averageBlockTime = useAverageBlockTime()
   const averageBlockTime = 2;
@@ -425,7 +434,7 @@ export default function Farm(): JSX.Element {
         <meta key="description" name="description" content="Farm DOGMONEY" />
       </Head>
       <div className={classNames('px-3 md:px-0 lg:block md:col-span-1')}>
-        <Menu positionsLength={positions.length} />
+        <Menu positionsLength={positions.length} farms={farms} />
         <div className="relative hidden h-80 lg:block">
           <Image layout="fill" objectFit="contain" objectPosition="bottom" src="/mist-machine.png" alt="" />
         </div>
