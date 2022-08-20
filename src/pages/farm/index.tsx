@@ -227,14 +227,16 @@ export default function Farm(): JSX.Element {
   if (chainId === 2000) {
     const dogeUSDCPool = farms.find((v) => v.pair === '0xd26745d973005bbdA64dB020B75B1720C4Ee7b23').pool;
     if (dogeUSDCPool.reserves) {
-      // bchPriceUSD = Number.parseFloat(dogeUSDCPool.reserves[1].toFixed(USDT.decimals, 18)) / Number.parseFloat(dogeUSDCPool.reserves[0].toFixed(USDT.decimals, 18));
+      bchPriceUSD = Number.parseFloat(dogeUSDCPool.reserves[0].toFixed(USDT.decimals)) / Number.parseFloat(dogeUSDCPool.reserves[1].toFixed());
     }
 
-    const dogmoneyUSDCPool = farms.find((v) => v.pair === '0x9Ab710Cd0BfbeE60E14115D19c76213C4D4b1687').pool;
+    const dogmoneyUSDCPool = farms.find((v) => v.pair === '0x90104885C69b980cB3C9D351671F0F06E016aB48').pool;
     if (dogmoneyUSDCPool.reserves) {
-      mistPriceUSD = Number.parseFloat(dogmoneyUSDCPool.reserves[1].toFixed()) / Number.parseFloat(dogmoneyUSDCPool.reserves[0].toFixed());
+      mistPriceUSD = Number.parseFloat(dogmoneyUSDCPool.reserves[0].toFixed(USDC.decimals)) / Number.parseFloat(dogmoneyUSDCPool.reserves[1].toFixed());
     }
   }
+  console.log('mistPriceUSD', mistPriceUSD)
+  console.log('bchPriceUSD', bchPriceUSD)
 
   const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
     MASTERCHEF_ADDRESS[chainId],
