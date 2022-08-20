@@ -65,7 +65,7 @@ const Menu = ({ positionsLength, farms }) => {
         <a className="flex items-center justify-between px-4 py-6 text-base font-bold border border-transparent rounded cursor-pointer bg-dark-900 hover:bg-dark-800"
           onClick={async () => await harvestAll(userFarms)}
         >
-          {i18n._(t`Harvest All (${total.toFixed(2)} DogMoney)`)}
+          {i18n._(t`Harvest all: ${total.toFixed(2)} DogMoney`)}
         </a>
       )}
 
@@ -73,7 +73,7 @@ const Menu = ({ positionsLength, farms }) => {
         <a className="flex items-center justify-between px-4 py-6 text-base font-bold border border-transparent rounded cursor-pointer bg-dark-900 hover:bg-dark-800"
           onClick={async () => {}}
         >
-          {i18n._(t`Funds locked $${Number(totalLockedUsd).toFixed(2)}`)}
+          {i18n._(t`In farms: $${Number(totalLockedUsd).toFixed(2)}`)}
         </a>
       )}
 
