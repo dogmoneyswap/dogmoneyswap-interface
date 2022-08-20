@@ -24,6 +24,8 @@ import { getDayData, useMistPrice } from '../../services/graph'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { GRAPH_HOST } from '../../services/graph/constants'
+import { useToken } from '../../hooks/Tokens'
+import { useTotalSupply } from '../../hooks/useTotalSupply'
 
 const INPUT_CHAR_LIMIT = 18
 
@@ -68,9 +70,19 @@ export default function Stake() {
 
   const { enter, leave } = useSushiBar()
 
-  const { data } = useSWR(`{bar(id: "0xc41c680c60309d4646379ed62020c534eb67b6f4") {ratio, totalSupply}}`, fetcher)
+  const barTotalSupply = useTotalSupply(XMIST[chainId]);
+  const barSushiBalance = useTokenBalance(XMIST[chainId].address, MIST[chainId])
+  const xSushiPerSushi = parseFloat((barSushiBalance ?? 0).toFixed()) / parseFloat((barTotalSupply ?? 1).toFixed())
 
-  const xSushiPerSushi = parseFloat(data?.bar?.ratio)
+  const data = {
+    bar: {
+      ratio: xSushiPerSushi,
+      totalSupply: parseFloat((barTotalSupply ?? 0).toFixed())
+    }
+  }
+
+  // const { data } = useSWR(`{bar(id: "0xc41c680c60309d4646379ed62020c534eb67b6f4") {ratio, totalSupply}}`, fetcher)
+  // const xSushiPerSushi = parseFloat(data?.bar?.ratio)
 
   const walletConnected = !!account
   const toggleWalletModal = useWalletModalToggle()
@@ -287,11 +299,11 @@ export default function Stake() {
                   <p className="font-bold text-large md:text-2xl text-high-emphesis">
                     {activeTab === 0 ? i18n._(t`Stake DOGMONEY`) : i18n._(t`Unstake`)}
                   </p>
-                  {/*
+
                   <div className="border-gradient-r-pink-red-light-brown-dark-pink-red border-transparent border-solid border rounded-3xl px-4 md:px-3.5 py-1.5 md:py-0.5 text-high-emphesis text-xs font-medium md:text-base md:font-normal">
                     {`1 xDOGMONEY = ${xSushiPerSushi.toFixed(4)} DOGMONEY`}
                   </div>
-                  */}
+
                 </div>
 
                 <StyledNumericalInput
