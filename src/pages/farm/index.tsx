@@ -169,6 +169,12 @@ export default function Farm(): JSX.Element {
         token0: MIST[ChainId.DOGECHAIN],
         token1: DAI,
       },
+      "0xCF7Ba74141F40fa6987E317ea8bd525A8AcaD7F5": {
+        farmId: 19,
+        allocPoint: 10000000,
+        token0: WBCH[ChainId.DOGECHAIN],
+        token1: new Token(ChainId.DOGECHAIN, '0x8578D10a6ef7d26f5AB014138BCC2e3c49331255', 18, 'NotDoge', 'NotDoge'),
+      },
     },
   };
 
@@ -211,7 +217,7 @@ export default function Farm(): JSX.Element {
       owner: {
         id: MASTERCHEF_ADDRESS[chainId],
         sushiPerBlock: "10000000000000000000",
-        totalAllocPoint: "1000000000"
+        totalAllocPoint: "1010000000"
       },
       userCount: 1,
     }
