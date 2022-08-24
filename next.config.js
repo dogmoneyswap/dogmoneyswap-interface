@@ -49,7 +49,7 @@ const nextConfig = {
       'raw.githubusercontent.com',
       'sideshift.ai',
       'assets.dogmoney.money',
-      'metadata.bch.domains',
+      'metadata.dogedomains.wf',
     ],
   },
   reactStrictMode: true,
