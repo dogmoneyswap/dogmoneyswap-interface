@@ -22,7 +22,7 @@ export default function Modal({
   initialFocusRef,
   children,
   padding = 5,
-  maxWidth = 420,
+  maxWidth = 480,
 }: ModalProps) {
   return (
     <>
