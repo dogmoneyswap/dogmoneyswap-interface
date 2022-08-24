@@ -1247,18 +1247,18 @@
   dependencies:
     eip-712 "^0.4.3"
 
-"@dogmoneyswap/default-token-list@0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@dogmoneyswap/default-token-list/-/default-token-list-0.0.5.tgz#9ede08bc427b279485b9fc476ac96565a4743e6a"
-  integrity sha512-8VFoh69GZmzilRv3YdfLj/O2Rf/ybOaOq0ronFfky3Qrowu3AC2KPjMa78pFWE42nfDX3hT1SwQhwCnh1eQ2XQ==
+"@dogmoneyswap/default-token-list@0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@dogmoneyswap/default-token-list/-/default-token-list-0.0.8.tgz#dc6407851996d8b33e40fb2cdcc57b00c6587bcb"
+  integrity sha512-+vCpPduRNf2mn8dU8Rgka15d0o1LKJK9YzGP5F9kFm8kTWkIuOocdvZoczyXj4RUhducmNqmk+D7n9vAFcatjg==
   dependencies:
     commitlint "^13.1.0"
     lint-staged "^11.1.2"
 
-"@dogmoneyswap/sdk@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@dogmoneyswap/sdk/-/sdk-0.0.2.tgz#1fb8999a64e2c6900e3e4fbdd74e408b4db01381"
-  integrity sha512-gkrajqWn1jWUJAvXOTK6ZYFABAuwrClishIiOsp1QsN+7dF3RBWhG39E31wOytUbd8MOhEE6WzTk+62cI4kEcQ==
+"@dogmoneyswap/sdk@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@dogmoneyswap/sdk/-/sdk-0.0.3.tgz#b1031d156c2e468ca93c20b85b979d9fa1ac0917"
+  integrity sha512-ZNNvWprlVg27ERLE2kaiMl5fE4vjAA5odW+a1fuFRg4JzaZluW9Y1YmENBdSCfEloMxzG3V4PtUw+usO0wozIw==
   dependencies:
     big.js "^6.1.0"
     decimal.js-light "^2.5.0"
