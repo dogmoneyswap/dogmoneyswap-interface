@@ -93,7 +93,7 @@ function Web3StatusInner() {
   const { ENSName } = useENSName(account ?? undefined)
 
   const [, avatarRefresh] = useState<number>(0)
-  const avatarSrcs = [`${LNS_METADATA_URL[chainId]}/avatar/${ENSName}`]
+  const avatarSrcs = LNS_METADATA_URL[chainId] ? [`${LNS_METADATA_URL[chainId]}/avatar/${ENSName}`] : ["/chef.svg"]
   const avatarSrc = avatarSrcs.find((src) => !BAD_AVATAR_SRCS[src]) || '/chef.svg'
 
   const allTransactions = useAllTransactions()

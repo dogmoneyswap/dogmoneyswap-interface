@@ -237,8 +237,8 @@ export default function Farm(): JSX.Element {
       mistPriceUSD = Number.parseFloat(dogmoneyUSDCPool.reserves[0].toFixed(USDC.decimals)) / Number.parseFloat(dogmoneyUSDCPool.reserves[1].toFixed());
     }
   }
-  console.log('mistPriceUSD', mistPriceUSD)
-  console.log('bchPriceUSD', bchPriceUSD)
+  // console.log('mistPriceUSD', mistPriceUSD)
+  // console.log('bchPriceUSD', bchPriceUSD)
 
   const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
     MASTERCHEF_ADDRESS[chainId],

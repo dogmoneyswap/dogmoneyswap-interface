@@ -9,7 +9,7 @@ export const network = new NetworkConnector({
   urls: RPC,
 })
 
-const supportedChainIds = Object.values(ChainId) as number[]
+const supportedChainIds = [ChainId.DOGECHAIN] // Object.values(ChainId) as number[]
 
 export const injected = new InjectedConnector({
   supportedChainIds,
