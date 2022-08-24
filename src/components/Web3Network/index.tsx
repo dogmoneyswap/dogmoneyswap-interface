@@ -5,6 +5,7 @@ import NetworkModel from '../../modals/NetworkModal'
 import React from 'react'
 import { useActiveWeb3React } from '../../hooks/useActiveWeb3React'
 import { useNetworkModalToggle } from '../../state/application/hooks'
+import { ChainId } from '@dogmoneyswap/sdk'
 
 function Web3Network(): JSX.Element | null {
   const { chainId } = useActiveWeb3React()
@@ -20,7 +21,7 @@ function Web3Network(): JSX.Element | null {
     >
       <div className="grid items-center grid-flow-col px-3 py-2 space-x-2 text-sm rounded-lg pointer-events-auto auto-cols-max bg-dark-1000 text-secondary">
         <Image src={NETWORK_ICON[chainId]} alt="Switch Network" className="rounded-md" width="22px" height="22px" />
-        <div className="text-primary">{NETWORK_LABEL[chainId]}</div>
+        <div className="text-primary">{NETWORK_LABEL[chainId] ?? NETWORK_LABEL[ChainId.DOGECHAIN]}</div>
       </div>
       <NetworkModel />
     </div>
