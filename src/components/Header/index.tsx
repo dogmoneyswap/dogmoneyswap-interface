@@ -139,6 +139,13 @@ function AppBar(): JSX.Element {
                           {i18n._(t`Analytics`)}
                         </ExternalLink>
                       )}
+                      <ExternalLink
+                        id={`nft-marketplace-nav-link`}
+                        className="p-2 text-baseline text-primary hover:text-high-emphesis focus:text-high-emphesis md:p-3 whitespace-nowrap"
+                        href={'https://oasis-nft.dog/'}
+                      >
+                        {i18n._(t`NFT Marketplace`)}
+                      </ExternalLink>
                     </div>
                   </div>
                 </div>
