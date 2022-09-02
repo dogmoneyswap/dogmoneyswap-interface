@@ -222,7 +222,7 @@ export default function Farm(): JSX.Element {
       pending: 0,
       owner: {
         id: MASTERCHEF_ADDRESS[chainId],
-        sushiPerBlock: "10000000000000000000",
+        sushiPerBlock: "1000000000000000000",
         totalAllocPoint: "1030000000"
       },
       userCount: 1,
