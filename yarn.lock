@@ -1247,10 +1247,10 @@
   dependencies:
     eip-712 "^0.4.3"
 
-"@dogmoneyswap/default-token-list@0.0.9":
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/@dogmoneyswap/default-token-list/-/default-token-list-0.0.9.tgz#e1d5b05feb0f1b45afa8e03e5787b8a633f00b06"
-  integrity sha512-+E0SHPOJXOahirEZDPJjuoYMocPvBzWl8O93zXafVoH1c4LWbxqfmcv0rz5IE5aLh7IZvChXsaDG6R9re8j9/w==
+"@dogmoneyswap/default-token-list@0.0.10":
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/@dogmoneyswap/default-token-list/-/default-token-list-0.0.10.tgz#681a914ee0993c2690d358c99bb538cc6febce31"
+  integrity sha512-xxNsTtg85Nz/6hyLPrXc2dLSTB+4FncYJ1jVPFWe3G6sKrQJUoBbxWDLU09ms0x8wHOrLWI4V9N4fnjBRX6E6w==
   dependencies:
     commitlint "^13.1.0"
     lint-staged "^11.1.2"
