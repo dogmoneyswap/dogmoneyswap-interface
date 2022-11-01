@@ -100,15 +100,20 @@ export default function Pool() {
       <div className="p-4 mb-3 space-y-3">
         <Back />
 
-        <Typography component="h1" variant="h2" style={{ background: '#000000', width: 'fit-content', padding: '1rem', borderRadius: '0.5rem' }}>
+        <Typography
+          component="h1"
+          variant="h2"
+          style={{ background: '#000000', width: 'fit-content', padding: '1rem', borderRadius: '0.5rem' }}
+        >
           {i18n._(t`My Liquidity Positions`)}
         </Typography>
       </div>
 
       <Alert
-        style={{background: "palevioletred"}}
         title={i18n._(t`Liquidity Provider Rewards`)}
-        message={i18n._(t`Liquidity providers earn a 0.25% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity`)}
+        message={i18n._(
+          t`Liquidity providers earn a 0.25% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity`
+        )}
         type="information"
       />
 

@@ -55,6 +55,7 @@ module.exports = {
         secondary: 'var(--secondary)',
         white: 'var(--white)',
 
+        'gold-light': 'var(--gold-light)',
         'opaque-blue': 'var(--opaque-blue)',
         'opaque-pink': 'var(--opaque-pink)',
         'pink-red': withOpacity('--pink-red-v'),

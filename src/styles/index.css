@@ -32,11 +32,16 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--bg-primary);
   color: var(--text-primary);
-  background: url(/dogewallpaper.jpg);
-
-  background-size: cover;
+  background-image: 
+  linear-gradient(
+    rgba(0, 0, 0, 0.95), 
+    rgba(58, 47, 0, 0.7), 
+    rgba(167, 128, 0, 0.6)
+  ),
+  url(/logo.png);
+  background-size: 130px;
+  background-repeat: repeat;
   background-position: center top;
 }
 
