@@ -5,7 +5,7 @@ import { classNames } from '../../functions'
 
 const TYPE = {
   information: {
-    color: 'bg-purple bg-opacity-20 text-high-emphesis',
+    color: 'text-high-emphesis',
     icon: (
       <svg
         width="33"
@@ -83,7 +83,10 @@ export default function Alert({
   const [show, setShow] = useState(true)
   const { color, icon } = TYPE[type]
   return message && show ? (
-    <div className={classNames('block relative w-full rounded text-sm p-4', show && 'pr-10', color, className)} style={style}>
+    <div
+      className={classNames('block relative w-full rounded text-sm p-4', show && 'pr-10', color, className)}
+      style={style}
+    >
       {title && <div className="mb-1 text-2xl font-medium">{title}</div>}
       <div className="flex items-center">
         {showIcon && <div className="flex-shrink-0">{icon}</div>}
